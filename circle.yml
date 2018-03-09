@@ -32,7 +32,7 @@ jobs:
           when: always
       - run:
           name: Run Klint on library module
-          command: ./gradlew :app:hiroaki
+          command: ./gradlew :hiroaki:ktlint
           when: always
       - run:
           name: Run Unit Tests
