@@ -1,8 +1,10 @@
-![Hiroaki logo][logo] Hiroaki [![Build Status](https://travis-ci.org/jorgecastilloprz/Hiroaki.svg?branch=master)](https://travis-ci.org/jorgecastilloprz/Hiroaki)
+Hiroaki [![CircleCI](https://circleci.com/gh/JorgeCastilloPrz/hiroaki/tree/master.svg?style=svg&circle-token=3824cb7754fef5b81f1a67c6e86786df5db242c5)](https://circleci.com/gh/JorgeCastilloPrz/hiroaki/tree/master)
 ======
 
-Hiroaki is a Japanese name that literally means 'spreading brightness'. It is derived from the 
-words 'hiro', which means 'large or wide', and 'aki', which means 'bright or clear'.
+<img src="./art/sakura_logo.svg" width="256" height="256" />
+
+*Hiroaki is a Japanese name that literally means 'spreading brightness'. It is derived from the 
+words 'hiro', which means 'large or wide', and 'aki', which means 'bright or clear'.*
 
 The intention of Hiroaki is to spread brightness over your tests by simplifying the way you prepare 
 your test environment prior to the test execution.
@@ -49,4 +51,3 @@ License
     See the License for the specific language governing permissions and
     limitations under the License.
 
-[logo]: ./art/cherry-blossom.png

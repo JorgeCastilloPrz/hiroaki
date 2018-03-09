@@ -1,0 +1,45 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/android:api-27-alpha
+
+    working_directory: ~/repo
+
+    environment:
+      GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError -XX:MaxPermSize=512m"
+
+    steps:
+      - checkout
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}-{{ checksum "hiroaki/build.gradle" }}
+      - run:
+          name: Update Android SDK
+          command: yes | sdkmanager --update || true
+      - run:
+          name: Install Android SDK Packages
+          command: yes | sdkmanager --install "build-tools;27.0.3" "tools" "platform-tools" "platforms;android-27" || true
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}-{{ checksum "hiroaki/build.gradle" }}
+          paths:
+            - ~/.gradle
+      - run:
+          name: Run Klint on app module
+          command: ./gradlew :app:ktlint
+          when: always
+      - run:
+          name: Run Klint on library module
+          command: ./gradlew :app:hiroaki
+          when: always
+      - run:
+          name: Run Unit Tests
+          command: ./gradlew test
+          when: always
+      - store_artifacts:
+          path: app/build/reports
+          destination: reports
+      - store_test_results:
+          path: app/build/test-results
