@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
@@ -30,9 +31,11 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         launch(UI) {
+            loading.visibility = View.VISIBLE
             val articles = NewsNetworkDataSource().fetchNews()
             adapter.articles = articles
             adapter.notifyDataSetChanged()
+            loading.visibility = View.GONE
         }
     }
 
