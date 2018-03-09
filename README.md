@@ -1,0 +1,52 @@
+![Hiroaki logo][logo] Hiroaki [![Build Status](https://travis-ci.org/jorgecastilloprz/Hiroaki.svg?branch=master)](https://travis-ci.org/jorgecastilloprz/Hiroaki)
+======
+
+Hiroaki is a Japanese name that literally means 'spreading brightness'. It is derived from the 
+words 'hiro', which means 'large or wide', and 'aki', which means 'bright or clear'.
+
+The intention of Hiroaki is to spread brightness over your tests by simplifying the way you prepare 
+your test environment prior to the test execution.
+
+Usage
+-----
+
+Add the following code to your ``build.gradle``.
+
+```groovy
+dependencies{
+    implementation 'com.jorgecastillo:hiroaki:0.0.1'
+}
+```
+
+Hiroaki provides the following features:
+
+Do you want to contribute?
+--------------------------
+
+I would love to get contributions from anybody. So if you feel that the library is lacking any features 
+you consider key, please open an issue asking for it or a pull request providing an implementation for it. 
+
+Libraries used in this project
+------------------------------
+
+* [JUnit][4]
+* [Mockito][5]
+
+License
+-------
+
+    Copyright 2018 Jorge Castillo Pérez
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+[logo]: ./art/cherry-blossom.png
