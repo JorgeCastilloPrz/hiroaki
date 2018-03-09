@@ -1,39 +1,48 @@
 package com.jorgecastillo.hiroaki
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
-
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var adapter: NewsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        setupList()
+    }
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+    private fun setupList() {
+        newsList.setHasFixedSize(true)
+        newsList.layoutManager = LinearLayoutManager(this)
+        adapter = NewsAdapter()
+        newsList.adapter = adapter
+    }
+
+    override fun onResume() {
+        super.onResume()
+        launch(UI) {
+            val articles = NewsNetworkDataSource().fetchNews()
+            adapter.articles = articles
+            adapter.notifyDataSetChanged()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.action_settings -> true
+        else -> super.onOptionsItemSelected(item)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 }

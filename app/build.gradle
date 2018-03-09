@@ -20,14 +20,33 @@ android {
     }
 }
 
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
+
 dependencies {
-    // linters
+    // Kotlin
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.22.5"
     ktlint "com.github.shyiko:ktlint:0.19.0"
 
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    // UI
     implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.support:design:27.1.0'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+
+    // Network
+    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.3.0'
+    implementation 'com.squareup.moshi:moshi:1.5.0'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.5.0'
+    implementation 'com.squareup.okio:okio:1.13.0'
 
     // test
     testImplementation 'junit:junit:4.12'
@@ -36,3 +55,4 @@ dependencies {
 }
 
 apply from: '../ktlint/ktlint.gradle'
+
