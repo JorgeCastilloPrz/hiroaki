@@ -40,7 +40,10 @@ class NewsNetworkDataSourceTest {
                 sentToPath = "v2/top-headlines",
                 queryParams = listOf(
                         "sources" to "crypto-coins-news",
-                        "apiKey" to "a7c816f57c004c49a21bd458e11e2807"))
+                        "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
+                headers = listOf(
+                        "Cache-Control" to "max-age=640000"
+                ))
     }
 
     @Test
