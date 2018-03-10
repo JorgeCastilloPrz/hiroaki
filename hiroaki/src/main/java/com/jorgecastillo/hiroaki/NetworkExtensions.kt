@@ -1,15 +1,14 @@
 package com.jorgecastillo.hiroaki
 
+import com.jorgecastillo.hiroaki.matchers.hasQueryParams
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.CoreMatchers.startsWith
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertThat
+import org.hamcrest.MatcherAssert.assertThat
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.net.URLEncoder
 
 private const val SUCCESS_RESPONSE_CODE = 200
 private const val UNAUTHORIZED_RESPONSE_CODE = 401
@@ -74,29 +73,14 @@ fun MockWebServer.enqueueErrorResponse(
     this.enqueue(response)
 }
 
-fun MockWebServer.assertRequestSentToPath(
-        path: String,
-        args: List<Pair<String, String>> = listOf()) {
-    val queryPath = if (args.isNotEmpty()) {
-        val pathWithArgs = StringBuilder(path)
-        var first = true
-        for ((key, value) in args) {
-            if (first) {
-                pathWithArgs.append("?")
-                first = false
-            } else {
-                pathWithArgs.append("&")
-            }
-            pathWithArgs.append(key)
-                    .append("=")
-                    .append(URLEncoder.encode(value, "UTF-8"))
-        }
-        pathWithArgs.toString()
-    } else {
-        path
-    }
-
+fun MockWebServer.assertRequest(
+        sentToPath: String,
+        queryParams: List<Pair<String, String>> = listOf()) {
     val request = this.takeRequest()
-    assertThat(request.path, startsWith("/$queryPath"))
+    assertThat(request.path, startsWith("/$sentToPath"))
+
+    if (queryParams.isNotEmpty()) {
+        assertThat(request, hasQueryParams(queryParams))
+    }
 }
 

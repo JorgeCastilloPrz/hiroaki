@@ -6,7 +6,7 @@ Hiroaki [![CircleCI](https://circleci.com/gh/JorgeCastilloPrz/hiroaki/tree/maste
 *Hiroaki is a Japanese name that literally means 'spreading brightness'. It is derived from the 
 words 'hiro', which means 'large or wide', and 'aki', which means 'bright or clear'.*
 
-The intention of Hiroaki is to spread brightness over your tests by simplifying the way you prepare 
+The intention of Hiroaki is to achieve that on your tests by simplifying the way you prepare 
 your test environment prior to the test execution.
 
 Usage
