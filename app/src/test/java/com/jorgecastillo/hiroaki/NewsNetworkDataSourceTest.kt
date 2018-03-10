@@ -23,11 +23,9 @@ class NewsNetworkDataSourceTest {
     @Before
     fun setup() {
         server = MockWebServer()
-        val service = server.retrofitService(
+        dataSource = NewsNetworkDataSource(server.retrofitService(
                 NewsApiService::class.java,
-                MoshiConverterFactory.create())
-
-        dataSource = NewsNetworkDataSource(service)
+                MoshiConverterFactory.create()))
     }
 
     @After
@@ -43,10 +41,10 @@ class NewsNetworkDataSourceTest {
 
         server.assertRequest(
                 sentToPath = "v2/top-headlines",
-                queryParams = listOf(
+                queryParams = mapOf(
                         "sources" to "crypto-coins-news",
                         "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
-                headers = listOf(
+                headers = mapOf(
                         "Cache-Control" to "max-age=640000"
                 ))
     }

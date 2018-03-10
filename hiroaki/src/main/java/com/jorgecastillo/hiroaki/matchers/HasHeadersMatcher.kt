@@ -8,13 +8,13 @@ import org.hamcrest.TypeSafeMatcher
 /**
  * Custom Hamcrest matcher to assert about HTTP headers on an OkHttp RecordedRequest.
  */
-fun hasHeaders(headers: List<Pair<String, String>>): Matcher<RecordedRequest> {
+fun hasHeaders(headers: Map<String, String>): Matcher<RecordedRequest> {
     return object : TypeSafeMatcher<RecordedRequest>() {
 
         override fun describeTo(description: Description) {
             description.appendText("The HTTP query should contain the following headers: ")
             headers.forEach {
-                description.appendText("\n${it.first} = ${it.second}")
+                description.appendText("\n${it.key} = ${it.value}")
             }
         }
 
