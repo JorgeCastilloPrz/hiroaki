@@ -21,13 +21,13 @@ fun hasBody(body: Map<String, String>): Matcher<RecordedRequest> {
 
         override fun describeMismatchSafely(request: RecordedRequest,
                                             mismatchDescription: Description) {
-            requestBodySnapshot.keys.forEach { key ->
-                if (body[key] == null) {
+            body.keys.forEach { key ->
+                if (requestBodySnapshot[key] == null) {
                     mismatchDescription.appendText("\n The key $key is not present.")
                 } else {
                     if (requestBodySnapshot[key] != body[key]) {
                         mismatchDescription.appendText(
-                                "\n$key = ${requestBodySnapshot[key]} Not matching!")
+                                "\n$key = ${requestBodySnapshot[key]} >>> Not matching!")
                     }
                 }
             }
