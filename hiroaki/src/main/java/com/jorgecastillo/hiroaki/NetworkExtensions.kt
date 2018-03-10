@@ -27,7 +27,7 @@ fun <T> MockWebServer.mockService(serviceClass: Class<T>): T {
 }
 
 fun MockWebServer.enqueueSuccessfulResponse() {
-    val body = "api/EmptyResponse.json".fileContentAsString()
+    val body = fileContentAsString("api/EmptyResponse.json")
     val response = MockResponse()
     response.setResponseCode(SUCCESS_RESPONSE_CODE)
     response.setBody(body)
@@ -41,7 +41,7 @@ fun MockWebServer.enqueueErrorResponse() {
 }
 
 fun MockWebServer.enqueueSuccessfulResponse(filePath: String) {
-    val body = filePath.fileContentAsString()
+    val body = fileContentAsString(filePath)
     val response = MockResponse()
     response.setResponseCode(SUCCESS_RESPONSE_CODE)
     response.setBody(body)

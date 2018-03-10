@@ -3,7 +3,8 @@ package com.jorgecastillo.hiroaki
 import java.io.File
 
 @Throws(Exception::class)
-fun String.fileContentAsString(): String {
-    val file = File(this.javaClass.classLoader.getResource(this).file)
+fun <T : Any> T.fileContentAsString(fileName: String): String {
+    val classLoader = this::class.java.classLoader
+    val file = File(classLoader.getResource(fileName).file)
     return file.readText()
 }

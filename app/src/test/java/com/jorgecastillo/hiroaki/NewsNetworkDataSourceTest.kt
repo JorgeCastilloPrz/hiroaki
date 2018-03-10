@@ -1,6 +1,7 @@
 package com.jorgecastillo.hiroaki
 
 import com.jorgecastillo.hiroaki.model.Article
+import kotlinx.coroutines.experimental.runBlocking
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
@@ -30,28 +31,28 @@ class NewsNetworkDataSourceTest {
     }
 
     @Test
-    suspend fun sendsGetNewsToRequiredEndpoint() {
+    fun sendsGetNewsToRequiredEndpoint() {
         server.enqueueSuccessfulResponse("GetNews.json")
 
-        dataSource.getNews()
+        runBlocking { dataSource.getNews() }
 
         server.assertRequestSendToPath("/v2/top-headlines")
     }
 
     @Test
-    suspend fun parsesNewsProperly() {
-        server.enqueueSuccessfulResponse("api/GetRidesSummary.json")
+    fun parsesNewsProperly() {
+        server.enqueueSuccessfulResponse("GetNews.json")
 
-        val news = dataSource.getNews()
+        val news = runBlocking { dataSource.getNews() }
 
         thenNewsAreParsed(news)
     }
 
     @Test(expected = IOException::class)
-    suspend fun throwsIOExceptionOnGetNewsErrorResponse() {
+    fun throwsIOExceptionOnGetNewsErrorResponse() {
         server.enqueueErrorResponse()
 
-        dataSource.getNews()
+        runBlocking { dataSource.getNews() }
     }
 
     private fun thenNewsAreParsed(news: List<Article>) {
