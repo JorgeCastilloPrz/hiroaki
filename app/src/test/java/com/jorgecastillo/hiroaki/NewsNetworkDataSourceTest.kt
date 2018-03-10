@@ -1,6 +1,7 @@
 package com.jorgecastillo.hiroaki
 
 import com.jorgecastillo.hiroaki.model.Article
+import com.jorgecastillo.hiroaki.mother.anyArticle
 import kotlinx.coroutines.experimental.runBlocking
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.CoreMatchers.`is`
@@ -10,6 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.IOException
 
 @RunWith(MockitoJUnitRunner::class)
@@ -21,7 +23,10 @@ class NewsNetworkDataSourceTest {
     @Before
     fun setup() {
         server = MockWebServer()
-        val service = server.mockService(NewsApiService::class.java)
+        val service = server.retrofitService(
+                NewsApiService::class.java,
+                MoshiConverterFactory.create())
+
         dataSource = NewsNetworkDataSource(service)
     }
 
@@ -31,8 +36,8 @@ class NewsNetworkDataSourceTest {
     }
 
     @Test
-    fun sendsGetNewsToRequiredEndpoint() {
-        server.enqueueSuccessfulResponse("GetNews.json")
+    fun sendsGetNews() {
+        server.enqueueSuccessResponse("GetNews.json")
 
         runBlocking { dataSource.getNews() }
 
@@ -47,8 +52,20 @@ class NewsNetworkDataSourceTest {
     }
 
     @Test
+    fun sendsPublishHeadline() {
+        server.enqueueSuccessResponse()
+        val article = anyArticle()
+
+        runBlocking { dataSource.publishHeadline(article) }
+
+        server.assertRequest(
+                sentToPath = "v2/top-headlines",
+                bodyJsonFileName = "PublishHeadline.json")
+    }
+
+    @Test
     fun parsesNewsProperly() {
-        server.enqueueSuccessfulResponse("GetNews.json")
+        server.enqueueSuccessResponse("GetNews.json")
 
         val news = runBlocking { dataSource.getNews() }
 
