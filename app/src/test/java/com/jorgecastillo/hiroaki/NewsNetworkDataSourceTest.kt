@@ -62,6 +62,37 @@ class NewsNetworkDataSourceTest {
     }
 
     @Test
+    fun sendsPublishHeadlineUsingInlineBody() {
+        server.enqueueSuccessResponse()
+        val article = anyArticle()
+
+        runBlocking { dataSource.publishHeadline(article) }
+
+        server.assertRequest(
+                sentToPath = "v2/top-headlines",
+                jsonBody = "{\n" +
+                        "  \"title\": \"Any Title\",\n" +
+                        "  \"description\": \"Any description\",\n" +
+                        "  \"url\": \"http://any.url\",\n" +
+                        "  \"urlToImage\": \"http://any.url/any_image.png\",\n" +
+                        "  \"publishedAt\": \"2018-03-10T14:09:00Z\"\n" +
+                        "}\n")
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun throwsWhenYouPassBothBodyParams() {
+        server.enqueueSuccessResponse()
+        val article = anyArticle()
+
+        runBlocking { dataSource.publishHeadline(article) }
+
+        server.assertRequest(
+                sentToPath = "v2/top-headlines",
+                jsonBodyFileName = "PublishHeadline.json",
+                jsonBody = "{\"title\" = \"Any title\" }")
+    }
+
+    @Test
     fun parsesNewsProperly() {
         server.enqueueSuccessResponse("GetNews.json")
 

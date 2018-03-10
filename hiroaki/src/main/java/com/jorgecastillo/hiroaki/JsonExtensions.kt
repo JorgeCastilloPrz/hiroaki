@@ -17,3 +17,9 @@ fun <T : Any> T.fileContentAsMap(fileName: String): Map<String, String> {
     val mapType = object : TypeToken<Map<String, String>>() {}.type
     return GsonBuilder().create().fromJson(fileString, mapType)
 }
+
+@Throws(Exception::class)
+fun String.fromJsonToMap(): Map<String, String> {
+    val mapType = object : TypeToken<Map<String, String>>() {}.type
+    return GsonBuilder().create().fromJson(this, mapType)
+}
