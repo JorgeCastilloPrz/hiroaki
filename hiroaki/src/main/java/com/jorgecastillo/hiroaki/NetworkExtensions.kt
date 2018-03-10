@@ -1,5 +1,6 @@
 package com.jorgecastillo.hiroaki
 
+import com.jorgecastillo.hiroaki.matchers.hasHeaders
 import com.jorgecastillo.hiroaki.matchers.hasQueryParams
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -75,12 +76,17 @@ fun MockWebServer.enqueueErrorResponse(
 
 fun MockWebServer.assertRequest(
         sentToPath: String,
-        queryParams: List<Pair<String, String>> = listOf()) {
+        queryParams: List<Pair<String, String>> = listOf(),
+        headers: List<Pair<String, String>> = listOf()) {
     val request = this.takeRequest()
     assertThat(request.path, startsWith("/$sentToPath"))
 
     if (queryParams.isNotEmpty()) {
         assertThat(request, hasQueryParams(queryParams))
+    }
+
+    if (headers.isNotEmpty()) {
+        assertThat(request, hasHeaders(headers))
     }
 }
 
