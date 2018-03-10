@@ -80,9 +80,9 @@ fun MockWebServer.enqueueErrorResponse(statusCode: Int, reason: String) {
 
 fun MockWebServer.assertRequest(
         sentToPath: String,
-        queryParams: List<Pair<String, String>>? = null,
+        queryParams: Map<String, String>? = null,
         jsonBodyFileName: String? = null,
-        headers: List<Pair<String, String>>? = null
+        headers: Map<String, String>? = null
 ) {
     val request = this.takeRequest()
     assertThat(request.path, startsWith("/$sentToPath"))

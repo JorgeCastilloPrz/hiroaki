@@ -9,13 +9,13 @@ import java.net.URLEncoder
 /**
  * Custom Hamcrest matcher to assert about query parameters on an OkHttp RecordedRequest.
  */
-fun hasQueryParams(params: List<Pair<String, String>>): Matcher<RecordedRequest> {
+fun hasQueryParams(params: Map<String, String>): Matcher<RecordedRequest> {
     return object : TypeSafeMatcher<RecordedRequest>() {
 
         override fun describeTo(description: Description) {
             description.appendText("The HTTP query should contain params: ")
             params.forEach {
-                description.appendText("\n${it.first} = ${it.second}")
+                description.appendText("\n${it.key} = ${it.value}")
             }
         }
 
