@@ -35,8 +35,8 @@ fun hasBody(body: Map<String, String>): Matcher<RecordedRequest> {
 
         override fun matchesSafely(request: RecordedRequest): Boolean {
             requestBodySnapshot = request.bodyAsMap()
-            return requestBodySnapshot.keys.fold(true) { acc, key ->
-                acc && if (body[key] == null) {
+            return body.keys.fold(true) { acc, key ->
+                acc && if (requestBodySnapshot[key] == null) {
                     false
                 } else {
                     requestBodySnapshot[key] == body[key]

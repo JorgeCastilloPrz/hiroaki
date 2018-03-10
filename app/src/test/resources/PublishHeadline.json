@@ -3,5 +3,9 @@
   "description": "Any description",
   "url": "http://any.url",
   "urlToImage": "http://any.url/any_image.png",
-  "publishedAt": "2018-03-10T14:09:00Z"
+  "publishedAt": "2018-03-10T14:09:00Z",
+  "source": {
+    "id": null,
+    "name": "CNN"
+  }
 }
