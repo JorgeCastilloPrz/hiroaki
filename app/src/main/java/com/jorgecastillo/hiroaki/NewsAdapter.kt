@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.jorgecastillo.hiroaki.model.Article
 import kotlinx.android.synthetic.main.item_article.view.*
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class NewsAdapter(var articles: List<Article> = ArrayList()) :
         RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
