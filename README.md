@@ -29,15 +29,15 @@ I would love to get contributions from anybody. So if you feel that the library 
 you consider key, please open an issue asking for it or a pull request providing an implementation for it. 
 
 Any PR's must pass CI and that includes code style. Run the following commands to check code style or 
-automatically format it.
+automatically format it. (You can use the graddle wrapper (`gradlew`) instead)
 ```groovy
 // check code style
-./gradlew app:ktlint
-./gradlew hiroaki:ktlint 
+gradle app:ktlint
+gradle hiroaki:ktlint 
 
 // autoformat
-./gradlew app:ktlintFormat
-./gradlew hiroaki:ktlintFormat
+gradle app:ktlintFormat
+gradle hiroaki:ktlintFormat
 ```
 
 Libraries used in this project
