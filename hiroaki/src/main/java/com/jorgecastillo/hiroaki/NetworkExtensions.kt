@@ -14,8 +14,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 private const val SUCCESS_RESPONSE_CODE = 200
 private const val UNAUTHORIZED_RESPONSE_CODE = 401
 
-fun okHttpClient(loggingLevel: HttpLoggingInterceptor.Level =
-                         HttpLoggingInterceptor.Level.BODY): OkHttpClient =
+fun okHttpClient(
+        loggingLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY): OkHttpClient =
         OkHttpClient.Builder()
                 .addInterceptor(HttpLoggingInterceptor().setLevel(loggingLevel))
                 .build()
@@ -55,10 +55,7 @@ fun MockWebServer.enqueueErrorResponse(statusCode: Int) {
     this.enqueue(response)
 }
 
-fun MockWebServer.enqueueErrorResponse(
-        statusCode: Int,
-        reason: String
-) {
+fun MockWebServer.enqueueErrorResponse(statusCode: Int, reason: String) {
     val response = MockResponse()
     response.setResponseCode(statusCode)
     response.setBody(
@@ -74,10 +71,9 @@ fun MockWebServer.enqueueErrorResponse(
     this.enqueue(response)
 }
 
-fun MockWebServer.assertRequest(
-        sentToPath: String,
-        queryParams: List<Pair<String, String>> = listOf(),
-        headers: List<Pair<String, String>> = listOf()) {
+fun MockWebServer.assertRequest(sentToPath: String,
+                                queryParams: List<Pair<String, String>> = listOf(),
+                                headers: List<Pair<String, String>> = listOf()) {
     val request = this.takeRequest()
     assertThat(request.path, startsWith("/$sentToPath"))
 

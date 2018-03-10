@@ -32,12 +32,12 @@ Any PR's must pass CI and that includes code style. Run the following commands t
 automatically format it.
 ```
 // check code style
-./gradlew :app:ktlint
-./gradlew :hirokai:ktlint 
+./gradlew app:ktlint
+./gradlew hirokai:ktlint 
 
 // autoformat
-./gradlew :app:ktlintFormat
-./gradlew :hirokai:ktlintFormat
+./gradlew app:ktlintFormat
+./gradlew hirokai:ktlintFormat
 ```
 
 Libraries used in this project
