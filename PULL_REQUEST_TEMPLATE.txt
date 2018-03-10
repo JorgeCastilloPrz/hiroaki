@@ -1,0 +1,33 @@
+### ⚠️ TEMPLATE ⚠️
+**Template for GitHub PR descriptions. Use it as a guide on how to describe your work.**
+
+### :pushpin: References
+**Issues:**
+* Fixes #1
+
+### :tophat: What is the goal?
+
+* Here you would describe the PR goals. Just the stuff we need to implement for the fix / feature and a simple rationale.
+* It could contain many check points if needed. We have no restrictions at all on the content of each section itself.
+
+### 💻 How is it being implemented?
+
+Here we use to include all the relevant things implemented and also rationale, aclarations / disclaimers etc related to the approach you used.
+
+* Stuff implemented 1
+* Stuff implemented 2
+* Stuff implemented 3
+
+### 🖼  Screenshots or Gifs
+
+We include all the media files to give some context about what's being implemented or fixed. It's not mandatory to upload screenshots or gifts, but for most of the cases it becomes really handy to get into the scope of the feature / bug being fixed. It's also REALLY useful for UI related PRs.
+
+![ezgif com-video-to-gif 1](https://user-images.githubusercontent.com/6547526/28528893-5269d13e-708f-11e7-9b2e-384f4e66c8ae.gif)
+
+### 📱 How to Test
+
+Here we use to add the steps to manually test the PR. Here you have some sample checks:
+
+* Install the branch and click on "+" on toolbar under rides tab.
+* Click on one ride.
+* New blank screen with "Duplicate Ride title" should appear on screen.
