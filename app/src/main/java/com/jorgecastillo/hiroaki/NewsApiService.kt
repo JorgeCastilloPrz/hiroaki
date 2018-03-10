@@ -9,4 +9,3 @@ interface NewsApiService {
     @Headers("Cache-Control: max-age=640000")
     fun getNews(): Call<NewsResponse>
 }
-
