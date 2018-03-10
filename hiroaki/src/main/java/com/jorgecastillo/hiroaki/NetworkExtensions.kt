@@ -82,8 +82,11 @@ fun MockWebServer.assertRequest(
         sentToPath: String,
         queryParams: Map<String, String>? = null,
         jsonBodyFileName: String? = null,
+        jsonBody: String? = null,
         headers: Map<String, String>? = null
 ) {
+    throwIfBothBodyParamsArePassed(jsonBodyFileName, jsonBody)
+
     val request = this.takeRequest()
     assertThat(request.path, startsWith("/$sentToPath"))
 
@@ -95,8 +98,18 @@ fun MockWebServer.assertRequest(
         assertThat(request, hasBody(fileContentAsMap(it)))
     }
 
+    jsonBody?.let {
+        assertThat(request, hasBody(it.fromJsonToMap()))
+    }
+
     headers?.let {
         assertThat(request, hasHeaders(it))
+    }
+}
+
+fun throwIfBothBodyParamsArePassed(jsonBodyFileName: String? = null, jsonBody: String? = null) {
+    if (jsonBodyFileName != null && jsonBody != null) {
+        throw IllegalArgumentException("Please pass jsonBodyFile name or jsonBody, but not both.")
     }
 }
 
