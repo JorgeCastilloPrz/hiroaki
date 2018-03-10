@@ -60,7 +60,7 @@ class NewsNetworkDataSourceTest {
 
         server.assertRequest(
                 sentToPath = "v2/top-headlines",
-                bodyJsonFileName = "PublishHeadline.json")
+                jsonBodyFileName = "PublishHeadline.json")
     }
 
     @Test

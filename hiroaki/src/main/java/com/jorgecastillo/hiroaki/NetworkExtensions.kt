@@ -81,7 +81,7 @@ fun MockWebServer.enqueueErrorResponse(statusCode: Int, reason: String) {
 fun MockWebServer.assertRequest(
         sentToPath: String,
         queryParams: List<Pair<String, String>>? = null,
-        bodyJsonFileName: String? = null,
+        jsonBodyFileName: String? = null,
         headers: List<Pair<String, String>>? = null
 ) {
     val request = this.takeRequest()
@@ -91,7 +91,7 @@ fun MockWebServer.assertRequest(
         assertThat(request, hasQueryParams(it))
     }
 
-    bodyJsonFileName?.let {
+    jsonBodyFileName?.let {
         assertThat(request, hasBody(fileContentAsMap(it)))
     }
 
