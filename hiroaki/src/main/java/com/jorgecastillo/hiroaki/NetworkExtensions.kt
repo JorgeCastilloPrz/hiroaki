@@ -15,7 +15,8 @@ private const val SUCCESS_RESPONSE_CODE = 200
 private const val UNAUTHORIZED_RESPONSE_CODE = 401
 
 fun okHttpClient(
-        loggingLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY): OkHttpClient =
+    loggingLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY
+): OkHttpClient =
         OkHttpClient.Builder()
                 .addInterceptor(HttpLoggingInterceptor().setLevel(loggingLevel))
                 .build()
@@ -71,9 +72,11 @@ fun MockWebServer.enqueueErrorResponse(statusCode: Int, reason: String) {
     this.enqueue(response)
 }
 
-fun MockWebServer.assertRequest(sentToPath: String,
-                                queryParams: List<Pair<String, String>> = listOf(),
-                                headers: List<Pair<String, String>> = listOf()) {
+fun MockWebServer.assertRequest(
+    sentToPath: String,
+    queryParams: List<Pair<String, String>> = listOf(),
+    headers: List<Pair<String, String>> = listOf()
+) {
     val request = this.takeRequest()
     assertThat(request.path, startsWith("/$sentToPath"))
 
@@ -85,4 +88,3 @@ fun MockWebServer.assertRequest(sentToPath: String,
         assertThat(request, hasHeaders(headers))
     }
 }
-
