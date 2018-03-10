@@ -17,3 +17,5 @@ data class ArticleDto(
 )
 
 fun ArticleDto.toArticle() = Article(title, description, url, urlToImage, publishedAt)
+
+fun Article.toDto() = ArticleDto(title, description, url, urlToImage, publishedAt)
