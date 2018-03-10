@@ -28,6 +28,13 @@ Do you want to contribute?
 I would love to get contributions from anybody. So if you feel that the library is lacking any features 
 you consider key, please open an issue asking for it or a pull request providing an implementation for it. 
 
+Any PR's must pass CI and that includes code style. Run the following commands to check code style or 
+automatically format it.
+```
+./gradlew ktlint
+./gradlew ktlintFormat
+```
+
 Libraries used in this project
 ------------------------------
 

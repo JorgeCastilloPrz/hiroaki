@@ -13,7 +13,7 @@ fun hasHeaders(headers: List<Pair<String, String>>): Matcher<RecordedRequest> {
     return object : TypeSafeMatcher<RecordedRequest>() {
 
         override fun describeTo(description: Description) {
-            description.appendText("The HTTP query should contain headers: ")
+            description.appendText("The HTTP query should contain the following headers: ")
             headers.forEach {
                 description.appendText("\n${it.first} = ${it.second}")
             }
@@ -25,7 +25,7 @@ fun hasHeaders(headers: List<Pair<String, String>>): Matcher<RecordedRequest> {
                 if (header == null) {
                     mismatchDescription.appendText("\nheader $key is not present.")
                 } else {
-                    if (header != URLEncoder.encode(value, "UTF-8")) {
+                    if (header != value) {
                         mismatchDescription.appendText("\n$key = $header (Not matching!)")
                     }
                 }
@@ -39,7 +39,7 @@ fun hasHeaders(headers: List<Pair<String, String>>): Matcher<RecordedRequest> {
                 if (header == null) {
                     failed = true
                 } else {
-                    if (header != URLEncoder.encode(value, "UTF-8")) {
+                    if (header != value) {
                         failed = true
                     }
                 }
