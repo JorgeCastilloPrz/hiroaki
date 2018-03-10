@@ -36,9 +36,11 @@ class NewsNetworkDataSourceTest {
 
         runBlocking { dataSource.getNews() }
 
-        server.assertRequest("v2/top-headlines", listOf(
-                "sources" to "crypto-coins-news",
-                "apiKey" to "a7c816f57c004c49a21bd458e11e2807"))
+        server.assertRequest(
+                sentToPath = "v2/top-headlines",
+                queryParams = listOf(
+                        "sources" to "crypto-coins-news",
+                        "apiKey" to "a7c816f57c004c49a21bd458e11e2807"))
     }
 
     @Test
