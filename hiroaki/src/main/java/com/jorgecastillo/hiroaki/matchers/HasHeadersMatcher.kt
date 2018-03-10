@@ -4,7 +4,6 @@ import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
-import java.net.URLEncoder
 
 /**
  * Custom Hamcrest matcher to assert about HTTP headers on an OkHttp RecordedRequest.
