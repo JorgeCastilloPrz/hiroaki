@@ -4,7 +4,9 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.hamcrest.CoreMatchers.startsWith
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThat
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.net.URLEncoder
@@ -19,8 +21,7 @@ fun okHttpClient(loggingLevel: HttpLoggingInterceptor.Level =
                 .build()
 
 fun <T> MockWebServer.mockService(serviceClass: Class<T>): T {
-    val server = MockWebServer()
-    return Retrofit.Builder().baseUrl(server.url("/").toString())
+    return Retrofit.Builder().baseUrl(this.url("/").toString())
             .client(okHttpClient())
             .addConverterFactory(MoshiConverterFactory.create()).build()
             .create(serviceClass)
@@ -73,29 +74,29 @@ fun MockWebServer.enqueueErrorResponse(
     this.enqueue(response)
 }
 
-fun MockWebServer.assertRequestSendToPath(path: String) {
-    val request = this.takeRequest()
-    assertEquals("/$path", request.path)
-}
-
-fun MockWebServer.assertRequestSendToPath(
+fun MockWebServer.assertRequestSentToPath(
         path: String,
         args: List<Pair<String, String>> = listOf()) {
-
-    val pathWithArgs = StringBuilder(path)
-    var first = true
-    for ((key, value) in args) {
-        if (first) {
-            pathWithArgs.append("?")
-            first = false
-        } else {
-            pathWithArgs.append("&")
+    val queryPath = if (args.isNotEmpty()) {
+        val pathWithArgs = StringBuilder(path)
+        var first = true
+        for ((key, value) in args) {
+            if (first) {
+                pathWithArgs.append("?")
+                first = false
+            } else {
+                pathWithArgs.append("&")
+            }
+            pathWithArgs.append(key)
+                    .append("=")
+                    .append(URLEncoder.encode(value, "UTF-8"))
         }
-        pathWithArgs.append(key)
-                .append("=")
-                .append(URLEncoder.encode(value, "UTF-8"))
+        pathWithArgs.toString()
+    } else {
+        path
     }
 
     val request = this.takeRequest()
-    assertEquals("/$pathWithArgs", request.path)
+    assertThat(request.path, startsWith("/$queryPath"))
 }
+

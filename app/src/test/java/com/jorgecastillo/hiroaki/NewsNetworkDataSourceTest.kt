@@ -36,7 +36,9 @@ class NewsNetworkDataSourceTest {
 
         runBlocking { dataSource.getNews() }
 
-        server.assertRequestSendToPath("/v2/top-headlines")
+        server.assertRequestSentToPath("v2/top-headlines", listOf(
+                Pair("sources", "crypto-coins-news"),
+                Pair("apiKey", "a7c816f57c004c49a21bd458e11e2807")))
     }
 
     @Test
@@ -56,6 +58,6 @@ class NewsNetworkDataSourceTest {
     }
 
     private fun thenNewsAreParsed(news: List<Article>) {
-        assertThat(news.size, `is`(4))
+        assertThat(news.size, `is`(3))
     }
 }
