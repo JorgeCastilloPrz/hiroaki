@@ -33,11 +33,11 @@ automatically format it.
 ```
 // check code style
 ./gradlew app:ktlint
-./gradlew hirokai:ktlint 
+./gradlew hiroaki:ktlint 
 
 // autoformat
 ./gradlew app:ktlintFormat
-./gradlew hirokai:ktlintFormat
+./gradlew hiroaki:ktlintFormat
 ```
 
 Libraries used in this project
