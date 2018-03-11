@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import com.jorgecastillo.hiroaki.data.datasource.MoshiNewsNetworkDataSource
 import com.jorgecastillo.hiroaki.di.provideNewsService
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.android.UI
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         launch(UI) {
             loading.visibility = View.VISIBLE
-            val articles = NewsNetworkDataSource(provideNewsService()).getNews()
+            val articles = MoshiNewsNetworkDataSource(provideNewsService()).getNews()
             adapter.articles = articles
             adapter.notifyDataSetChanged()
             loading.visibility = View.GONE

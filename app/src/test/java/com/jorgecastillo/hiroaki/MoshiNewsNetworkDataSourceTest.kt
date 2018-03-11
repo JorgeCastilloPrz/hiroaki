@@ -1,5 +1,8 @@
 package com.jorgecastillo.hiroaki
 
+import com.jorgecastillo.hiroaki.data.datasource.MoshiNewsNetworkDataSource
+import com.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
+import com.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
 import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.mother.anyArticle
 import kotlinx.coroutines.experimental.runBlocking
@@ -14,16 +17,16 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.IOException
 
 @RunWith(MockitoJUnitRunner::class)
-class NewsNetworkDataSourceTest {
+class MoshiNewsNetworkDataSourceTest {
 
-    private lateinit var dataSource: NewsNetworkDataSource
+    private lateinit var dataSource: MoshiNewsNetworkDataSource
     private lateinit var server: HiroakiServer
 
     @Before
     fun setup() {
         server = HiroakiServer()
-        dataSource = NewsNetworkDataSource(server.retrofitService(
-                NewsApiService::class.java,
+        dataSource = MoshiNewsNetworkDataSource(server.retrofitService(
+                MoshiNewsApiService::class.java,
                 MoshiConverterFactory.create()))
     }
 
@@ -57,7 +60,7 @@ class NewsNetworkDataSourceTest {
 
         server.assertRequest(
                 sentToPath = "v2/top-headlines",
-                jsonBodyResFile = "PublishHeadline.json" withType ArticleDto::class.java)
+                jsonBodyResFile = "PublishHeadline.json" withType MoshiArticleDto::class.java)
     }
 
     @Test
@@ -79,7 +82,7 @@ class NewsNetworkDataSourceTest {
                         "    \"id\": \"AnyId\",\n" +
                         "    \"name\": \"ANYID\"\n" +
                         "  }\n" +
-                        "}\n" withType ArticleDto::class.java)
+                        "}\n" withType MoshiArticleDto::class.java)
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -91,8 +94,8 @@ class NewsNetworkDataSourceTest {
 
         server.assertRequest(
                 sentToPath = "v2/top-headlines",
-                jsonBodyResFile = "PublishHeadline.json" withType ArticleDto::class.java,
-                jsonBody = "{\"title\" = \"Any title\" }" withType ArticleDto::class.java)
+                jsonBodyResFile = "PublishHeadline.json" withType MoshiArticleDto::class.java,
+                jsonBody = "{\"title\" = \"Any title\" }" withType MoshiArticleDto::class.java)
     }
 
     @Test
