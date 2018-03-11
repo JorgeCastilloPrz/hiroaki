@@ -29,7 +29,7 @@ class GsonNewsNetworkDataSource(private val service: GsonNewsApiService) {
      * This is a no-op method on the real news API, just created for testing purposes.
      */
     @Throws(IOException::class)
-    suspend fun publishHeadline(article: Article): Unit {
+    suspend fun publishHeadline(article: Article) {
         val query = async(CommonPool) {
             val response = service.publishHeadline(article.toGsonDto()).execute()
             if (!response.isSuccessful) {

@@ -16,8 +16,10 @@ fun <T> hasBody(stringBody: String, parsedExpectedBody: T, parsedRequestBody: Pa
         description.appendText("\n$stringBody")
     }
 
-    override fun describeMismatchSafely(request: RecordedRequest,
-                                        mismatchDescription: Description) {
+    override fun describeMismatchSafely(
+        request: RecordedRequest,
+        mismatchDescription: Description
+    ) {
         mismatchDescription.appendText("\n${parsedRequestBody.second}")
     }
 

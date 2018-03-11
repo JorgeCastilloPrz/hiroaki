@@ -5,23 +5,24 @@ import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.model.Source
 
 data class GsonNewsResponse(
-        @SerializedName("status") val status: String,
-        @SerializedName("totalResults") val totalResults: Long,
-        @SerializedName("articles") val articles: List<GsonArticleDto>
+    @SerializedName("status") val status: String,
+    @SerializedName("totalResults") val totalResults: Long,
+    @SerializedName("articles") val articles: List<GsonArticleDto>
 )
 
 data class GsonArticleDto(
-        @SerializedName("title") val title: String,
-        @SerializedName("description") val description: String,
-        @SerializedName("url") val url: String,
-        @SerializedName("urlToImage") val urlToImage: String,
-        @SerializedName("publishedAt") val publishedAt: String,
-        @SerializedName("source") val source: GsonSourceDto
+    @SerializedName("title") val title: String,
+    @SerializedName("description") val description: String,
+    @SerializedName("url") val url: String,
+    @SerializedName("urlToImage") val urlToImage: String,
+    @SerializedName("publishedAt") val publishedAt: String,
+    @SerializedName("source") val source: GsonSourceDto
 )
 
 data class GsonSourceDto(
-        @SerializedName("id") val id: String?,
-        @SerializedName("name") val name: String)
+    @SerializedName("id") val id: String?,
+    @SerializedName("name") val name: String
+)
 
 fun GsonArticleDto.toArticle() = Article(title, description, url, urlToImage, publishedAt, source.toSource())
 

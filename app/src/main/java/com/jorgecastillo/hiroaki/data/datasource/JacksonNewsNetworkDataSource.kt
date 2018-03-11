@@ -1,9 +1,7 @@
 package com.jorgecastillo.hiroaki.data.datasource
 
 import com.jorgecastillo.hiroaki.data.networkdto.toArticle
-import com.jorgecastillo.hiroaki.data.networkdto.toGsonDto
 import com.jorgecastillo.hiroaki.data.networkdto.toJacksonDto
-import com.jorgecastillo.hiroaki.data.service.GsonNewsApiService
 import com.jorgecastillo.hiroaki.data.service.JacksonNewsApiService
 import com.jorgecastillo.hiroaki.model.Article
 import kotlinx.coroutines.experimental.CommonPool
@@ -31,7 +29,7 @@ class JacksonNewsNetworkDataSource(private val service: JacksonNewsApiService) {
      * This is a no-op method on the real news API, just created for testing purposes.
      */
     @Throws(IOException::class)
-    suspend fun publishHeadline(article: Article): Unit {
+    suspend fun publishHeadline(article: Article) {
         val query = async(CommonPool) {
             val response = service.publishHeadline(article.toJacksonDto()).execute()
             if (!response.isSuccessful) {
