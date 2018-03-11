@@ -16,15 +16,15 @@ private const val SUCCESS_RESPONSE_CODE = 200
 private const val UNAUTHORIZED_RESPONSE_CODE = 401
 
 private fun okHttpClient(
-        loggingLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY
+    loggingLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY
 ): OkHttpClient =
         OkHttpClient.Builder()
                 .addInterceptor(HttpLoggingInterceptor().setLevel(loggingLevel))
                 .build()
 
 fun <T> MockWebServer.retrofitService(
-        serviceClass: Class<T>,
-        converterFactory: Converter.Factory
+    serviceClass: Class<T>,
+    converterFactory: Converter.Factory
 ): T {
     return Retrofit.Builder().baseUrl(this.url("/").toString())
             .client(okHttpClient())
@@ -76,11 +76,11 @@ fun MockWebServer.enqueueErrorResponse(statusCode: Int, reason: String) {
 }
 
 fun MockWebServer.assertRequest(
-        sentToPath: String,
-        queryParams: Map<String, String>? = null,
-        jsonBodyResFile: Pair<String, Class<*>>? = null,
-        jsonBody: Pair<String, Class<*>>? = null,
-        headers: Map<String, String>? = null
+    sentToPath: String,
+    queryParams: Map<String, String>? = null,
+    jsonBodyResFile: Pair<String, Class<*>>? = null,
+    jsonBody: Pair<String, Class<*>>? = null,
+    headers: Map<String, String>? = null
 ) {
     throwIfBothBodyParamsArePassed(jsonBodyResFile, jsonBody)
 
@@ -112,8 +112,8 @@ fun MockWebServer.assertRequest(
 }
 
 private fun throwIfBothBodyParamsArePassed(
-        jsonBodyResFile: Pair<String, Class<*>>? = null,
-        jsonBody: Pair<String, Class<*>>? = null
+    jsonBodyResFile: Pair<String, Class<*>>? = null,
+    jsonBody: Pair<String, Class<*>>? = null
 ) {
     if (jsonBodyResFile != null && jsonBody != null) {
         throw IllegalArgumentException("Please pass jsonBodyFile name or jsonBody, but not both.")
