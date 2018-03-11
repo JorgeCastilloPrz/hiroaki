@@ -57,9 +57,11 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-jackson:$retrofitVersion"
     implementation 'com.squareup.moshi:moshi:1.5.0'
     implementation 'com.squareup.moshi:moshi-kotlin:1.5.0'
     implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.4.1'
 
     // test
     testImplementation 'junit:junit:4.12'
