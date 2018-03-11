@@ -49,7 +49,8 @@ class GsonNewsNetworkDataSourceTest {
                         "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
                 headers = mapOf(
                         "Cache-Control" to "max-age=640000"
-                ))
+                ),
+                method = "GET")
     }
 
     @Test
@@ -61,7 +62,8 @@ class GsonNewsNetworkDataSourceTest {
 
         server.assertRequest(
                 sentToPath = "v2/top-headlines",
-                jsonBodyResFile = "PublishHeadline.json" withType MoshiArticleDto::class.java)
+                jsonBodyResFile = "PublishHeadline.json" withType MoshiArticleDto::class.java,
+                method = "POST")
     }
 
     @Test

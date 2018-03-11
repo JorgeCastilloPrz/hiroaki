@@ -2,13 +2,14 @@ package com.jorgecastillo.hiroaki
 
 import com.jorgecastillo.hiroaki.matchers.hasBody
 import com.jorgecastillo.hiroaki.matchers.hasHeaders
+import com.jorgecastillo.hiroaki.matchers.hasMethod
 import com.jorgecastillo.hiroaki.matchers.hasQueryParams
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.CoreMatchers
-import org.hamcrest.MatcherAssert
+import org.hamcrest.MatcherAssert.assertThat
 import retrofit2.Converter
 import retrofit2.Retrofit
 
@@ -80,34 +81,39 @@ fun MockWebServer.assertRequest(
     queryParams: Map<String, String>? = null,
     jsonBodyResFile: Pair<String, Class<*>>? = null,
     jsonBody: Pair<String, Class<*>>? = null,
-    headers: Map<String, String>? = null
+    headers: Map<String, String>? = null,
+    method: String? = null
 ) {
     throwIfBothBodyParamsArePassed(jsonBodyResFile, jsonBody)
 
     val request = this.takeRequest()
-    MatcherAssert.assertThat(request.path, CoreMatchers.startsWith("/$sentToPath"))
+    assertThat(request.path, CoreMatchers.startsWith("/$sentToPath"))
 
     queryParams?.let {
-        MatcherAssert.assertThat(request, hasQueryParams(it))
+        assertThat(request, hasQueryParams(it))
     }
 
     jsonBodyResFile?.let {
         val fileStringBody = fileContentAsString(it.first)
-        MatcherAssert.assertThat(request, hasBody(
+        assertThat(request, hasBody(
                 fileStringBody,
                 fileStringBody.fromJson(it.second),
                 request.parse(it.second)))
     }
 
     jsonBody?.let {
-        MatcherAssert.assertThat(request, hasBody(
+        assertThat(request, hasBody(
                 it.first,
                 it.first.fromJson(it.second),
                 request.parse(it.second)))
     }
 
     headers?.let {
-        MatcherAssert.assertThat(request, hasHeaders(it))
+        assertThat(request, hasHeaders(it))
+    }
+
+    method?.let {
+        assertThat(request, hasMethod(method))
     }
 }
 
