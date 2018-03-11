@@ -1,6 +1,9 @@
-package com.jorgecastillo.hiroaki
+package com.jorgecastillo.hiroaki.data.datasource
 
+import com.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
 import com.jorgecastillo.hiroaki.model.Article
+import com.jorgecastillo.hiroaki.data.networkdto.toArticle
+import com.jorgecastillo.hiroaki.data.networkdto.toMoshiDto
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
 import java.io.IOException
@@ -8,7 +11,7 @@ import java.io.IOException
 /**
  * Basic sample class to request data from network.
  */
-class NewsNetworkDataSource(private val service: NewsApiService) {
+class MoshiNewsNetworkDataSource(private val service: MoshiNewsApiService) {
 
     @Throws(IOException::class)
     suspend fun getNews(): List<Article> {
@@ -28,7 +31,7 @@ class NewsNetworkDataSource(private val service: NewsApiService) {
     @Throws(IOException::class)
     suspend fun publishHeadline(article: Article): Unit {
         val query = async(CommonPool) {
-            val response = service.publishHeadline(article.toDto()).execute()
+            val response = service.publishHeadline(article.toMoshiDto()).execute()
             if (!response.isSuccessful) {
                 throw IOException("Coins not found.")
             }

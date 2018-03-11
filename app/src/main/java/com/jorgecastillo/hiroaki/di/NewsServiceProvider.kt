@@ -1,6 +1,6 @@
 package com.jorgecastillo.hiroaki.di
 
-import com.jorgecastillo.hiroaki.NewsApiService
+import com.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -10,8 +10,8 @@ fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
         .build()
 
-fun provideNewsService(client: OkHttpClient = provideOkHttpClient()): NewsApiService =
+fun provideNewsService(client: OkHttpClient = provideOkHttpClient()): MoshiNewsApiService =
         Retrofit.Builder().baseUrl("https://newsapi.org")
                 .client(client)
                 .addConverterFactory(MoshiConverterFactory.create()).build()
-                .create(NewsApiService::class.java)
+                .create(MoshiNewsApiService::class.java)

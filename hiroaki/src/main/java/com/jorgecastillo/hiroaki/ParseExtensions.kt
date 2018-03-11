@@ -2,7 +2,6 @@ package com.jorgecastillo.hiroaki
 
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParseException
-import com.google.gson.reflect.TypeToken
 import okhttp3.mockwebserver.RecordedRequest
 import java.io.File
 
