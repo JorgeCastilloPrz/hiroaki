@@ -3,7 +3,6 @@ package com.jorgecastillo.hiroaki
 import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.mother.anyArticle
 import kotlinx.coroutines.experimental.runBlocking
-import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
@@ -18,11 +17,11 @@ import java.io.IOException
 class NewsNetworkDataSourceTest {
 
     private lateinit var dataSource: NewsNetworkDataSource
-    private lateinit var server: MockWebServer
+    private lateinit var server: HiroakiServer
 
     @Before
     fun setup() {
-        server = MockWebServer()
+        server = HiroakiServer()
         dataSource = NewsNetworkDataSource(server.retrofitService(
                 NewsApiService::class.java,
                 MoshiConverterFactory.create()))
@@ -58,7 +57,7 @@ class NewsNetworkDataSourceTest {
 
         server.assertRequest(
                 sentToPath = "v2/top-headlines",
-                jsonBodyFileName = "PublishHeadline.json")
+                jsonBodyResFile = "PublishHeadline.json" withType ArticleDto::class.java)
     }
 
     @Test
@@ -75,8 +74,12 @@ class NewsNetworkDataSourceTest {
                         "  \"description\": \"Any description\",\n" +
                         "  \"url\": \"http://any.url\",\n" +
                         "  \"urlToImage\": \"http://any.url/any_image.png\",\n" +
-                        "  \"publishedAt\": \"2018-03-10T14:09:00Z\"\n" +
-                        "}\n")
+                        "  \"publishedAt\": \"2018-03-10T14:09:00Z\",\n" +
+                        "  \"source\": {\n" +
+                        "    \"id\": \"AnyId\",\n" +
+                        "    \"name\": \"ANYID\"\n" +
+                        "  }\n" +
+                        "}\n" withType ArticleDto::class.java)
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -88,8 +91,8 @@ class NewsNetworkDataSourceTest {
 
         server.assertRequest(
                 sentToPath = "v2/top-headlines",
-                jsonBodyFileName = "PublishHeadline.json",
-                jsonBody = "{\"title\" = \"Any title\" }")
+                jsonBodyResFile = "PublishHeadline.json" withType ArticleDto::class.java,
+                jsonBody = "{\"title\" = \"Any title\" }" withType ArticleDto::class.java)
     }
 
     @Test
