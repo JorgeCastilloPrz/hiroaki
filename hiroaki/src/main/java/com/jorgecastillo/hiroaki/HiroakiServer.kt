@@ -24,14 +24,16 @@ class HiroakiServer {
     private lateinit var server: MockWebServer
 
     private fun okHttpClient(
-            loggingLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY
+        loggingLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY
     ): OkHttpClient =
             OkHttpClient.Builder()
                     .addInterceptor(HttpLoggingInterceptor().setLevel(loggingLevel))
                     .build()
 
-    fun <T> retrofitService(serviceClass: Class<T>,
-                            converterFactory: Converter.Factory): T {
+    fun <T> retrofitService(
+        serviceClass: Class<T>,
+        converterFactory: Converter.Factory
+    ): T {
         this.converterFactory = converterFactory
         this.server = MockWebServer()
         return Retrofit.Builder().baseUrl(server.url("/").toString())
@@ -89,11 +91,11 @@ class HiroakiServer {
     }
 
     fun assertRequest(
-            sentToPath: String,
-            queryParams: Map<String, String>? = null,
-            jsonBodyResFile: Pair<String, Class<*>>? = null,
-            jsonBody: Pair<String, Class<*>>? = null,
-            headers: Map<String, String>? = null
+        sentToPath: String,
+        queryParams: Map<String, String>? = null,
+        jsonBodyResFile: Pair<String, Class<*>>? = null,
+        jsonBody: Pair<String, Class<*>>? = null,
+        headers: Map<String, String>? = null
     ) {
         throwIfBothBodyParamsArePassed(jsonBodyResFile, jsonBody)
 
@@ -124,8 +126,10 @@ class HiroakiServer {
         }
     }
 
-    private fun throwIfBothBodyParamsArePassed(jsonBodyResFile: Pair<String, Class<*>>? = null,
-                                               jsonBody: Pair<String, Class<*>>? = null) {
+    private fun throwIfBothBodyParamsArePassed(
+        jsonBodyResFile: Pair<String, Class<*>>? = null,
+        jsonBody: Pair<String, Class<*>>? = null
+    ) {
         if (jsonBodyResFile != null && jsonBody != null) {
             throw IllegalArgumentException("Please pass jsonBodyFile name or jsonBody, but not both.")
         }
