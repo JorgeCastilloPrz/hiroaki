@@ -6,6 +6,7 @@ import com.jorgecastillo.hiroaki.data.service.GsonNewsApiService
 import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.mother.anyArticle
 import kotlinx.coroutines.experimental.runBlocking
+import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
@@ -20,11 +21,11 @@ import java.io.IOException
 class GsonNewsNetworkDataSourceTest {
 
     private lateinit var dataSource: GsonNewsNetworkDataSource
-    private lateinit var server: HiroakiServer
+    private lateinit var server: MockWebServer
 
     @Before
     fun setup() {
-        server = HiroakiServer()
+        server = MockWebServer()
         dataSource = GsonNewsNetworkDataSource(server.retrofitService(
                 GsonNewsApiService::class.java,
                 GsonConverterFactory.create()))
