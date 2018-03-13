@@ -25,7 +25,9 @@ dependencies{
 
 ### Request assertions
 
-Request assertions are mandatory when testing an API client. **Hiroaki** provides a highly configurable extension function working over any `MockWebServer` instance to do that. Any of its arguments are optional so you're free to configure the assertion in a way that matches your needs. Here you have some examples:
+Request assertions are mandatory when testing an API client. **Hiroaki** provides a highly configurable **extension function** working over any `MockWebServer` instance to do that. Any of its arguments are **optional** so you're free to configure the assertion in a way that matches your needs. 
+
+Here you have some examples:
 
 Asserting about the path where the request is sent to, the GET request query parameters, the headers, or even the HTTP method used.
 ```kotlin
