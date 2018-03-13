@@ -43,7 +43,7 @@ server.assertRequest(
 ```
 You can also provide a json body to assert over the body sent on your requests (`POST`, `PUT`, `PATCH`). Here you have an inlined body used for the assertion. 
 
-Note that **It's mandatory to provide the network DTO you are using to map that body to**, since `Hiroaki` uses `equals` to compare the expected and sent bodies. Therefore, it's highly recommended to **use Kotlin `data` classes** for your DTOs (following the standards) or if you don't really want to use them, you'll have to override `equals` on the class and all its nested levels.
+Note that **It's mandatory to provide the network DTO you are using to map that body from**, since `Hiroaki` parses both bodies to objects and uses `equals` to compare the expected and sent bodies. Therefore, it's highly recommended to **use Kotlin `data` classes** for your DTOs (following the standards) or if you don't really want to use them, you'll have to override `equals` on the class and all its nested levels.
 ```kotlin
 server.assertRequest(
                 sentToPath = "v2/top-headlines",
