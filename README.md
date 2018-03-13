@@ -46,12 +46,6 @@ Tests are also required to pass. You can run them like:
 gradle test
 ```
 
-Libraries used in this project
-------------------------------
-
-* [JUnit][4]
-* [Mockito][5]
-
 License
 -------
 
