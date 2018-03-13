@@ -6,9 +6,10 @@ Hiroaki [![CircleCI](https://circleci.com/gh/JorgeCastilloPrz/hiroaki/tree/maste
     Hiroaki is a Japanese name that literally means 'spreading brightness'. It is derived from the 
     words 'hiro', which means 'large or wide', and 'aki', which means 'bright or clear'.
 
-The intention of Hiroaki is to achieve that on your tests by simplifying the way you prepare 
-your test environment prior to test execution. It uses Kotlin features like extension functions 
-and delegation to achieve that.
+The intention of Hiroaki is to achieve that on your API integration tests by simplifying the way you prepare 
+your test environment prior to test execution and the assertions you perform in the end. It uses Kotlin features 
+like extension functions, delegation, package level functions and many other features like custom hamcrest matchers
+ to achieve the wanted beahvior.
 
 Usage
 -----
