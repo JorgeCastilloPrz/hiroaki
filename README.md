@@ -23,7 +23,48 @@ dependencies{
 }
 ```
 
-Hiroaki provides the following features:
+### Request assertions
+
+Request assertions are mandatory when testing an API client. **Hiroaki** provides a highly configurable extension function working over any `MockWebServer` instance to do that. Any of its arguments are optional so you're free to configure the assertion in a way that matches your needs. Here you have some examples:
+
+Asserting about the path where the request is sent to, the GET request query parameters, the headers, or even the HTTP method used.
+```kotlin
+server.assertRequest(
+                sentToPath = "v2/top-headlines",
+                queryParams = params(
+                        "sources" to "crypto-coins-news",
+                        "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
+                headers = headers(
+                        "Cache-Control" to "max-age=640000"
+                ),
+                method = "GET")
+```
+You can also provide a json body to assert over the body sent on your requests (`POST`, `PUT`, `PATCH`). Here you have an inlined body used for the assertion. 
+
+Note that **It's mandatory to provide the network DTO you are using to map that body to**, since `Hiroaki` uses `equals` to compare the expected and sent bodies. Therefore, it's highly recommended to **use Kotlin `data` classes** for your DTOs (following the standards) or if you don't really want to use them, you'll have to override `equals` on the class and all its nested levels.
+```kotlin
+server.assertRequest(
+                sentToPath = "v2/top-headlines",
+                jsonBody = inlineBody("{\n" +
+                        "  \"title\": \"Any Title\",\n" +
+                        "  \"description\": \"Any description\",\n" +
+                        "  \"url\": \"http://any.url\",\n" +
+                        "  \"urlToImage\": \"http://any.url/any_image.png\",\n" +
+                        "  \"publishedAt\": \"2018-03-10T14:09:00Z\",\n" +
+                        "  \"source\": {\n" +
+                        "    \"id\": \"AnyId\",\n" +
+                        "    \"name\": \"ANYID\"\n" +
+                        "  }\n" +
+                        "}\n", ArticleDto::class.java))
+````
+You can also provide json body for post requests from a file saved on your `/test/resources` directory.
+```kotlin
+server.assertRequest(
+                sentToPath = "v2/top-headlines",
+                jsonBodyResFile = fileBody("PublishHeadline.json", ArticleDto::class.java),
+                method = "POST")
+```
+Again, any of this parameters are optional so feel free to configure the assertion the way you need.
 
 Do you want to contribute?
 --------------------------
