@@ -9,8 +9,6 @@ import com.jorgecastillo.hiroaki.models.fileBody
 import com.jorgecastillo.hiroaki.models.inlineBody
 import com.jorgecastillo.hiroaki.mother.anyArticle
 import kotlinx.coroutines.experimental.runBlocking
-import okhttp3.mockwebserver.MockWebServer
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,22 +17,16 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.IOException
 
 @RunWith(MockitoJUnitRunner::class)
-class MoshiNewsNetworkDataSourceTest {
+class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
 
     private lateinit var dataSource: MoshiNewsNetworkDataSource
-    private lateinit var server: MockWebServer
 
     @Before
-    fun setup() {
-        server = MockWebServer()
+    override fun setup() {
+        super.setup()
         dataSource = MoshiNewsNetworkDataSource(server.retrofitService(
                 MoshiNewsApiService::class.java,
                 MoshiConverterFactory.create()))
-    }
-
-    @After
-    fun tearDown() {
-        server.shutdown()
     }
 
     @Test

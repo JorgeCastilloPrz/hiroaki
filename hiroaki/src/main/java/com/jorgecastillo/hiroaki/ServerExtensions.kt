@@ -11,16 +11,16 @@ private const val SUCCESS_RESPONSE_CODE = 200
 private const val UNAUTHORIZED_RESPONSE_CODE = 401
 
 private fun okHttpClient(
-        loggingLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY
+    loggingLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY
 ): OkHttpClient =
         OkHttpClient.Builder()
                 .addInterceptor(HttpLoggingInterceptor().setLevel(loggingLevel))
                 .build()
 
 fun <T> MockWebServer.retrofitService(
-        serviceClass: Class<T>,
-        converterFactory: Converter.Factory,
-        okHttpClient: OkHttpClient = okHttpClient()
+    serviceClass: Class<T>,
+    converterFactory: Converter.Factory,
+    okHttpClient: OkHttpClient = okHttpClient()
 ): T {
     return Retrofit.Builder().baseUrl(this.url("/").toString())
             .client(okHttpClient)
