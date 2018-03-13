@@ -4,6 +4,8 @@ import com.jorgecastillo.hiroaki.data.datasource.MoshiNewsNetworkDataSource
 import com.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
 import com.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
 import com.jorgecastillo.hiroaki.model.Article
+import com.jorgecastillo.hiroaki.models.fileBody
+import com.jorgecastillo.hiroaki.models.inlineBody
 import com.jorgecastillo.hiroaki.mother.anyArticle
 import kotlinx.coroutines.experimental.runBlocking
 import okhttp3.mockwebserver.MockWebServer
@@ -44,10 +46,10 @@ class MoshiNewsNetworkDataSourceTest {
 
         server.assertRequest(
                 sentToPath = "v2/top-headlines",
-                queryParams = mapOf(
+                queryParams = params(
                         "sources" to "crypto-coins-news",
                         "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
-                headers = mapOf(
+                headers = headers(
                         "Cache-Control" to "max-age=640000"
                 ),
                 method = "GET")
@@ -62,7 +64,7 @@ class MoshiNewsNetworkDataSourceTest {
 
         server.assertRequest(
                 sentToPath = "v2/top-headlines",
-                jsonBodyResFile = "PublishHeadline.json" withType MoshiArticleDto::class.java,
+                jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
                 method = "POST")
     }
 
@@ -75,7 +77,7 @@ class MoshiNewsNetworkDataSourceTest {
 
         server.assertRequest(
                 sentToPath = "v2/top-headlines",
-                jsonBody = "{\n" +
+                jsonBody = inlineBody("{\n" +
                         "  \"title\": \"Any Title\",\n" +
                         "  \"description\": \"Any description\",\n" +
                         "  \"url\": \"http://any.url\",\n" +
@@ -85,7 +87,7 @@ class MoshiNewsNetworkDataSourceTest {
                         "    \"id\": \"AnyId\",\n" +
                         "    \"name\": \"ANYID\"\n" +
                         "  }\n" +
-                        "}\n" withType MoshiArticleDto::class.java)
+                        "}\n", MoshiArticleDto::class.java))
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -97,8 +99,8 @@ class MoshiNewsNetworkDataSourceTest {
 
         server.assertRequest(
                 sentToPath = "v2/top-headlines",
-                jsonBodyResFile = "PublishHeadline.json" withType MoshiArticleDto::class.java,
-                jsonBody = "{\"title\" = \"Any title\" }" withType MoshiArticleDto::class.java)
+                jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
+                jsonBody = inlineBody("{\"title\" = \"Any title\" }", MoshiArticleDto::class.java))
     }
 
     @Test
