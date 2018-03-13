@@ -41,6 +41,11 @@ gradle app:ktlintFormat
 gradle hiroaki:ktlintFormat
 ```
 
+Tests are also required to pass. You can run them like:
+```groovy
+gradle test
+```
+
 Libraries used in this project
 ------------------------------
 
