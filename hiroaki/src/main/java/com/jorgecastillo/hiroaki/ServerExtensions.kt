@@ -4,6 +4,8 @@ import com.jorgecastillo.hiroaki.matchers.hasBody
 import com.jorgecastillo.hiroaki.matchers.hasHeaders
 import com.jorgecastillo.hiroaki.matchers.hasMethod
 import com.jorgecastillo.hiroaki.matchers.hasQueryParams
+import com.jorgecastillo.hiroaki.models.JsonBody
+import com.jorgecastillo.hiroaki.models.JsonBodyFile
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockResponse
@@ -17,15 +19,15 @@ private const val SUCCESS_RESPONSE_CODE = 200
 private const val UNAUTHORIZED_RESPONSE_CODE = 401
 
 private fun okHttpClient(
-    loggingLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY
+        loggingLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY
 ): OkHttpClient =
         OkHttpClient.Builder()
                 .addInterceptor(HttpLoggingInterceptor().setLevel(loggingLevel))
                 .build()
 
 fun <T> MockWebServer.retrofitService(
-    serviceClass: Class<T>,
-    converterFactory: Converter.Factory
+        serviceClass: Class<T>,
+        converterFactory: Converter.Factory
 ): T {
     return Retrofit.Builder().baseUrl(this.url("/").toString())
             .client(okHttpClient())
@@ -77,12 +79,12 @@ fun MockWebServer.enqueueErrorResponse(statusCode: Int, reason: String) {
 }
 
 fun MockWebServer.assertRequest(
-    sentToPath: String,
-    queryParams: Map<String, String>? = null,
-    jsonBodyResFile: Pair<String, Class<*>>? = null,
-    jsonBody: Pair<String, Class<*>>? = null,
-    headers: Map<String, String>? = null,
-    method: String? = null
+        sentToPath: String,
+        queryParams: QueryParams? = null,
+        jsonBodyResFile: JsonBodyFile? = null,
+        jsonBody: JsonBody? = null,
+        headers: Headers? = null,
+        method: String? = null
 ) {
     throwIfBothBodyParamsArePassed(jsonBodyResFile, jsonBody)
 
@@ -94,18 +96,18 @@ fun MockWebServer.assertRequest(
     }
 
     jsonBodyResFile?.let {
-        val fileStringBody = fileContentAsString(it.first)
+        val fileStringBody = fileContentAsString(it.jsonBodyResFile)
         assertThat(request, hasBody(
                 fileStringBody,
-                fileStringBody.fromJson(it.second),
-                request.parse(it.second)))
+                fileStringBody.fromJson(it.type),
+                request.parse(it.type)))
     }
 
     jsonBody?.let {
         assertThat(request, hasBody(
-                it.first,
-                it.first.fromJson(it.second),
-                request.parse(it.second)))
+                it.jsonBody,
+                it.jsonBody.fromJson(it.type),
+                request.parse(it.type)))
     }
 
     headers?.let {
@@ -118,8 +120,8 @@ fun MockWebServer.assertRequest(
 }
 
 private fun throwIfBothBodyParamsArePassed(
-    jsonBodyResFile: Pair<String, Class<*>>? = null,
-    jsonBody: Pair<String, Class<*>>? = null
+        jsonBodyResFile: JsonBodyFile? = null,
+        jsonBody: JsonBody? = null
 ) {
     if (jsonBodyResFile != null && jsonBody != null) {
         throw IllegalArgumentException("Please pass jsonBodyFile name or jsonBody, but not both.")
