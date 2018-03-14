@@ -68,6 +68,26 @@ server.assertRequest(
 ```
 Again, any of this parameters are optional so feel free to configure the assertion the way you need.
 
+### Parsed assertions
+After any test that requests data from network you'll probably need to **assert over the returned 
+data after parsing it** to double check whether the response was received and parsed properly to the 
+expected object/s.
+
+To achieve that, **Hiroaki** provides syntax for asserting over equality, so you'd do the following:
+```kotlin
+@Test
+fun parsesNewsProperly() {
+    server.enqueueSuccessResponse("GetNews.json")
+
+    val news = runBlocking { dataSource.getNews() }
+
+    news eq expectedNews() // eq is an infix function for assertEquals()
+}
+``` 
+So `eq` Is just an `infix` function to `assertEquals` both objects. That means the objects are being 
+compared using the `equals` operator so you better use data classes or redefine `equals` properly 
+for your returned classes. 
+
 Do you want to contribute?
 --------------------------
 
