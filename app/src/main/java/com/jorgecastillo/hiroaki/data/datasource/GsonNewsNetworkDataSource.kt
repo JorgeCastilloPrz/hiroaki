@@ -19,7 +19,7 @@ class GsonNewsNetworkDataSource(private val service: GsonNewsApiService) {
             val response = service.getNews().execute()
             if (response.isSuccessful) {
                 response.body()!!.articles.map { it.toArticle() }
-            } else throw IOException("Coins not found.")
+            } else throw IOException("News not found.")
         }
 
         return query.await()
