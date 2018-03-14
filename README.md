@@ -25,11 +25,11 @@ dependencies{
 
 ### Request assertions
 
-Request assertions are mandatory when testing an API client. **Hiroaki** provides a highly configurable **extension function** working over any `MockWebServer` instance to do that. Any of its arguments are **optional** so you're free to configure the assertion in a way that matches your needs. 
+**Hiroaki** provides a highly configurable **extension function** working over any `MockWebServer` instance to perform assertions over your requests. Any of its arguments are **optional** so you're free to configure the assertion in a way that matches your needs. 
 
 Here you have some examples:
 
-Asserting about the path where the request is sent to, the GET request query parameters, the headers, or even the HTTP method used.
+Here I am asserting about: path where the request was sent to, query parameters, headers, and the HTTP method used.
 ```kotlin
 server.assertRequest(
                 sentToPath = "v2/top-headlines",
@@ -43,19 +43,16 @@ server.assertRequest(
 ```
 You can also provide a json body to assert over the body sent on your requests (`POST`, `PUT`, `PATCH`). Here you have an inlined body used for the assertion. 
 
-Note that **It's mandatory to provide the network DTO you are using to map that body from**, since `Hiroaki` parses both bodies to objects and uses `equals` to compare the expected and sent bodies. Therefore, it's highly recommended to **use Kotlin `data` classes** for your DTOs (following the standards) or if you don't really want to use them, you'll have to override `equals` on the class and all its nested levels.
+*Note that **It's mandatory to provide the network DTO you are using to map that body from**, since `Hiroaki` parses both bodies to objects and uses `equals` to compare the **expected** vs **sent** bodies. Therefore, it's highly recommended to **use Kotlin `data` classes** for your DTOs (following the standards) or if you don't really want to use them, you'll have to override `equals` on the class and all its nested levels.*
 ```kotlin
 server.assertRequest(
                 sentToPath = "v2/top-headlines",
                 jsonBody = inlineBody("{\n" +
                         "  \"title\": \"Any Title\",\n" +
                         "  \"description\": \"Any description\",\n" +
-                        "  \"url\": \"http://any.url\",\n" +
-                        "  \"urlToImage\": \"http://any.url/any_image.png\",\n" +
-                        "  \"publishedAt\": \"2018-03-10T14:09:00Z\",\n" +
                         "  \"source\": {\n" +
-                        "    \"id\": \"AnyId\",\n" +
-                        "    \"name\": \"ANYID\"\n" +
+                        "    \"link\": \"http://source/123\",\n" +
+                        "    \"name\": \"Some source\"\n" +
                         "  }\n" +
                         "}\n", ArticleDto::class.java))
 ````
@@ -66,12 +63,10 @@ server.assertRequest(
                 jsonBodyResFile = fileBody("PublishHeadline.json", ArticleDto::class.java),
                 method = "POST")
 ```
-Again, any of this parameters are optional so feel free to configure the assertion the way you need.
 
 ### Parsed assertions
-After any test that requests data from network you'll probably need to **assert over the returned 
-data after parsing it** to double check whether the response was received and parsed properly to the 
-expected object/s.
+After any test that requests data from network you'll probably need to **assert over the parsed 
+response** to double check whether the data was received and parsed properly.
 
 To achieve that, **Hiroaki** provides syntax for asserting over equality, so you'd do the following:
 ```kotlin
@@ -84,9 +79,8 @@ fun parsesNewsProperly() {
     news eq expectedNews() // eq is an infix function for assertEquals()
 }
 ``` 
-So `eq` Is just an `infix` function to `assertEquals` both objects. That means the objects are being 
-compared using the `equals` operator so you better use data classes or redefine `equals` properly 
-for your returned classes. 
+So `eq` Is just an `infix` function to `assertEquals` both objects. Here we are building the list of expected objects with the function `expectedNews()`. 
+The objects are being compared using the `equals` operator so again, you **better use data classes or redefine `equals`** for your returned classes. 
 
 Do you want to contribute?
 --------------------------
