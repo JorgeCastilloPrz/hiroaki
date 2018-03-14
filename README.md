@@ -23,6 +23,46 @@ dependencies{
 }
 ```
 
+### Connecting your app to the mock server
+
+Your app will query the real endpoints if you don't configure your retrofit instance to use the 
+mock server url. To do that, you can wake up a mock retrofit service passing in your `Retrofit` 
+service interface and the converter you want to use. Then you pass it to your `ApiClient`, 
+`NetworkDataSource`, or however your collaborator using it is called.
+
+```kotlin
+class GsonNewsNetworkDataSourceTest : MockServerSuite() {
+
+    private lateinit var dataSource: GsonNewsNetworkDataSource
+
+    @Before
+    override fun setup() {
+        super.setup()
+        dataSource = GsonNewsNetworkDataSource(server.retrofitService(
+                GsonNewsApiService::class.java,
+                GsonConverterFactory.create()))
+    }
+        
+    /*...*/
+}
+```
+This will use a default `OkHttpClient` instance created for you with basic configuration. 
+If you need further configuration on the http client, `retrofitService()` extension function offers 
+an optional parameter to pass a custom `OkHttpClient`:
+
+```kotlin
+val customClient = OkHttpClient.Builder()
+        .connectTimeout(2, TimeUnit.SECONDS) // For testing purposes
+        .readTimeout(2, TimeUnit.SECONDS) // For testing purposes
+        .writeTimeout(2, TimeUnit.SECONDS)
+        .build()
+
+dataSource = GsonNewsNetworkDataSource(server.retrofitService(
+                GsonNewsApiService::class.java,
+                GsonConverterFactory.create(),
+                okHttpClient = customClient))
+```
+
 ### Request assertions
 
 **Hiroaki** provides a highly configurable **extension function** working over any `MockWebServer` instance to perform assertions over your requests. Any of its arguments are **optional** so you're free to configure the assertion in a way that matches your needs. 
