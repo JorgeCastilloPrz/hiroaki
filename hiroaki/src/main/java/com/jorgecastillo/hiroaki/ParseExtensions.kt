@@ -21,3 +21,8 @@ fun <T> RecordedRequest.parse(clazz: Class<T>): Pair<T, String> {
     val bodyString = this.body.readUtf8()
     return Pair(GsonBuilder().create().fromJson(bodyString, clazz), bodyString)
 }
+
+@Throws(JsonParseException::class)
+fun <T> String.parse(clazz: Class<T>): Pair<T, String> {
+    return Pair(fromJson(clazz), this)
+}

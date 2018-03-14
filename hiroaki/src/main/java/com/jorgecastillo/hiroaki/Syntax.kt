@@ -9,3 +9,4 @@ fun params(vararg pairs: Pair<String, String>): QueryParams =
 
 fun headers(vararg pairs: Pair<String, String>): Headers =
         if (pairs.isNotEmpty()) pairs.toMap() else emptyMap()
+
