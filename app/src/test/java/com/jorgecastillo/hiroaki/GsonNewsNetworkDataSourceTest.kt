@@ -7,6 +7,7 @@ import com.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
 import com.jorgecastillo.hiroaki.data.service.GsonNewsApiService
 import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.model.Source
+import com.jorgecastillo.hiroaki.models.error
 import com.jorgecastillo.hiroaki.models.fileBody
 import com.jorgecastillo.hiroaki.models.inlineBody
 import com.jorgecastillo.hiroaki.models.success
@@ -65,7 +66,7 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test
     fun sendsPublishHeadlineUsingInlineBody() {
-        server.enqueueSuccessResponse()
+        server.whenever(POST, "v2/top-headlines").thenRespond(success())
         val article = anyArticle()
 
         runBlocking { dataSource.publishHeadline(article) }
@@ -87,7 +88,7 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test(expected = IllegalArgumentException::class)
     fun throwsWhenYouPassBothBodyParams() {
-        server.enqueueSuccessResponse()
+        server.whenever(POST, "v2/top-headlines").thenRespond(success())
         val article = anyArticle()
 
         runBlocking { dataSource.publishHeadline(article) }
@@ -100,7 +101,8 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test
     fun parsesNewsProperly() {
-        server.enqueueSuccessResponse("GetNews.json")
+        server.whenever(POST, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
 
         val news = runBlocking { dataSource.getNews() }
 
@@ -109,7 +111,7 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test(expected = IOException::class)
     fun throwsIOExceptionOnGetNewsErrorResponse() {
-        server.enqueueErrorResponse()
+        server.whenever(GET, "v2/top-headlines").thenRespond(error())
 
         runBlocking { dataSource.getNews() }
     }
