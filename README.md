@@ -94,7 +94,7 @@ server.assertRequest(
                 headers = headers(
                         "Cache-Control" to "max-age=640000"
                 ),
-                method = "GET")
+                method = Method.GET)
 ```
 You can also provide a json body to assert over the body sent on your requests (`POST`, `PUT`, `PATCH`). Here you have an inlined body used for the assertion. 
 
@@ -116,7 +116,7 @@ You can also provide json body for post requests from a file saved on your `/tes
 server.assertRequest(
                 sentToPath = "v2/top-headlines",
                 jsonBodyResFile = fileBody("PublishHeadline.json", ArticleDto::class.java),
-                method = "POST")
+                method = Method.POST)
 ```
 
 ### Parsed Response assertions
