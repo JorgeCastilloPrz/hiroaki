@@ -64,7 +64,7 @@ server.assertRequest(
                 method = "POST")
 ```
 
-### Parsed assertions
+### Parsed Response assertions
 After any test that requests data from network you'll probably need to **assert over the parsed 
 response** to double check whether the data was received and parsed properly.
 
