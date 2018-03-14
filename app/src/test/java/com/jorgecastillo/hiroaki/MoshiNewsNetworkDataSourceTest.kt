@@ -7,8 +7,10 @@ import com.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
 import com.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
 import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.model.Source
+import com.jorgecastillo.hiroaki.models.error
 import com.jorgecastillo.hiroaki.models.fileBody
 import com.jorgecastillo.hiroaki.models.inlineBody
+import com.jorgecastillo.hiroaki.models.success
 import com.jorgecastillo.hiroaki.mother.anyArticle
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
@@ -33,7 +35,8 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test
     fun sendsGetNews() {
-        server.enqueueSuccessResponse("GetNews.json")
+        server.whenever(GET, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
 
         runBlocking { dataSource.getNews() }
 
@@ -50,7 +53,7 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test
     fun sendsPublishHeadline() {
-        server.enqueueSuccessResponse()
+        server.whenever(POST, "v2/top-headlines").thenRespond(success())
         val article = anyArticle()
 
         runBlocking { dataSource.publishHeadline(article) }
@@ -63,7 +66,7 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test
     fun sendsPublishHeadlineUsingInlineBody() {
-        server.enqueueSuccessResponse()
+        server.whenever(POST, "v2/top-headlines").thenRespond(success())
         val article = anyArticle()
 
         runBlocking { dataSource.publishHeadline(article) }
@@ -85,7 +88,7 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test(expected = IllegalArgumentException::class)
     fun throwsWhenYouPassBothBodyParams() {
-        server.enqueueSuccessResponse()
+        server.whenever(POST, "v2/top-headlines").thenRespond(success())
         val article = anyArticle()
 
         runBlocking { dataSource.publishHeadline(article) }
@@ -98,7 +101,8 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test
     fun parsesNewsProperly() {
-        server.enqueueSuccessResponse("GetNews.json")
+        server.whenever(POST, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
 
         val news = runBlocking { dataSource.getNews() }
 
@@ -107,7 +111,7 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test(expected = IOException::class)
     fun throwsIOExceptionOnGetNewsErrorResponse() {
-        server.enqueueErrorResponse()
+        server.whenever(GET, "v2/top-headlines").thenRespond(error())
 
         runBlocking { dataSource.getNews() }
     }

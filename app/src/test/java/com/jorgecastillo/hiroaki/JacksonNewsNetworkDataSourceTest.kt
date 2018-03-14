@@ -17,6 +17,8 @@ import retrofit2.converter.jackson.JacksonConverterFactory
 import java.io.IOException
 import com.jorgecastillo.hiroaki.Method.GET
 import com.jorgecastillo.hiroaki.Method.POST
+import com.jorgecastillo.hiroaki.models.error
+import com.jorgecastillo.hiroaki.models.success
 
 @RunWith(MockitoJUnitRunner::class)
 class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
@@ -33,7 +35,8 @@ class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test
     fun sendsGetNews() {
-        server.enqueueSuccessResponse("GetNews.json")
+        server.whenever(GET, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
 
         runBlocking { dataSource.getNews() }
 
@@ -50,7 +53,7 @@ class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test
     fun sendsPublishHeadline() {
-        server.enqueueSuccessResponse()
+        server.whenever(POST, "v2/top-headlines").thenRespond(success())
         val article = anyArticle()
 
         runBlocking { dataSource.publishHeadline(article) }
@@ -63,7 +66,7 @@ class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test
     fun sendsPublishHeadlineUsingInlineBody() {
-        server.enqueueSuccessResponse()
+        server.whenever(POST, "v2/top-headlines").thenRespond(success())
         val article = anyArticle()
 
         runBlocking { dataSource.publishHeadline(article) }
@@ -85,7 +88,7 @@ class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test(expected = IllegalArgumentException::class)
     fun throwsWhenYouPassBothBodyParams() {
-        server.enqueueSuccessResponse()
+        server.whenever(POST, "v2/top-headlines").thenRespond(success())
         val article = anyArticle()
 
         runBlocking { dataSource.publishHeadline(article) }
@@ -98,7 +101,8 @@ class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test
     fun parsesNewsProperly() {
-        server.enqueueSuccessResponse("GetNews.json")
+        server.whenever(POST, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
 
         val news = runBlocking { dataSource.getNews() }
 
@@ -107,7 +111,7 @@ class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test(expected = IOException::class)
     fun throwsIOExceptionOnGetNewsErrorResponse() {
-        server.enqueueErrorResponse()
+        server.whenever(GET, "v2/top-headlines").thenRespond(error())
 
         runBlocking { dataSource.getNews() }
     }
