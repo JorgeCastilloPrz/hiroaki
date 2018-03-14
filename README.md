@@ -79,7 +79,7 @@ fun parsesNewsProperly() {
     news eq expectedNews() // eq is an infix function for assertEquals()
 }
 ``` 
-So `eq` Is just an `infix` function to `assertEquals` both objects. Here we are building the list of expected objects with the function `expectedNews()`. 
+Here `eq` Is just an `infix` function to run `assertEquals` on both objects. Here we are building the list of expected objects with the function `expectedNews()`. 
 The objects are being compared using the `equals` operator so again, you **better use data classes or redefine `equals`** for your returned classes. 
 
 Do you want to contribute?
