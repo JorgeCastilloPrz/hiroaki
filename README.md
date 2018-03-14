@@ -9,6 +9,9 @@ Hiroaki [![CircleCI](https://circleci.com/gh/JorgeCastilloPrz/hiroaki/tree/maste
 The intention of Hiroaki is to achieve that on your **API integration tests** by simplifying the way you **prepare 
 your test environment prior to test execution and the assertions you perform in the end**. 
 
+How it works
+------------
+
 It uses Kotlin features like extension functions, type aliases, delegation, package level functions and many other features 
 like custom hamcrest matchers to achieve the wanted behavior.
 
