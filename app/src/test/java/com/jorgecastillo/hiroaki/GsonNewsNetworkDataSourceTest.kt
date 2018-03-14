@@ -9,6 +9,7 @@ import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.model.Source
 import com.jorgecastillo.hiroaki.models.fileBody
 import com.jorgecastillo.hiroaki.models.inlineBody
+import com.jorgecastillo.hiroaki.models.success
 import com.jorgecastillo.hiroaki.mother.anyArticle
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
@@ -33,8 +34,8 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test
     fun sendsGetNews() {
-        server.enqueueSuccessResponse("GetNews.json")
-        server.whenever()
+        server.whenever(GET, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
 
         runBlocking { dataSource.getNews() }
 
@@ -51,7 +52,7 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test
     fun sendsPublishHeadline() {
-        server.enqueueSuccessResponse()
+        server.whenever(POST, "v2/top-headlines").thenRespond(success())
         val article = anyArticle()
 
         runBlocking { dataSource.publishHeadline(article) }

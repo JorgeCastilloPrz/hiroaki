@@ -1,5 +1,6 @@
 package com.jorgecastillo.hiroaki
 
+import com.jorgecastillo.hiroaki.dispatcher.DispatcherRetainer
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
@@ -15,10 +16,13 @@ open class MockServerSuite {
     @Before
     open fun setup() {
         server = MockWebServer()
+        DispatcherRetainer.dispatcher.reset()
+        server.setDispatcher(DispatcherRetainer.dispatcher)
     }
 
     @After
     open fun tearDown() {
         server.shutdown()
+        DispatcherRetainer.dispatcher.reset()
     }
 }
