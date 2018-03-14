@@ -18,7 +18,7 @@ fun MockWebServer.assertRequest(
     jsonBodyResFile: JsonBodyFile? = null,
     jsonBody: JsonBody? = null,
     headers: Headers? = null,
-    method: String? = null
+    method: Method? = null
 ) {
     throwIfBothBodyParamsArePassed(jsonBodyResFile, jsonBody)
 

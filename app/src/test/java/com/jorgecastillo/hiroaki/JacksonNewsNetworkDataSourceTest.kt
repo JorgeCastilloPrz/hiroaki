@@ -15,6 +15,8 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import retrofit2.converter.jackson.JacksonConverterFactory
 import java.io.IOException
+import com.jorgecastillo.hiroaki.Method.GET
+import com.jorgecastillo.hiroaki.Method.POST
 
 @RunWith(MockitoJUnitRunner::class)
 class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
@@ -43,7 +45,7 @@ class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
                 headers = headers(
                         "Cache-Control" to "max-age=640000"
                 ),
-                method = "GET")
+                method = GET)
     }
 
     @Test
@@ -56,7 +58,7 @@ class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
         server.assertRequest(
                 sentToPath = "v2/top-headlines",
                 jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
-                method = "POST")
+                method = POST)
     }
 
     @Test

@@ -1,5 +1,7 @@
 package com.jorgecastillo.hiroaki
 
+import com.jorgecastillo.hiroaki.Method.GET
+import com.jorgecastillo.hiroaki.Method.POST
 import com.jorgecastillo.hiroaki.data.datasource.MoshiNewsNetworkDataSource
 import com.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
 import com.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
@@ -43,7 +45,7 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
                 headers = headers(
                         "Cache-Control" to "max-age=640000"
                 ),
-                method = "GET")
+                method = GET)
     }
 
     @Test
@@ -56,7 +58,7 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
         server.assertRequest(
                 sentToPath = "v2/top-headlines",
                 jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
-                method = "POST")
+                method = POST)
     }
 
     @Test
