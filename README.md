@@ -36,9 +36,11 @@ dependencies{
 ### Connecting your app to the mock server
 
 Your app will query the real endpoints if you don't configure your retrofit instance to use the 
-mock server url. To do that, you can wake up a **mock retrofit service** passing in your `Retrofit` 
-service interface and the converter you want to use. Then you pass it to your `ApiClient`, 
-`NetworkDataSource`, or however your collaborator using it is called.
+mock server url. To do that, you can wake up a **mock retrofit service** passing in your **service 
+interface** and the **converter** you want to use. 
+
+Finally, you are free to pass this mocked service to your `ApiClient`, `NetworkDataSource`, or 
+however your collaborator using it is called.
 
 Note that you'll also need to extend the base class `MockServerSuite`, which takes care of running 
 and shutting down the server for you.
