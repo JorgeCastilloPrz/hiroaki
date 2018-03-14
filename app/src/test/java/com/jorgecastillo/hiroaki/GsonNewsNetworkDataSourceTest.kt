@@ -101,7 +101,7 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test
     fun parsesNewsProperly() {
-        server.whenever(POST, "v2/top-headlines")
+        server.whenever(GET, "v2/top-headlines")
                 .thenRespond(success(jsonFileName = "GetNews.json"))
 
         val news = runBlocking { dataSource.getNews() }
