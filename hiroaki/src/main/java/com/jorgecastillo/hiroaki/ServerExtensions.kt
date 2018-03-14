@@ -7,6 +7,10 @@ import okhttp3.mockwebserver.MockWebServer
 import retrofit2.Converter
 import retrofit2.Retrofit
 
+enum class Method {
+    DELETE, GET, HEAD, POST, OPTIONS, PATCH, PUT, CONNECT, TRACE
+}
+
 private const val SUCCESS_RESPONSE_CODE = 200
 private const val UNAUTHORIZED_RESPONSE_CODE = 401
 
@@ -26,6 +30,10 @@ fun <T> MockWebServer.retrofitService(
             .client(okHttpClient)
             .addConverterFactory(converterFactory).build()
             .create(serviceClass)
+}
+
+fun MockWebServer.whenever() {
+
 }
 
 fun MockWebServer.enqueueSuccessResponse() {

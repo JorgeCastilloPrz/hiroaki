@@ -1,5 +1,7 @@
 package com.jorgecastillo.hiroaki
 
+import com.jorgecastillo.hiroaki.Method.GET
+import com.jorgecastillo.hiroaki.Method.POST
 import com.jorgecastillo.hiroaki.data.datasource.GsonNewsNetworkDataSource
 import com.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
 import com.jorgecastillo.hiroaki.data.service.GsonNewsApiService
@@ -32,6 +34,7 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
     @Test
     fun sendsGetNews() {
         server.enqueueSuccessResponse("GetNews.json")
+        server.whenever()
 
         runBlocking { dataSource.getNews() }
 
@@ -43,7 +46,7 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
                 headers = headers(
                         "Cache-Control" to "max-age=640000"
                 ),
-                method = "GET")
+                method = GET)
     }
 
     @Test
@@ -56,7 +59,7 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
         server.assertRequest(
                 sentToPath = "v2/top-headlines",
                 jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
-                method = "POST")
+                method = POST)
     }
 
     @Test

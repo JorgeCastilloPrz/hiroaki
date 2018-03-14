@@ -1,5 +1,6 @@
 package com.jorgecastillo.hiroaki.matchers
 
+import com.jorgecastillo.hiroaki.Method
 import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -9,7 +10,7 @@ import org.hamcrest.TypeSafeMatcher
  * Custom Hamcrest matcher to assert about HTTP method (GET, POST, PUT, DELETE...) on an OkHttp
  * RecordedRequest.
  */
-fun hasMethod(expectedMethod: String): Matcher<RecordedRequest> {
+fun hasMethod(expectedMethod: Method): Matcher<RecordedRequest> {
     return object : TypeSafeMatcher<RecordedRequest>() {
 
         override fun describeTo(description: Description) {
@@ -21,6 +22,6 @@ fun hasMethod(expectedMethod: String): Matcher<RecordedRequest> {
         }
 
         override fun matchesSafely(request: RecordedRequest): Boolean =
-                request.method == expectedMethod
+                request.method == expectedMethod.toString()
     }
 }
