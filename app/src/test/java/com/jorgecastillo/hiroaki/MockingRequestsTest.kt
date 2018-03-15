@@ -143,5 +143,5 @@ class MockingRequestsTest : MockServerSuite() {
                     "https://lifehacker.com/how-to-get-android-ps-screenshot-editing-tool-on-any-an-1823646122",
                     "https://i.kinja-img.com/gawker-media/image/upload/s--Y-5X_NcT--/c_fill,fl_progressive,g_center,h_450,q_80,w_800/nxmwbkwzoc1z1tmak7s4.jpg",
                     "2018-03-09T20:30:00Z",
-                    Source("$requestPathLengthAsSourceId", "Lifehacker.com")))
+                    Source(if (requestPathLengthAsSourceId != null) "$requestPathLengthAsSourceId" else null, "Lifehacker.com")))
 }
