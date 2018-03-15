@@ -78,7 +78,7 @@ dataSource = GsonNewsNetworkDataSource(server.retrofitService(
                 okHttpClient = customClient))
 ```
 
-If you can't extend `MockServerSuite`, **Hiroaki** also provides a JUnit rule called 
+If you can't extend `MockServerSuite`, **Hiroaki** also provides a **JUnit rule** called 
 `MockServerRule` with the same purpose:
 
 ```kotlin
