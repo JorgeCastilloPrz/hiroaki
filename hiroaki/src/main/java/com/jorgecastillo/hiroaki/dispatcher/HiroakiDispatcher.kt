@@ -24,13 +24,18 @@ class HiroakiDispatcher : Dispatcher() {
         mockRequests.add(Pair(matcher, mockResponse))
     }
 
-    fun reset(): Unit {
+    fun reset() {
         mockRequests.clear()
     }
 
     override fun dispatch(request: RecordedRequest): MockResponse {
         val mockRequest = mockRequests.find { (matcher, _) -> matcher.matches(request) }
-        return mockRequest?.second ?: notMockedResponse()
+        return if (mockRequest != null) {
+            mockRequests.remove(mockRequest)
+            mockRequest.second
+        } else {
+            notMockedResponse()
+        }
     }
 
     private fun notMockedResponse(): MockResponse {

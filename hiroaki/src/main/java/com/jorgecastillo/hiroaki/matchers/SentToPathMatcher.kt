@@ -15,8 +15,10 @@ fun isSentToPath(expectedPath: String): Matcher<RecordedRequest> {
             description.appendText("The HTTP query should be sent to: $expectedPath")
         }
 
-        override fun describeMismatchSafely(request: RecordedRequest,
-                                            mismatchDescription: Description) {
+        override fun describeMismatchSafely(
+            request: RecordedRequest,
+            mismatchDescription: Description
+        ) {
             mismatchDescription.appendText("\nRequest sent to ${request.method} instead.")
         }
 
