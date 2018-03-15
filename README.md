@@ -125,41 +125,48 @@ This ensures that **whenever** the endpoint `v2/top-headlines` is called with a 
 the you'll get a response like the one we are mocking there.
 
 The function `success()` is a shortcut to provide a successful response. You can also use `error()` 
-and `response()`. All of them are mocking functions that allow you to pass the following arguments:
+and `response()`. All of them are mocking functions that allow you to pass the following **optional** 
+arguments:
 
-* `code`: Int for the return http status code you want on your mocked response.
-* `jsonFileName`: String for the resource file name where to load the json from for your mocked response body.
-* `jsonBody`: String with an inlined json for your mocked response body.
-* `headers`: Is a Map<String,String> for the headers you want to attach to the mocked response.
+* `code` **Int** return http status code for the mocked response.
+* `jsonFileName` **String** resource file name to load the mocked response json body from.
+* `jsonBody` **String** inlined json for your mocked response body.
+* `headers` Is a **Map<String,String>** headers to attach to the mocked response.
 
-If you don't want to use the shortcut functions, you can still pass your own custom `MockResponse` 
-from `MockWebServer`.
+If you don't want to use the `succes()`, `error()` or `response()` shortcut functions, you can 
+still pass your own custom `MockResponse` from `MockWebServer`, the same way you have been doing 
+until now. 
 
-**Hiroaki** also alows you to chain responses:
+**Chaining mocked responses:**
+
+You can also chain a bunch of mocked responses:
 ````kotlin
 server.whenever(Method.GET, "v2/top-headlines")
                 .thenRespond(success(jsonFileName = "GetNews.json"))
                 .thenRespond(success(jsonFileName = "GetSingleNew.json"))
                 .thenRespond(success(jsonFileName = "GetNews.json"))
 ````
-That means that the first time the endpoint is called under the given conditions, it will return a 
-`MockResponse` with the body obtained from the file `GetNews.json`. The second time it gets called, 
-it will return the second mocked response, which on this example is reading it's body from 
-`GetSingleNew.json`. And the third time it gets called it'll return the third mocked response.
+* The first time the endpoint is called under the given conditions, it will return a 
+`MockResponse` with the body obtained from the file `GetNews.json`. 
+* The second time it gets called, it will return the second mocked response, which on this example 
+is reading it's body from `GetSingleNew.json`. 
+* The third time it gets called it'll return the third mocked response.
 
-You can chain as many responses as you want, just remember that those will be dispatched in the order.
+You can chain as many responses as you want, just remember that those **will be dispatched in the 
+same order**.
 
 **Dispatching dynamic responses**
+
 Sometimes you want a response to depend on the structure of the request sent. For that reason, 
 **Hiroaki** provides the `thenDispatch` method:
 ````kotlin
 server.whenever(Method.GET, "v2/top-headlines")
       .thenDispatch({ request -> success(jsonBody = "{\"requestPath\" : ${request.path}" })
 ````   
-Thanks to this method you could attach to a programmed mocked response the same headers from the 
-request, for example, or other usual use cases.
+With this feature, you could attach the same requesteded item Id to one of the items contained into 
+the response body, for example. I guess you can imagine different use cases.
 
-Of course, you can combine as many `thenRespond()` and `thenDispatch()` calls as you want.
+Feel free to combine as many `thenRespond()` and `thenDispatch()` calls as you want.
 ````kotlin
 server.whenever(Method.GET, "v2/top-headlines")
       .thenRespond(success())
