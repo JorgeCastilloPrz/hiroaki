@@ -12,8 +12,8 @@ your test environment prior to test execution and the assertions you perform in 
 How it works
 ------------
 
-It uses Kotlin features like extension functions, type aliases, delegation, package level functions and many other features 
-like custom hamcrest matchers to achieve the wanted behavior.
+It uses Kotlin features like **extension functions**, **type aliases**, **delegation**, 
+**package level functions** and many other ones like **custom hamcrest** matchers to achieve the wanted behavior.
 
 When you are testing you want to isolate your tests from external frameworks that can provoke flakiness. 
 **Hiroaki** relies on `MockWebServer` to provide a mock server as a target for your HTTP requests 
@@ -21,6 +21,15 @@ that you'll be able to use to mock your server behavior.
 
 That enables you to assert over how your app or system will react to some predefined server & API 
 behaviors. 
+
+Where is the magic?
+-------------------
+Most of the features provided by `Hiroaki` are **extension functions** declared over the 
+`MockWebServer` type.
+ 
+That means you can easily program and chain mock responses for given request conditions to certain 
+endpoints (à la mockito), mock responses with one liners, assert over recorded request conditions 
+or over the response data parsed just with a simple `MockWebServer` instance.
 
 Usage
 -----
