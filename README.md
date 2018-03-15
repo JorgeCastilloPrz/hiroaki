@@ -78,6 +78,36 @@ dataSource = GsonNewsNetworkDataSource(server.retrofitService(
                 okHttpClient = customClient))
 ```
 
+If cannot extend `MockServerSuite`, **Hiroaki** also provides a JUnit rule called 
+`MockServerRule` with the same purpose:
+
+```kotlin
+@RunWith(MockitoJUnitRunner::class)
+class RuleNetworkDataSourceTest {
+
+    private lateinit var dataSource: JacksonNewsNetworkDataSource
+    @get:Rule val rule: MockServerRule = MockServerRule()
+
+    @Before
+    fun setup() {
+        dataSource = JacksonNewsNetworkDataSource(rule.server.retrofitService(
+                JacksonNewsApiService::class.java,
+                JacksonConverterFactory.create()))
+    }
+    
+    @Test
+    fun sendsGetNews() {
+       // you'll need to call the server through the rule
+       rule.server.whenever(GET, "v2/top-headlines")
+                  .thenRespond(success(jsonFileName = "GetNews.json"))
+    
+       runBlocking { dataSource.getNews() }
+
+       /*...*/
+    }
+}
+```
+
 ### Request assertions
 
 **Hiroaki** provides a highly configurable **extension function** working over any `MockWebServer` instance to perform assertions over your requests. Any of its arguments are **optional** so you're free to configure the assertion in a way that matches your needs. 
