@@ -1,5 +1,8 @@
 package com.jorgecastillo.hiroaki.dispatcher
 
+import com.jorgecastillo.hiroaki.Either
+import com.jorgecastillo.hiroaki.left
+import com.jorgecastillo.hiroaki.right
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
@@ -17,11 +20,22 @@ import org.hamcrest.Matcher
  */
 class HiroakiDispatcher : Dispatcher() {
 
-    private val mockRequests: MutableList<Pair<Matcher<RecordedRequest>, MockResponse>> =
+    private val mockRequests: MutableList<Pair<Matcher<RecordedRequest>,
+            Either<MockResponse, (recordedRequest: RecordedRequest) -> MockResponse>>> =
             mutableListOf()
 
-    fun addMockRequest(matcher: Matcher<RecordedRequest>, mockResponse: MockResponse) {
-        mockRequests.add(Pair(matcher, mockResponse))
+    fun addMockRequest(
+        matcher: Matcher<RecordedRequest>,
+        mockResponse: MockResponse
+    ) {
+        mockRequests.add(Pair(matcher, mockResponse.left()))
+    }
+
+    fun addDispatchableBlock(
+        matcher: Matcher<RecordedRequest>,
+        dispatchableBlock: (recordedRequest: RecordedRequest) -> MockResponse
+    ) {
+        mockRequests.add(Pair(matcher, dispatchableBlock.right()))
     }
 
     fun reset() {
@@ -32,7 +46,7 @@ class HiroakiDispatcher : Dispatcher() {
         val mockRequest = mockRequests.find { (matcher, _) -> matcher.matches(request) }
         return if (mockRequest != null) {
             mockRequests.remove(mockRequest)
-            mockRequest.second
+            mockRequest.second.fold({ it }, { it(request) })
         } else {
             notMockedResponse()
         }
