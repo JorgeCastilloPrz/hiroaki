@@ -1,4 +1,4 @@
-package com.jorgecastillo.hiroaki
+package com.jorgecastillo.hiroaki.internal
 
 import com.jorgecastillo.hiroaki.dispatcher.DispatcherRetainer
 import okhttp3.mockwebserver.MockWebServer

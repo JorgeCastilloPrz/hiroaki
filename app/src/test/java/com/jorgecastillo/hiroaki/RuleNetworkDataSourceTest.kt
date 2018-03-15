@@ -2,10 +2,10 @@ package com.jorgecastillo.hiroaki
 
 import com.jorgecastillo.hiroaki.Method.GET
 import com.jorgecastillo.hiroaki.Method.POST
-import com.jorgecastillo.hiroaki.data.datasource.GsonNewsNetworkDataSource
+import com.jorgecastillo.hiroaki.data.datasource.JacksonNewsNetworkDataSource
 import com.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
-import com.jorgecastillo.hiroaki.data.service.GsonNewsApiService
-import com.jorgecastillo.hiroaki.internal.MockServerSuite
+import com.jorgecastillo.hiroaki.data.service.JacksonNewsApiService
+import com.jorgecastillo.hiroaki.internal.MockServerRule
 import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.model.Source
 import com.jorgecastillo.hiroaki.models.error
@@ -15,33 +15,34 @@ import com.jorgecastillo.hiroaki.models.success
 import com.jorgecastillo.hiroaki.mother.anyArticle
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.jackson.JacksonConverterFactory
 import java.io.IOException
 
 @RunWith(MockitoJUnitRunner::class)
-class GsonNewsNetworkDataSourceTest : MockServerSuite() {
+class RuleNetworkDataSourceTest {
 
-    private lateinit var dataSource: GsonNewsNetworkDataSource
+    private lateinit var dataSource: JacksonNewsNetworkDataSource
+    @get:Rule val rule: MockServerRule = MockServerRule()
 
     @Before
-    override fun setup() {
-        super.setup()
-        dataSource = GsonNewsNetworkDataSource(server.retrofitService(
-                GsonNewsApiService::class.java,
-                GsonConverterFactory.create()))
+    fun setup() {
+        dataSource = JacksonNewsNetworkDataSource(rule.server.retrofitService(
+                JacksonNewsApiService::class.java,
+                JacksonConverterFactory.create()))
     }
 
     @Test
     fun sendsGetNews() {
-        server.whenever(GET, "v2/top-headlines")
+        rule.server.whenever(GET, "v2/top-headlines")
                 .thenRespond(success(jsonFileName = "GetNews.json"))
 
         runBlocking { dataSource.getNews() }
 
-        server.assertRequest(
+        rule.server.assertRequest(
                 sentToPath = "v2/top-headlines",
                 queryParams = params(
                         "sources" to "crypto-coins-news",
@@ -54,12 +55,12 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test
     fun sendsPublishHeadline() {
-        server.whenever(POST, "v2/top-headlines").thenRespond(success())
+        rule.server.whenever(POST, "v2/top-headlines").thenRespond(success())
         val article = anyArticle()
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        server.assertRequest(
+        rule.server.assertRequest(
                 sentToPath = "v2/top-headlines",
                 jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
                 method = POST)
@@ -67,12 +68,12 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test
     fun sendsPublishHeadlineUsingInlineBody() {
-        server.whenever(POST, "v2/top-headlines").thenRespond(success())
+        rule.server.whenever(POST, "v2/top-headlines").thenRespond(success())
         val article = anyArticle()
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        server.assertRequest(
+        rule.server.assertRequest(
                 sentToPath = "v2/top-headlines",
                 jsonBody = inlineBody("{\n" +
                         "  \"title\": \"Any Title\",\n" +
@@ -89,12 +90,12 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test(expected = IllegalArgumentException::class)
     fun throwsWhenYouPassBothBodyParams() {
-        server.whenever(POST, "v2/top-headlines").thenRespond(success())
+        rule.server.whenever(POST, "v2/top-headlines").thenRespond(success())
         val article = anyArticle()
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        server.assertRequest(
+        rule.server.assertRequest(
                 sentToPath = "v2/top-headlines",
                 jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
                 jsonBody = inlineBody("{\"title\" = \"Any title\" }", MoshiArticleDto::class.java))
@@ -102,7 +103,7 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test
     fun parsesNewsProperly() {
-        server.whenever(GET, "v2/top-headlines")
+        rule.server.whenever(GET, "v2/top-headlines")
                 .thenRespond(success(jsonFileName = "GetNews.json"))
 
         val news = runBlocking { dataSource.getNews() }
@@ -112,7 +113,7 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
     @Test(expected = IOException::class)
     fun throwsIOExceptionOnGetNewsErrorResponse() {
-        server.whenever(GET, "v2/top-headlines").thenRespond(error())
+        rule.server.whenever(GET, "v2/top-headlines").thenRespond(error())
 
         runBlocking { dataSource.getNews() }
     }

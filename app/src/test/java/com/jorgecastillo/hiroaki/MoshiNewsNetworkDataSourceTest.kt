@@ -5,6 +5,7 @@ import com.jorgecastillo.hiroaki.Method.POST
 import com.jorgecastillo.hiroaki.data.datasource.MoshiNewsNetworkDataSource
 import com.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
 import com.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
+import com.jorgecastillo.hiroaki.internal.MockServerSuite
 import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.model.Source
 import com.jorgecastillo.hiroaki.models.error
