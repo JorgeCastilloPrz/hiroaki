@@ -65,6 +65,26 @@ class MockingRequestsTest : MockServerSuite() {
         runBlocking { dataSource.getNews() }
     }
 
+    @Test
+    fun chainResponses() {
+        server.whenever(Method.GET, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetSingleNew.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+
+        val news = runBlocking { dataSource.getNews() }
+
+        news eq expectedNews()
+
+        val singleNew = runBlocking { dataSource.getNews() }
+
+        singleNew eq expectedSingleNew()
+
+        val news2 = runBlocking { dataSource.getNews() }
+
+        news2 eq expectedNews()
+    }
+
     private fun expectedNews(): List<Article> {
         return listOf(
                 Article("How to Get Android P's Screenshot Editing Tool on Any Android Phone",
@@ -87,4 +107,12 @@ class MockingRequestsTest : MockServerSuite() {
                         Source("techcrunch", "TechCrunch"))
         )
     }
+
+    private fun expectedSingleNew(): List<Article> = listOf(
+            Article("How to Get Android P's Screenshot Editing Tool on Any Android Phone",
+                    "Last year, Apple brought advanced screenshot editing tools to the iPhone with iOS 11, and, this week, Google fired back with a similar Android feature called Markup. The only catch is that this new tool is limited to Android P, which launches later this year …",
+                    "https://lifehacker.com/how-to-get-android-ps-screenshot-editing-tool-on-any-an-1823646122",
+                    "https://i.kinja-img.com/gawker-media/image/upload/s--Y-5X_NcT--/c_fill,fl_progressive,g_center,h_450,q_80,w_800/nxmwbkwzoc1z1tmak7s4.jpg",
+                    "2018-03-09T20:30:00Z",
+                    Source(null, "Lifehacker.com")))
 }

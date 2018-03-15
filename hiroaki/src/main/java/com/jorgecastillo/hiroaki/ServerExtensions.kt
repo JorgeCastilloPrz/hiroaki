@@ -17,16 +17,16 @@ enum class Method {
 }
 
 private fun okHttpClient(
-        loggingLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY
+    loggingLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY
 ): OkHttpClient =
         OkHttpClient.Builder()
                 .addInterceptor(HttpLoggingInterceptor().setLevel(loggingLevel))
                 .build()
 
 fun <T> MockWebServer.retrofitService(
-        serviceClass: Class<T>,
-        converterFactory: Converter.Factory,
-        okHttpClient: OkHttpClient = okHttpClient()
+    serviceClass: Class<T>,
+    converterFactory: Converter.Factory,
+    okHttpClient: OkHttpClient = okHttpClient()
 ): T {
     return Retrofit.Builder().baseUrl(this.url("/").toString())
             .client(okHttpClient)
@@ -62,4 +62,3 @@ fun MockWebServer.whenever(method: Method, sentToPath: String, jsonBodyResFile: 
 fun MockWebServer.whenever(matcher: Matcher<RecordedRequest>): PotentialRequestChain {
     return PotentialRequestChain(matcher)
 }
-

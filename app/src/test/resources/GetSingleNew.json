@@ -1,0 +1,18 @@
+{
+  "status": "ok",
+  "totalResults": 2342,
+  "articles": [
+    {
+      "source": {
+        "id": null,
+        "name": "Lifehacker.com"
+      },
+      "author": "Jacob Kleinman",
+      "title": "How to Get Android P's Screenshot Editing Tool on Any Android Phone",
+      "description": "Last year, Apple brought advanced screenshot editing tools to the iPhone with iOS 11, and, this week, Google fired back with a similar Android feature called Markup. The only catch is that this new tool is limited to Android P, which launches later this year …",
+      "url": "https://lifehacker.com/how-to-get-android-ps-screenshot-editing-tool-on-any-an-1823646122",
+      "urlToImage": "https://i.kinja-img.com/gawker-media/image/upload/s--Y-5X_NcT--/c_fill,fl_progressive,g_center,h_450,q_80,w_800/nxmwbkwzoc1z1tmak7s4.jpg",
+      "publishedAt": "2018-03-09T20:30:00Z"
+    }
+  ]
+}
