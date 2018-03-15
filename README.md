@@ -49,10 +49,10 @@ mock server url. To do that, you can wake up a **mock retrofit service** passing
 interface** and the **converter** you want to use. 
 
 Finally, you are free to pass this mocked service to your `ApiClient`, `NetworkDataSource`, or 
-whatever your collaborator using it is called.
+whatever your collaborator handling your network logic is called.
 
-Note that you'll also need to extend the base class `MockServerSuite`, which takes care of running 
-and shutting down the server for you.
+You'll have to extend the base class `MockServerSuite`, which takes care of running and shutting 
+down the server for you. But there's also a JUnit `Rule` if you don't want to.
 
 ```kotlin
 class GsonNewsNetworkDataSourceTest : MockServerSuite() {
