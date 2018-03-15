@@ -2,6 +2,7 @@ package com.jorgecastillo.hiroaki
 
 import com.jorgecastillo.hiroaki.data.datasource.GsonNewsNetworkDataSource
 import com.jorgecastillo.hiroaki.data.service.GsonNewsApiService
+import com.jorgecastillo.hiroaki.internal.MockServerSuite
 import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.model.Source
 import com.jorgecastillo.hiroaki.models.error

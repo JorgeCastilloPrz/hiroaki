@@ -17,6 +17,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory
 import java.io.IOException
 import com.jorgecastillo.hiroaki.Method.GET
 import com.jorgecastillo.hiroaki.Method.POST
+import com.jorgecastillo.hiroaki.internal.MockServerSuite
 import com.jorgecastillo.hiroaki.models.error
 import com.jorgecastillo.hiroaki.models.success
 
