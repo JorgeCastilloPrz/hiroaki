@@ -6,7 +6,7 @@ Hiroaki [![CircleCI](https://circleci.com/gh/JorgeCastilloPrz/hiroaki/tree/maste
     Hiroaki is a Japanese name that literally means 'spreading brightness'. It is derived from the 
     words 'hiro', which means 'large or wide', and 'aki', which means 'bright or clear'.
 
-The intention of Hiroaki is to achieve that on your **API integration tests** by simplifying the way you **prepare 
+The intention of Hiroaki is to achieve clarity on your **API integration tests** in an idiomatic way by simplifying the way you **prepare 
 your test environment prior to test execution and the assertions you perform in the end**. 
 
 How it works
@@ -78,7 +78,7 @@ dataSource = GsonNewsNetworkDataSource(server.retrofitService(
                 okHttpClient = customClient))
 ```
 
-If cannot extend `MockServerSuite`, **Hiroaki** also provides a JUnit rule called 
+If you can't extend `MockServerSuite`, **Hiroaki** also provides a JUnit rule called 
 `MockServerRule` with the same purpose:
 
 ```kotlin
