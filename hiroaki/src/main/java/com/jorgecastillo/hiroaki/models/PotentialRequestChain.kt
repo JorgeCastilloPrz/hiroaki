@@ -11,8 +11,22 @@ import org.hamcrest.Matcher
  */
 class PotentialRequestChain(private val matcher: Matcher<RecordedRequest>) {
 
+    /**
+     * Enqueue a mocked response for the conditions given on the "whenever" statement.
+     */
     fun thenRespond(mockResponse: MockResponse): PotentialRequestChain {
         DispatcherRetainer.dispatcher.addMockRequest(matcher, mockResponse)
+        return this
+    }
+
+    /**
+     * Enqueue a dispatched response for the conditions given on the "whenever" statement. A
+     * dispatched response is just a function that will receive the request and return the required
+     * mocked response. This allows the user to configure returned responses depending on the
+     * request.
+     */
+    fun thenDispatch(dispatchableBlock: (recordedRequest: RecordedRequest) -> MockResponse): PotentialRequestChain {
+        DispatcherRetainer.dispatcher.addDispatchableBlock(matcher, dispatchableBlock)
         return this
     }
 }
