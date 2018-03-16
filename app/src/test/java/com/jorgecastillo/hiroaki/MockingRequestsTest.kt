@@ -9,7 +9,6 @@ import com.jorgecastillo.hiroaki.models.error
 import com.jorgecastillo.hiroaki.models.response
 import com.jorgecastillo.hiroaki.models.success
 import kotlinx.coroutines.experimental.runBlocking
-import okhttp3.mockwebserver.QueueDispatcher
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -32,7 +31,6 @@ class MockingRequestsTest : MockServerSuite() {
 
     @Test
     fun enqueuesSuccess() {
-        server.setDispatcher(QueueDispatcher())
         server.enqueue(success(jsonFileName = "GetNews.json"))
 
         val news = runBlocking { dataSource.getNews() }
@@ -42,7 +40,6 @@ class MockingRequestsTest : MockServerSuite() {
 
     @Test(expected = IOException::class)
     fun enqueueError() {
-        server.setDispatcher(QueueDispatcher())
         server.enqueue(error())
 
         runBlocking { dataSource.getNews() }
@@ -50,7 +47,6 @@ class MockingRequestsTest : MockServerSuite() {
 
     @Test
     fun mockResponseSuccess() {
-        server.setDispatcher(QueueDispatcher())
         server.enqueue(response(200, jsonFileName = "GetNews.json"))
 
         val news = runBlocking { dataSource.getNews() }
@@ -60,7 +56,6 @@ class MockingRequestsTest : MockServerSuite() {
 
     @Test(expected = IOException::class)
     fun mockResponseError() {
-        server.setDispatcher(QueueDispatcher())
         server.enqueue(response(307))
 
         runBlocking { dataSource.getNews() }
