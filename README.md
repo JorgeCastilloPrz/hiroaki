@@ -133,8 +133,34 @@ fun chainResponses() {
 This ensures that **whenever** the endpoint `v2/top-headlines` is called with a `GET` http method, 
 the you'll get a response like the one we are mocking there.
 
-The function `success()` is a shortcut to provide a successful response. You can also use `error()` 
-and `response()`. All of them are mocking functions that allow you to pass the following **optional** 
+You can also program responses for expected query params:
+````kotlin
+server.whenever(
+           method = Method.GET,
+           sentToPath = "v2/top-headlines",
+           queryParams = mapOf("sources" to "crypto-coins-news",
+                               "apiKey" to "a7c816f57c004c49a21bd458e11e2807"))
+           .thenRespond(success(jsonFileName = "GetNews.json"))
+````
+
+This is the declaration of the `whenever()` function, so you can program your mocked responses 
+expecting the following request configuration specs: 
+````kotlin
+fun MockWebServer.whenever(sentToPath: String,
+                           queryParams: QueryParams? = null,
+                           jsonBodyResFile: JsonBodyFile? = null,
+                           jsonBody: JsonBody? = null,
+                           headers: Headers? = null,
+                           method: Method? = null) {
+    /*...*/                           
+}
+````
+You're able to match over path, query params, json body (inline or by resource file), headers, and 
+HTTP method.
+
+Also note in the previous snippets the `success()` function when mocking the response. function 
+`success()` is a shortcut to provide a successful response. You can also use `error()`  and 
+`response()`. All of them are mocking functions that allow you to pass the following **optional** 
 arguments:
 
 * `code` **Int** return http status code for the mocked response.

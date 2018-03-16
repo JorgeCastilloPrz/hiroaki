@@ -115,6 +115,28 @@ class MockingRequestsTest : MockServerSuite() {
         singleNew eq expectedSingleNew(83)
     }
 
+    @Test
+    fun matchesWithQueryParams() {
+        server.whenever(
+                method = Method.GET,
+                sentToPath = "v2/top-headlines",
+                queryParams = mapOf("sources" to "crypto-coins-news",
+                        "apiKey" to "a7c816f57c004c49a21bd458e11e2807"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+
+        val news = runBlocking { dataSource.getNews() }
+
+        news eq expectedNews()
+    }
+
+    @Test(expected = IOException::class)
+    fun failsWithUnknownParams() {
+        server.whenever(Method.GET, "v2/top-headlines", mapOf("randomParam" to "someValue"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+
+        runBlocking { dataSource.getNews() }
+    }
+
     private fun expectedNews(): List<Article> {
         return listOf(
                 Article("How to Get Android P's Screenshot Editing Tool on Any Android Phone",

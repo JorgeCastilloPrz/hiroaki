@@ -17,16 +17,16 @@ enum class Method {
 }
 
 private fun okHttpClient(
-    loggingLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY
+        loggingLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY
 ): OkHttpClient =
         OkHttpClient.Builder()
                 .addInterceptor(HttpLoggingInterceptor().setLevel(loggingLevel))
                 .build()
 
 fun <T> MockWebServer.retrofitService(
-    serviceClass: Class<T>,
-    converterFactory: Converter.Factory,
-    okHttpClient: OkHttpClient = okHttpClient()
+        serviceClass: Class<T>,
+        converterFactory: Converter.Factory,
+        okHttpClient: OkHttpClient = okHttpClient()
 ): T {
     return Retrofit.Builder().baseUrl(this.url("/").toString())
             .client(okHttpClient)
@@ -34,15 +34,32 @@ fun <T> MockWebServer.retrofitService(
             .create(serviceClass)
 }
 
+fun MockWebServer.whenever(sentToPath: String,
+                           queryParams: QueryParams? = null,
+                           jsonBodyResFile: JsonBodyFile? = null,
+                           jsonBody: JsonBody? = null,
+                           headers: Headers? = null,
+                           method: Method? = null): PotentialRequestChain {
+    return PotentialRequestChain(matches(
+            sentToPath = sentToPath,
+            method = method,
+            queryParams = queryParams,
+            jsonBodyResFile = jsonBodyResFile,
+            jsonBody = jsonBody,
+            headers = headers))
+}
+
 fun MockWebServer.whenever(method: Method, sentToPath: String): PotentialRequestChain {
-    return PotentialRequestChain(matches(method = method, sentToPath = sentToPath))
+    return PotentialRequestChain(matches(
+            method = method,
+            sentToPath = sentToPath))
 }
 
 fun MockWebServer.whenever(method: Method, sentToPath: String, params: QueryParams): PotentialRequestChain {
     return PotentialRequestChain(matches(
             method = method,
             sentToPath = sentToPath,
-            params = params))
+            queryParams = params))
 }
 
 fun MockWebServer.whenever(method: Method, sentToPath: String, jsonBody: JsonBody): PotentialRequestChain {

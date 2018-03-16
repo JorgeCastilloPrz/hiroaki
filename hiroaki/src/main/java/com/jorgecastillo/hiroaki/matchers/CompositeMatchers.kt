@@ -60,10 +60,3 @@ fun <T : Any> T.matches(
 
     return allOf(matchers)
 }
-
-fun matches(
-    method: Method,
-    sentToPath: String,
-    params: QueryParams
-): Matcher<RecordedRequest> =
-    allOf(hasMethod(method), isSentToPath(sentToPath), hasQueryParams(params))
