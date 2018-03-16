@@ -4,6 +4,7 @@ import com.jorgecastillo.hiroaki.Headers
 import com.jorgecastillo.hiroaki.fileContentAsString
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import java.util.concurrent.TimeUnit
 
 private const val SUCCESS_RESPONSE_CODE = 200
 private const val UNAUTHORIZED_RESPONSE_CODE = 401
@@ -74,4 +75,8 @@ fun MockWebServer.enqueueError(
     headers: Headers? = null
 ) {
     this.enqueue(error(code, jsonFileName, jsonBody, headers))
+}
+
+fun MockResponse.delay(millis: Long): MockResponse = this.apply {
+    setBodyDelay(millis, TimeUnit.MILLISECONDS)
 }

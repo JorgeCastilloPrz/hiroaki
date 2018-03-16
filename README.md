@@ -209,6 +209,23 @@ server.whenever(Method.GET, "v2/top-headlines")
       .thenRespond(error())
 ````   
 
+**Delay responses**
+Sometimes you need to mimic server response delays. `MockWebServer` already provides a function 
+`MockResponse.setBodyDelay()` to achieve it, which you can append to any `MockResponse` you create. 
+But **Hiroaki** also provides an extension function for `MockResponse` to pass a delay in millis: 
+`response.delay(millis)`:
+
+````kotlin
+server.whenever(Method.GET, "v2/top-headlines")
+      .thenRespond(success(jsonFileName = "GetNews.json").delay(250))
+      .thenRespond(success(jsonFileName = "GetSingleNew.json").delay(500))
+      .thenRespond(success(jsonFileName = "GetNews.json").delay(1000))
+      
+// Also for dispatched responses
+server.whenever(Method.GET, "v2/top-headlines")
+      .thenDispatch { request -> success().delay(250) }
+````
+
 ### Request assertions
 
 **Hiroaki** provides a highly configurable **extension function** working over any `MockWebServer` instance to perform assertions over your requests. Any of its arguments are **optional** so you're free to configure the assertion in a way that matches your needs. 
