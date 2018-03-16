@@ -210,6 +210,7 @@ server.whenever(Method.GET, "v2/top-headlines")
 ````   
 
 **Delay responses**
+
 Sometimes you need to mimic server response delays. `MockWebServer` already provides a function 
 `MockResponse.setBodyDelay()` to achieve it, which you can append to any `MockResponse` you create. 
 But **Hiroaki** also provides an extension function for `MockResponse` to pass a delay in millis: 
