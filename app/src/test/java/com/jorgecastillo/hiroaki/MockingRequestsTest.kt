@@ -89,7 +89,7 @@ class MockingRequestsTest : MockServerSuite() {
     @Test
     fun dispatchesCorrectly() {
         server.whenever(Method.GET, "v2/top-headlines")
-                .thenDispatch({ request ->
+                .thenDispatch { request ->
                     success(jsonBody = "{\n" +
                             "  \"status\": \"ok\",\n" +
                             "  \"totalResults\": 2342,\n" +
@@ -108,7 +108,7 @@ class MockingRequestsTest : MockServerSuite() {
                             "    }\n" +
                             "  ]\n" +
                             "}")
-                })
+                }
 
         val singleNew = runBlocking { dataSource.getNews() }
 

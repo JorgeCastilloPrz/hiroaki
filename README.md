@@ -196,7 +196,7 @@ Sometimes you want a response to depend on the structure of the request sent. Fo
 **Hiroaki** provides the `thenDispatch` method:
 ````kotlin
 server.whenever(Method.GET, "v2/top-headlines")
-      .thenDispatch({ request -> success(jsonBody = "{\"requestPath\" : ${request.path}" })
+      .thenDispatch { request -> success(jsonBody = "{\"requestPath\" : ${request.path}" }
 ````   
 With this feature, you could attach the same requesteded item Id to one of the items contained into 
 the response body, for example. I guess you can imagine different use cases.
@@ -205,7 +205,7 @@ Feel free to combine as many `thenRespond()` and `thenDispatch()` calls as you w
 ````kotlin
 server.whenever(Method.GET, "v2/top-headlines")
       .thenRespond(success())
-      .thenDispatch({ request -> success(jsonBody = "{\"requestPath\" : ${request.path}" })
+      .thenDispatch { request -> success(jsonBody = "{\"requestPath\" : ${request.path}" }
       .thenRespond(error())
 ````   
 
