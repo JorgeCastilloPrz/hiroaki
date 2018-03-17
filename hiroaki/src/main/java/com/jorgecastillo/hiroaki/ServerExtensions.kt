@@ -43,7 +43,7 @@ fun MockWebServer.whenever(
     headers: Headers? = null,
     method: Method? = null
 ): PotentialRequestChain {
-    this.setDispatcher(DispatcherRetainer.dispatcher)
+    this.setDispatcher(DispatcherRetainer.hiroakiDispatcher)
     return PotentialRequestChain(matches(
             sentToPath = sentToPath,
             method = method,
@@ -54,14 +54,14 @@ fun MockWebServer.whenever(
 }
 
 fun MockWebServer.whenever(method: Method, sentToPath: String): PotentialRequestChain {
-    this.setDispatcher(DispatcherRetainer.dispatcher)
+    this.setDispatcher(DispatcherRetainer.hiroakiDispatcher)
     return PotentialRequestChain(matches(
             method = method,
             sentToPath = sentToPath))
 }
 
 fun MockWebServer.whenever(method: Method, sentToPath: String, params: QueryParams): PotentialRequestChain {
-    this.setDispatcher(DispatcherRetainer.dispatcher)
+    this.setDispatcher(DispatcherRetainer.hiroakiDispatcher)
     return PotentialRequestChain(matches(
             method = method,
             sentToPath = sentToPath,
@@ -69,7 +69,7 @@ fun MockWebServer.whenever(method: Method, sentToPath: String, params: QueryPara
 }
 
 fun MockWebServer.whenever(method: Method, sentToPath: String, jsonBody: JsonBody): PotentialRequestChain {
-    this.setDispatcher(DispatcherRetainer.dispatcher)
+    this.setDispatcher(DispatcherRetainer.hiroakiDispatcher)
     return PotentialRequestChain(matches(
             method = method,
             sentToPath = sentToPath,
@@ -77,7 +77,7 @@ fun MockWebServer.whenever(method: Method, sentToPath: String, jsonBody: JsonBod
 }
 
 fun MockWebServer.whenever(method: Method, sentToPath: String, jsonBodyResFile: JsonBodyFile): PotentialRequestChain {
-    this.setDispatcher(DispatcherRetainer.dispatcher)
+    this.setDispatcher(DispatcherRetainer.hiroakiDispatcher)
     return PotentialRequestChain(matches(
             method = method,
             sentToPath = sentToPath,
@@ -85,6 +85,6 @@ fun MockWebServer.whenever(method: Method, sentToPath: String, jsonBodyResFile: 
 }
 
 fun MockWebServer.whenever(matcher: Matcher<RecordedRequest>): PotentialRequestChain {
-    this.setDispatcher(DispatcherRetainer.dispatcher)
+    this.setDispatcher(DispatcherRetainer.hiroakiDispatcher)
     return PotentialRequestChain(matcher)
 }

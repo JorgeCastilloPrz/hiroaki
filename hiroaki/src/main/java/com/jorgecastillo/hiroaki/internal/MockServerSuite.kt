@@ -2,7 +2,6 @@ package com.jorgecastillo.hiroaki.internal
 
 import com.jorgecastillo.hiroaki.dispatcher.DispatcherRetainer
 import okhttp3.mockwebserver.MockWebServer
-import okhttp3.mockwebserver.QueueDispatcher
 import org.junit.After
 import org.junit.Before
 
@@ -17,13 +16,14 @@ open class MockServerSuite {
     @Before
     open fun setup() {
         server = MockWebServer()
-        DispatcherRetainer.dispatcher.reset()
+        DispatcherRetainer.resetDispatchers()
+        server.start()
     }
 
     @After
     open fun tearDown() {
         server.shutdown()
-        DispatcherRetainer.dispatcher.reset()
-        server.setDispatcher(QueueDispatcher())
+        DispatcherRetainer.resetDispatchers()
+        server.setDispatcher(DispatcherRetainer.queueDispatcher)
     }
 }

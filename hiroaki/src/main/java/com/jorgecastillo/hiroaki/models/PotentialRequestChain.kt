@@ -15,7 +15,7 @@ class PotentialRequestChain(private val matcher: Matcher<RecordedRequest>) {
      * Enqueue a mocked response for the conditions given on the "whenever" statement.
      */
     fun thenRespond(mockResponse: MockResponse): PotentialRequestChain {
-        DispatcherRetainer.dispatcher.addMockRequest(matcher, mockResponse)
+        DispatcherRetainer.hiroakiDispatcher.addMockRequest(matcher, mockResponse)
         return this
     }
 
@@ -26,7 +26,7 @@ class PotentialRequestChain(private val matcher: Matcher<RecordedRequest>) {
      * request.
      */
     fun thenDispatch(dispatchableBlock: (recordedRequest: RecordedRequest) -> MockResponse): PotentialRequestChain {
-        DispatcherRetainer.dispatcher.addDispatchableBlock(matcher, dispatchableBlock)
+        DispatcherRetainer.hiroakiDispatcher.addDispatchableBlock(matcher, dispatchableBlock)
         return this
     }
 }
