@@ -6,6 +6,7 @@ import com.jorgecastillo.hiroaki.data.datasource.GsonNewsNetworkDataSource
 import com.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
 import com.jorgecastillo.hiroaki.data.service.GsonNewsApiService
 import com.jorgecastillo.hiroaki.internal.MockServerSuite
+import com.jorgecastillo.hiroaki.matchers.times
 import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.model.Source
 import com.jorgecastillo.hiroaki.models.error
@@ -41,8 +42,8 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
         runBlocking { dataSource.getNews() }
 
-        server.assertRequest(
-                sentToPath = "v2/top-headlines",
+        verify("v2/top-headlines").called(
+                times = times(1),
                 queryParams = params(
                         "sources" to "crypto-coins-news",
                         "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
@@ -59,8 +60,8 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        server.assertRequest(
-                sentToPath = "v2/top-headlines",
+        verify("v2/top-headlines").called(
+                times = once(),
                 jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
                 method = POST)
     }
@@ -72,8 +73,8 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        server.assertRequest(
-                sentToPath = "v2/top-headlines",
+        verify("v2/top-headlines").called(
+                times = once(),
                 jsonBody = inlineBody("{\n" +
                         "  \"title\": \"Any Title\",\n" +
                         "  \"description\": \"Any description\",\n" +
@@ -94,8 +95,8 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        server.assertRequest(
-                sentToPath = "v2/top-headlines",
+        verify("v2/top-headlines").called(
+                times = times(1),
                 jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
                 jsonBody = inlineBody("{\"title\" = \"Any title\" }", MoshiArticleDto::class.java))
     }

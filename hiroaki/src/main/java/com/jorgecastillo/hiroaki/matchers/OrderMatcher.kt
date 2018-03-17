@@ -18,8 +18,8 @@ fun order(vararg orders: Int): (requestMatcher: Matcher<RecordedRequest>) -> Mat
             }
 
             override fun describeMismatchSafely(
-                    dispatchedRequests: List<RecordedRequest>,
-                    mismatchDescription: Description
+                dispatchedRequests: List<RecordedRequest>,
+                mismatchDescription: Description
             ) {
                 orders.forEach { order ->
                     if (dispatchedRequests.size < order) {

@@ -6,6 +6,7 @@ import com.jorgecastillo.hiroaki.data.datasource.JacksonNewsNetworkDataSource
 import com.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
 import com.jorgecastillo.hiroaki.data.service.JacksonNewsApiService
 import com.jorgecastillo.hiroaki.internal.MockServerRule
+import com.jorgecastillo.hiroaki.matchers.times
 import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.model.Source
 import com.jorgecastillo.hiroaki.models.error
@@ -42,8 +43,8 @@ class RuleNetworkDataSourceTest {
 
         runBlocking { dataSource.getNews() }
 
-        rule.server.assertRequest(
-                sentToPath = "v2/top-headlines",
+        verify("v2/top-headlines").called(
+                times = once(),
                 queryParams = params(
                         "sources" to "crypto-coins-news",
                         "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
@@ -60,8 +61,8 @@ class RuleNetworkDataSourceTest {
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        rule.server.assertRequest(
-                sentToPath = "v2/top-headlines",
+        verify("v2/top-headlines").called(
+                times = once(),
                 jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
                 method = POST)
     }
@@ -73,8 +74,8 @@ class RuleNetworkDataSourceTest {
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        rule.server.assertRequest(
-                sentToPath = "v2/top-headlines",
+        verify("v2/top-headlines").called(
+                times = times(1),
                 jsonBody = inlineBody("{\n" +
                         "  \"title\": \"Any Title\",\n" +
                         "  \"description\": \"Any description\",\n" +
@@ -95,8 +96,8 @@ class RuleNetworkDataSourceTest {
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        rule.server.assertRequest(
-                sentToPath = "v2/top-headlines",
+        verify("v2/top-headlines").called(
+                times = once(),
                 jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
                 jsonBody = inlineBody("{\"title\" = \"Any title\" }", MoshiArticleDto::class.java))
     }

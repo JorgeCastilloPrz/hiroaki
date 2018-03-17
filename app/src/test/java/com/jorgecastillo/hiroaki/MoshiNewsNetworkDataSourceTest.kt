@@ -41,8 +41,8 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
 
         runBlocking { dataSource.getNews() }
 
-        server.assertRequest(
-                sentToPath = "v2/top-headlines",
+        verify("v2/top-headlines").called(
+                times = once(),
                 queryParams = params(
                         "sources" to "crypto-coins-news",
                         "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
@@ -59,8 +59,8 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        server.assertRequest(
-                sentToPath = "v2/top-headlines",
+        verify("v2/top-headlines").called(
+                times = once(),
                 jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
                 method = POST)
     }
@@ -72,8 +72,8 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        server.assertRequest(
-                sentToPath = "v2/top-headlines",
+        verify("v2/top-headlines").called(
+                times = once(),
                 jsonBody = inlineBody("{\n" +
                         "  \"title\": \"Any Title\",\n" +
                         "  \"description\": \"Any description\",\n" +
@@ -94,8 +94,8 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        server.assertRequest(
-                sentToPath = "v2/top-headlines",
+        verify("v2/top-headlines").called(
+                times = once(),
                 jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
                 jsonBody = inlineBody("{\"title\" = \"Any title\" }", MoshiArticleDto::class.java))
     }
