@@ -1,14 +1,8 @@
 package com.jorgecastillo.hiroaki.matchers
 
-import com.jorgecastillo.hiroaki.Headers
-import com.jorgecastillo.hiroaki.Method
-import com.jorgecastillo.hiroaki.QueryParams
-import com.jorgecastillo.hiroaki.fileContentAsString
-import com.jorgecastillo.hiroaki.fromJson
+import com.jorgecastillo.hiroaki.*
 import com.jorgecastillo.hiroaki.models.JsonBody
 import com.jorgecastillo.hiroaki.models.JsonBodyFile
-import com.jorgecastillo.hiroaki.parse
-import com.jorgecastillo.hiroaki.throwIfBothBodyParamsArePassed
 import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matcher
@@ -59,4 +53,13 @@ fun <T : Any> T.matches(
     }
 
     return allOf(matchers)
+}
+
+fun throwIfBothBodyParamsArePassed(
+        jsonBodyResFile: JsonBodyFile? = null,
+        jsonBody: JsonBody? = null
+) {
+    if (jsonBodyResFile != null && jsonBody != null) {
+        throw IllegalArgumentException("Please pass jsonBodyFile name or jsonBody, but not both.")
+    }
 }
