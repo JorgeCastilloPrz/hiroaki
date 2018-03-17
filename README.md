@@ -227,45 +227,60 @@ server.whenever(Method.GET, "v2/top-headlines")
       .thenDispatch { request -> success().delay(250) }
 ````
 
-### Request assertions
+### Request verification
 
-**Hiroaki** provides a highly configurable **extension function** working over any `MockWebServer` instance to perform assertions over your requests. Any of its arguments are **optional** so you're free to configure the assertion in a way that matches your needs. 
+**Hiroaki** provides a highly configurable `verify()` function to perform verification over executed HTTP requests. 
+Its arguments are **optional** so you're free to configure the assertion in a way that matches your needs. 
 
 Here you have some examples:
 
 Here I am asserting about: path where the request was sent to, query parameters, headers, and the HTTP method used.
 ```kotlin
-server.assertRequest(
-                sentToPath = "v2/top-headlines",
-                queryParams = params(
-                        "sources" to "crypto-coins-news",
-                        "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
-                headers = headers(
-                        "Cache-Control" to "max-age=640000"
-                ),
-                method = Method.GET)
+@Test
+fun verifiesCall() {
+    server.whenever(Method.GET, "v2/top-headlines")
+            .thenRespond(success(jsonFileName = "GetNews.json"))
+            .thenRespond(success(jsonFileName = "GetSingleNew.json"))
+            .thenRespond(success(jsonFileName = "GetNews.json"))
+
+    runBlocking {
+        dataSource.getNews()
+        dataSource.getSingleNew()
+        dataSource.getNews()
+    }
+
+    verify("v2/top-headlines").called(
+            times = times(2),
+            order = order(1, 3),
+            method = Method.GET,
+            queryParams = params(
+                    "sources" to "crypto-coins-news",
+                    "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
+            headers = headers("Cache-Control" to "max-age=640000"))
+}
 ```
 You can also provide a json body to assert over the body sent on your requests (`POST`, `PUT`, `PATCH`). Here you have an inlined body used for the assertion. 
 
 *Note that **It's mandatory to provide the network DTO you are using to map that body from**, since `Hiroaki` parses both bodies to objects and uses `equals` to compare the **expected** vs **sent** bodies. Therefore, it's highly recommended to **use Kotlin `data` classes** for your DTOs (following the standards) or if you don't really want to use them, you'll have to override `equals` on the class and all its nested levels.*
 ```kotlin
-server.assertRequest(
-                sentToPath = "v2/top-headlines",
-                jsonBody = inlineBody("{\n" +
-                        "  \"title\": \"Any Title\",\n" +
-                        "  \"description\": \"Any description\",\n" +
-                        "  \"source\": {\n" +
-                        "    \"link\": \"http://source/123\",\n" +
-                        "    \"name\": \"Some source\"\n" +
-                        "  }\n" +
-                        "}\n", ArticleDto::class.java))
+verify("v2/top-headlines").called(
+            times = once(),
+            method = Method.POST,
+            headers = headers("Cache-Control" to "max-age=640000"),
+            jsonBody = inlineBody("{\n" +
+                                    "  \"title\": \"Any Title\",\n" +
+                                    "  \"description\": \"Any description\",\n" +
+                                    "  \"source\": {\n" +
+                                    "    \"link\": \"http://source/123\",\n" +
+                                    "    \"name\": \"Some source\"\n" +
+                                    "  }\n" +
+                                    "}\n", ArticleDto::class.java))
 ````
 You can also provide json body for post requests from a file saved on your `/test/resources` directory.
 ```kotlin
-server.assertRequest(
-                sentToPath = "v2/top-headlines",
-                jsonBodyResFile = fileBody("PublishHeadline.json", ArticleDto::class.java),
-                method = Method.POST)
+verify("v2/top-headlines").called(
+            method = Method.POST,
+            jsonBodyResFile = fileBody("PublishHeadline.json", ArticleDto::class.java))
 ```
 
 ### Parsed Response assertions
