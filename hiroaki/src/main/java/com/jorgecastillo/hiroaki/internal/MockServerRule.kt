@@ -2,7 +2,6 @@ package com.jorgecastillo.hiroaki.internal
 
 import com.jorgecastillo.hiroaki.dispatcher.DispatcherRetainer
 import okhttp3.mockwebserver.MockWebServer
-import okhttp3.mockwebserver.QueueDispatcher
 import org.junit.Before
 import org.junit.rules.ExternalResource
 
@@ -12,14 +11,14 @@ class MockServerRule : ExternalResource() {
 
     @Before
     override fun before() {
-        super.before()
         server = MockWebServer()
-        DispatcherRetainer.dispatcher.reset()
+        DispatcherRetainer.resetDispatchers()
+        server.start()
     }
 
     override fun after() {
-        super.after()
-        DispatcherRetainer.dispatcher.reset()
-        server.setDispatcher(QueueDispatcher())
+        server.shutdown()
+        DispatcherRetainer.resetDispatchers()
+        server.setDispatcher(DispatcherRetainer.queueDispatcher)
     }
 }

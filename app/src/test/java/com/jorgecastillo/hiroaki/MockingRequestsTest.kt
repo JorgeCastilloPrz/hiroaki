@@ -3,6 +3,8 @@ package com.jorgecastillo.hiroaki
 import com.jorgecastillo.hiroaki.data.datasource.GsonNewsNetworkDataSource
 import com.jorgecastillo.hiroaki.data.service.GsonNewsApiService
 import com.jorgecastillo.hiroaki.internal.MockServerSuite
+import com.jorgecastillo.hiroaki.matchers.order
+import com.jorgecastillo.hiroaki.matchers.times
 import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.model.Source
 import com.jorgecastillo.hiroaki.models.error
@@ -46,7 +48,7 @@ class MockingRequestsTest : MockServerSuite() {
     }
 
     @Test
-    fun mockResponseSuccess() {
+    fun enqueueMockResponseSuccess() {
         server.enqueue(response(200, jsonFileName = "GetNews.json"))
 
         val news = runBlocking { dataSource.getNews() }
@@ -55,7 +57,7 @@ class MockingRequestsTest : MockServerSuite() {
     }
 
     @Test(expected = IOException::class)
-    fun mockResponseError() {
+    fun enqueueMockResponseError() {
         server.enqueue(response(307))
 
         runBlocking { dataSource.getNews() }
@@ -130,6 +132,29 @@ class MockingRequestsTest : MockServerSuite() {
                 .thenRespond(success(jsonFileName = "GetNews.json"))
 
         runBlocking { dataSource.getNews() }
+    }
+
+    @Test
+    fun verifiesCall() {
+        server.whenever(Method.GET, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+
+        runBlocking {
+            dataSource.getNews()
+            dataSource.getNews()
+            dataSource.getNews()
+        }
+
+        verify("v2/top-headlines").called(
+                times = times(3),
+                order = order(1, 2, 3),
+                method = Method.GET,
+                queryParams = params(
+                        "sources" to "crypto-coins-news",
+                        "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
+                headers = headers("Cache-Control" to "max-age=640000"))
     }
 
     private fun expectedNews(): List<Article> {
