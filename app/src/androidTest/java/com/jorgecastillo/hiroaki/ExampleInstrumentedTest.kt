@@ -1,22 +1,41 @@
 package com.jorgecastillo.hiroaki
 
+import android.content.Intent
 import android.support.test.InstrumentationRegistry
+import android.support.test.filters.LargeTest
+import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import com.jorgecastillo.hiroaki.Method.GET
+import com.jorgecastillo.hiroaki.internal.MockServerSuite
+import com.jorgecastillo.hiroaki.models.success
 import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.MockitoAnnotations
 
-/**
- * Instrumented test, which will execute on an Android device.
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
+@LargeTest
 @RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
+class ExampleInstrumentedTest : MockServerSuite() {
+
+    @get:Rule val testRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, true, false)
+
+    @Before
+    override fun setup() {
+        super.setup()
+        MockitoAnnotations.initMocks(this)
+    }
+
+    private fun startActivity(): MainActivity {
+        return testRule.launchActivity(Intent())
+    }
+
     @Test
-    fun useAppContext() {
-        // Context of the app under test.
-        val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.jorgecastillo.hiroaki", appContext.packageName)
+    fun showsEmptyCaseIfThereAreNoSuperHeroes() {
+        server.whenever(GET, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+
+        startActivity()
     }
 }
