@@ -19,13 +19,15 @@ fun twice(): (requestMatcher: Matcher<RecordedRequest>) -> Matcher<List<Recorded
 
 class VerifiableRequest(private val path: String) {
 
-    fun called(times: ((requestMatcher: Matcher<RecordedRequest>) -> Matcher<List<RecordedRequest>>)? = null,
-               order: ((requestMatcher: Matcher<RecordedRequest>) -> Matcher<List<RecordedRequest>>)? = null,
-               queryParams: QueryParams? = null,
-               jsonBodyResFile: JsonBodyFile? = null,
-               jsonBody: JsonBody? = null,
-               headers: Headers? = null,
-               method: Method? = null) {
+    fun called(
+        times: ((requestMatcher: Matcher<RecordedRequest>) -> Matcher<List<RecordedRequest>>)? = null,
+        order: ((requestMatcher: Matcher<RecordedRequest>) -> Matcher<List<RecordedRequest>>)? = null,
+        queryParams: QueryParams? = null,
+        jsonBodyResFile: JsonBodyFile? = null,
+        jsonBody: JsonBody? = null,
+        headers: Headers? = null,
+        method: Method? = null
+    ) {
 
         val safeTimes = times ?: once()
         val safeOrder = order ?: anyOrder()

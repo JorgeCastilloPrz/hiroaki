@@ -18,8 +18,8 @@ fun times(count: Int): (requestMatcher: Matcher<RecordedRequest>) -> Matcher<Lis
             }
 
             override fun describeMismatchSafely(
-                    dispatchedRequests: List<RecordedRequest>,
-                    mismatchDescription: Description
+                dispatchedRequests: List<RecordedRequest>,
+                mismatchDescription: Description
             ) {
                 val timesFound = dispatchedRequests
                         .fold(0, { acc, recordedRequest ->

@@ -14,8 +14,8 @@ fun anyOrder(): (requestMatcher: Matcher<RecordedRequest>) -> Matcher<List<Recor
             }
 
             override fun describeMismatchSafely(
-                    dispatchedRequests: List<RecordedRequest>,
-                    mismatchDescription: Description
+                dispatchedRequests: List<RecordedRequest>,
+                mismatchDescription: Description
             ) {
                 mismatchDescription.appendText("But request has not been done.")
             }
