@@ -234,7 +234,6 @@ Its arguments are **optional** so you're free to configure the assertion in a wa
 
 Here you have some examples:
 
-Here I am asserting about: path where the request was sent to, query parameters, headers, and the HTTP method used.
 ```kotlin
 @Test
 fun verifiesCall() {
