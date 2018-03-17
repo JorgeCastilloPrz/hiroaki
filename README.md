@@ -3,8 +3,8 @@ Hiroaki [![CircleCI](https://circleci.com/gh/JorgeCastilloPrz/hiroaki/tree/maste
 
 <img src="./art/sakura_logo.svg" width="256" height="256" />
 
-    Japanese: 'spreading brightness'. Derived from the words 'hiro', which means 'large or wide', 
-    and 'aki', which means 'bright or clear'.
+    Japanese: 'spreading brightness'. Derived from the words 'hiro', which means 'large or wide', and 'aki', 
+    which means 'bright or clear'.
 
 The intention of Hiroaki is to achieve clarity on your **API integration tests** in an idiomatic way by simplifying the way you **prepare 
 your test environment prior to test execution and the assertions you perform in the end**. 
