@@ -306,8 +306,6 @@ You must extend `AndroidMockServerSuite` or use `AndroidMockServerRule` instead.
 `MockServerSuite` and `MockServerRule`, but they also take care of passing the instrumentation Android `Context` into 
 **Hiroaki** so it can load resource files from `androidTest/assets/` for json body files. 
 
-That's transparent for you if you extend the mentioned classes.
-
 Basic sample of Android instrumentation tests:
 ````kotlin
 @LargeTest
@@ -344,6 +342,10 @@ class ExampleInstrumentedTest : AndroidMockServerSuite() {
 I'm being intentionally simple here on how I pass the mocked service to the application class (setup method), which is 
 being replaced by a mock application on the androidTest environment. But you would use a dependency injector/container 
 to replace the service most likely. 
+
+**Verifying calls in Android**
+Using call verification on Android instrumentation tests can also be a good idea, so you are able to assert that the 
+endpoints are called as expected (including optional times / ordering) per screen. 
 
 Do you want to contribute?
 --------------------------
