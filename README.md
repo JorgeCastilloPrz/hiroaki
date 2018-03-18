@@ -344,6 +344,7 @@ being replaced by a mock application on the androidTest environment. But you wou
 to replace the service most likely. 
 
 **Verifying calls in Android**
+
 Using call verification on Android instrumentation tests can also be a good idea, so you are able to assert that the 
 endpoints are called as expected (including optional times / ordering) per screen. 
 
