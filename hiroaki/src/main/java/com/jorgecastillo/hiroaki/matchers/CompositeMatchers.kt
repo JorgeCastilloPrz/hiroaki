@@ -7,7 +7,6 @@ import com.jorgecastillo.hiroaki.fileContentAsString
 import com.jorgecastillo.hiroaki.fromJson
 import com.jorgecastillo.hiroaki.models.JsonBody
 import com.jorgecastillo.hiroaki.models.JsonBodyFile
-import com.jorgecastillo.hiroaki.parse
 import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matcher
@@ -36,18 +35,14 @@ fun <T : Any> T.matches(
         matchers.add(
                 hasBody(
                         fileStringBody,
-                        fileStringBody.fromJson(it.type),
-                        fileStringBody.parse(it.type)
-                )
+                        fileStringBody.fromJson())
         )
     }
     jsonBody?.let {
         matchers.add(
                 hasBody(
                         it.jsonBody,
-                        it.jsonBody.fromJson(it.type),
-                        it.jsonBody.parse(it.type)
-                )
+                        it.jsonBody.fromJson())
         )
     }
     headers?.let {

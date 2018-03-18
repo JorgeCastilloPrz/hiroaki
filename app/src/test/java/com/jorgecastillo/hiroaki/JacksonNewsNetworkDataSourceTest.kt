@@ -1,12 +1,16 @@
 package com.jorgecastillo.hiroaki
 
+import com.jorgecastillo.hiroaki.Method.GET
+import com.jorgecastillo.hiroaki.Method.POST
 import com.jorgecastillo.hiroaki.data.datasource.JacksonNewsNetworkDataSource
-import com.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
 import com.jorgecastillo.hiroaki.data.service.JacksonNewsApiService
+import com.jorgecastillo.hiroaki.internal.MockServerSuite
 import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.model.Source
+import com.jorgecastillo.hiroaki.models.error
 import com.jorgecastillo.hiroaki.models.fileBody
 import com.jorgecastillo.hiroaki.models.inlineBody
+import com.jorgecastillo.hiroaki.models.success
 import com.jorgecastillo.hiroaki.mother.anyArticle
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
@@ -15,11 +19,6 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import retrofit2.converter.jackson.JacksonConverterFactory
 import java.io.IOException
-import com.jorgecastillo.hiroaki.Method.GET
-import com.jorgecastillo.hiroaki.Method.POST
-import com.jorgecastillo.hiroaki.internal.MockServerSuite
-import com.jorgecastillo.hiroaki.models.error
-import com.jorgecastillo.hiroaki.models.success
 
 @RunWith(MockitoJUnitRunner::class)
 class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
@@ -60,7 +59,7 @@ class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
         runBlocking { dataSource.publishHeadline(article) }
 
         verify("v2/top-headlines").called(
-                jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
+                jsonBodyResFile = fileBody("PublishHeadline.json"),
                 method = POST)
     }
 
@@ -83,7 +82,7 @@ class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
                         "    \"id\": \"AnyId\",\n" +
                         "    \"name\": \"ANYID\"\n" +
                         "  }\n" +
-                        "}\n", MoshiArticleDto::class.java))
+                        "}\n"))
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -95,8 +94,8 @@ class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
 
         verify("v2/top-headlines").called(
                 times = once(),
-                jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
-                jsonBody = inlineBody("{\"title\" = \"Any title\" }", MoshiArticleDto::class.java))
+                jsonBodyResFile = fileBody("PublishHeadline.json"),
+                jsonBody = inlineBody("{\"title\" = \"Any title\" }"))
     }
 
     @Test

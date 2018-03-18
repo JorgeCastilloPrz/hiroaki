@@ -3,7 +3,6 @@ package com.jorgecastillo.hiroaki
 import com.jorgecastillo.hiroaki.Method.GET
 import com.jorgecastillo.hiroaki.Method.POST
 import com.jorgecastillo.hiroaki.data.datasource.JacksonNewsNetworkDataSource
-import com.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
 import com.jorgecastillo.hiroaki.data.service.JacksonNewsApiService
 import com.jorgecastillo.hiroaki.internal.MockServerRule
 import com.jorgecastillo.hiroaki.matchers.times
@@ -63,7 +62,7 @@ class RuleNetworkDataSourceTest {
 
         verify("v2/top-headlines").called(
                 times = once(),
-                jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
+                jsonBodyResFile = fileBody("PublishHeadline.json"),
                 method = POST)
     }
 
@@ -86,7 +85,7 @@ class RuleNetworkDataSourceTest {
                         "    \"id\": \"AnyId\",\n" +
                         "    \"name\": \"ANYID\"\n" +
                         "  }\n" +
-                        "}\n", MoshiArticleDto::class.java))
+                        "}\n"))
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -98,8 +97,8 @@ class RuleNetworkDataSourceTest {
 
         verify("v2/top-headlines").called(
                 times = once(),
-                jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
-                jsonBody = inlineBody("{\"title\" = \"Any title\" }", MoshiArticleDto::class.java))
+                jsonBodyResFile = fileBody("PublishHeadline.json"),
+                jsonBody = inlineBody("{\"title\" = \"Any title\" }"))
     }
 
     @Test
