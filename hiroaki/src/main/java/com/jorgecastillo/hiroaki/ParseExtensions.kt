@@ -1,6 +1,5 @@
 package com.jorgecastillo.hiroaki
 
-import com.google.gson.GsonBuilder
 import com.google.gson.JsonParseException
 import com.jorgecastillo.hiroaki.dispatcher.DispatcherRetainer
 import okhttp3.mockwebserver.RecordedRequest
@@ -39,4 +38,3 @@ fun RecordedRequest.parse(): Pair<LinkedTreeMap<String, Object>, String> {
     val bodyString = this.body.snapshot().utf8()
     return Pair(bodyString.fromJson(), bodyString)
 }
-

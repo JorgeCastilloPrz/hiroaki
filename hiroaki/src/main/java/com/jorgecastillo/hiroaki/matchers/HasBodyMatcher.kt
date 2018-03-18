@@ -13,7 +13,8 @@ import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType.Object
  */
 fun hasBody(
     stringBody: String,
-    parsedExpectedBody: LinkedTreeMap<String, Object>):
+    parsedExpectedBody: LinkedTreeMap<String, Object>
+):
         Matcher<RecordedRequest> = object : TypeSafeMatcher<RecordedRequest>() {
 
     override fun describeTo(description: Description) {
