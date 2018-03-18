@@ -35,7 +35,8 @@ Add the following code to your ``build.gradle``.
 
 ```groovy
 dependencies{
-    implementation 'com.jorgecastillo:hiroaki:0.0.1'
+    implementation 'com.jorgecastillo:hiroaki-core:0.0.1'
+    implementation 'com.jorgecastillo:hiroaki-android:0.0.1' // Android instrumentation tests
 }
 ```
 
