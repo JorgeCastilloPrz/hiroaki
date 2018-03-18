@@ -1,1 +1,1 @@
-include ':app', ':hiroaki'
+include ':app', ':hiroaki-core', ':hiroaki-android'
