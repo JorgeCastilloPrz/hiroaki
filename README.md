@@ -132,12 +132,11 @@ the you'll get a response like the one we are mocking there.
 
 You can also program responses for expected query params:
 ````kotlin
-server.whenever(
-           method = Method.GET,
-           sentToPath = "v2/top-headlines",
-           queryParams = mapOf("sources" to "crypto-coins-news",
-                               "apiKey" to "a7c816f57c004c49a21bd458e11e2807"))
-           .thenRespond(success(jsonFileName = "GetNews.json"))
+server.whenever(method = Method.GET,
+                sentToPath = "v2/top-headlines",
+                queryParams = mapOf("sources" to "crypto-coins-news",
+                                    "apiKey" to "a7c816f57c004c49a21bd458e11e2807"))
+      .thenRespond(success(jsonFileName = "GetNews.json"))
 ````
 
 This is the declaration of the `whenever()` function, so you can program your mocked responses 
