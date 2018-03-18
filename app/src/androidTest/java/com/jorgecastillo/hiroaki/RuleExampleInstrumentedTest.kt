@@ -1,7 +1,6 @@
 package com.jorgecastillo.hiroaki
 
 import android.content.Intent
-import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -11,8 +10,7 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import com.jorgecastillo.hiroaki.Method.GET
 import com.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
-import com.jorgecastillo.hiroaki.internal.AndroidMockServerSuite
-import com.jorgecastillo.hiroaki.internal.MockServerSuite
+import com.jorgecastillo.hiroaki.internal.AndroidMockServerRule
 import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.model.Source
 import com.jorgecastillo.hiroaki.models.success
@@ -20,31 +18,30 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.MockitoAnnotations
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest : AndroidMockServerSuite() {
+class RuleExampleInstrumentedTest {
 
-    @get:Rule val testRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, true, false)
+    @get:Rule val testRule: AndroidMockServerRule = AndroidMockServerRule()
+    @get:Rule val activityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, true, false)
 
     @Before
-    override fun setup() {
-        super.setup()
-        val mockService = server.retrofitService(
+    fun setup() {
+        val mockService = testRule.server.retrofitService(
                 MoshiNewsApiService::class.java,
                 MoshiConverterFactory.create())
         getApp().service = mockService
     }
 
     private fun startActivity(): MainActivity {
-        return testRule.launchActivity(Intent())
+        return activityRule.launchActivity(Intent())
     }
 
     @Test
     fun showsEmptyCaseIfThereAreNoSuperHeroes() {
-        server.whenever(GET, "v2/top-headlines")
+        testRule.server.whenever(GET, "v2/top-headlines")
                 .thenRespond(success(jsonFileName = "GetNews.json"))
 
         startActivity()
