@@ -300,6 +300,51 @@ fun parsesNewsProperly() {
 Here `eq` Is just an `infix` function to run `assertEquals` on both objects. Here we are building the list of expected objects with the function `expectedNews()`. 
 The objects are being compared using the `equals` operator so again, you **better use data classes or redefine `equals`** for your returned classes. 
 
+### Android Instrumentation Tests
+
+You must extend `AndroidMockServerSuite` or use `AndroidMockServerRule` instead. Those classes are equivalent to 
+`MockServerSuite` and `MockServerRule`, but they also take care of passing the instrumentation Android `Context` into 
+**Hiroaki** so it can load resource files from `androidTest/assets/` for json body files. 
+
+That's transparent for you if you extend the mentioned classes.
+
+Basic sample of Android instrumentation tests:
+````kotlin
+@LargeTest
+@RunWith(AndroidJUnit4::class)
+class ExampleInstrumentedTest : AndroidMockServerSuite() {
+
+    @get:Rule val testRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, true, false)
+
+    @Before
+    override fun setup() {
+        super.setup()
+        val mockService = server.retrofitService(
+                MoshiNewsApiService::class.java,
+                MoshiConverterFactory.create())
+        getApp().service = mockService
+    }
+
+    private fun startActivity(): MainActivity {
+        return testRule.launchActivity(Intent())
+    }
+
+    @Test
+    fun showsEmptyCaseIfThereAreNoSuperHeroes() {
+        server.whenever(GET, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+
+        startActivity()
+
+        onView(withText(expectedNews()[0].title)).check(matches(isDisplayed()))
+        onView(withText(expectedNews()[0].description)).check(matches(isDisplayed()))
+    }
+}
+````
+I'm being intentionally simple here on how I pass the mocked service to the application class (setup method), which is 
+being replaced by a mock application on the androidTest environment. But you would use a dependency injector/container 
+to replace the service most likely. 
+
 Do you want to contribute?
 --------------------------
 
