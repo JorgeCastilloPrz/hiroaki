@@ -1,7 +1,6 @@
 package com.jorgecastillo.hiroaki
 
 import android.content.Intent
-import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -12,7 +11,6 @@ import android.support.test.runner.AndroidJUnit4
 import com.jorgecastillo.hiroaki.Method.GET
 import com.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
 import com.jorgecastillo.hiroaki.internal.AndroidMockServerSuite
-import com.jorgecastillo.hiroaki.internal.MockServerSuite
 import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.model.Source
 import com.jorgecastillo.hiroaki.models.success
@@ -20,7 +18,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.MockitoAnnotations
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 @LargeTest

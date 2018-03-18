@@ -36,7 +36,7 @@ fun <T> MockWebServer.retrofitService(
             .create(serviceClass)
 }
 
-fun MockWebServer.setAndroidContext(context: Context): Unit {
+fun MockWebServer.setAndroidContext(context: Context) {
     DispatcherRetainer.androidContext = context
 }
 
