@@ -51,6 +51,7 @@ class ExampleInstrumentedTest : MockServerSuite() {
         startActivity()
 
         onView(withText(expectedNews()[0].title)).check(matches(isDisplayed()))
+        onView(withText(expectedNews()[0].description)).check(matches(isDisplayed()))
     }
 
     private fun expectedNews(): List<Article> {
