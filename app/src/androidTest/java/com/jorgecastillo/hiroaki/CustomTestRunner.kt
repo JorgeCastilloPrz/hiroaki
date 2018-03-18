@@ -2,7 +2,6 @@ package com.jorgecastillo.hiroaki
 
 import android.app.Application
 import android.content.Context
-import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnitRunner
 
 class CustomTestRunner : AndroidJUnitRunner() {

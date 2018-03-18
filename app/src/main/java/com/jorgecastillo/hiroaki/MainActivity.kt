@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.jorgecastillo.hiroaki.data.datasource.MoshiNewsNetworkDataSource
-import com.jorgecastillo.hiroaki.di.provideNewsService
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
