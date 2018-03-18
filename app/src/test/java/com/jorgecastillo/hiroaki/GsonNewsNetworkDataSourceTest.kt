@@ -3,7 +3,6 @@ package com.jorgecastillo.hiroaki
 import com.jorgecastillo.hiroaki.Method.GET
 import com.jorgecastillo.hiroaki.Method.POST
 import com.jorgecastillo.hiroaki.data.datasource.GsonNewsNetworkDataSource
-import com.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
 import com.jorgecastillo.hiroaki.data.service.GsonNewsApiService
 import com.jorgecastillo.hiroaki.internal.MockServerSuite
 import com.jorgecastillo.hiroaki.matchers.times
@@ -62,7 +61,7 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
         verify("v2/top-headlines").called(
                 times = once(),
-                jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
+                jsonBodyResFile = fileBody("PublishHeadline.json"),
                 method = POST)
     }
 
@@ -85,7 +84,7 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
                         "    \"id\": \"AnyId\",\n" +
                         "    \"name\": \"ANYID\"\n" +
                         "  }\n" +
-                        "}\n", MoshiArticleDto::class.java))
+                        "}\n"))
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -97,8 +96,8 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
 
         verify("v2/top-headlines").called(
                 times = times(1),
-                jsonBodyResFile = fileBody("PublishHeadline.json", MoshiArticleDto::class.java),
-                jsonBody = inlineBody("{\"title\" = \"Any title\" }", MoshiArticleDto::class.java))
+                jsonBodyResFile = fileBody("PublishHeadline.json"),
+                jsonBody = inlineBody("{\"title\" = \"Any title\" }"))
     }
 
     @Test

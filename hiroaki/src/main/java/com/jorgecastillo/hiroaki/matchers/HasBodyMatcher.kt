@@ -1,14 +1,19 @@
 package com.jorgecastillo.hiroaki.matchers
 
+import com.google.gson.internal.LinkedTreeMap
+import com.jorgecastillo.hiroaki.parse
 import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType.Object
 
 /**
  * Custom Hamcrest matcher to assert about the outgoing body of an OkHttp RecordedRequest.
  */
-fun <T> hasBody(stringBody: String, parsedExpectedBody: T, parsedRequestBody: Pair<T, String>):
+fun hasBody(
+    stringBody: String,
+    parsedExpectedBody: LinkedTreeMap<String, Object>):
         Matcher<RecordedRequest> = object : TypeSafeMatcher<RecordedRequest>() {
 
     override fun describeTo(description: Description) {
@@ -20,10 +25,10 @@ fun <T> hasBody(stringBody: String, parsedExpectedBody: T, parsedRequestBody: Pa
         request: RecordedRequest,
         mismatchDescription: Description
     ) {
-        mismatchDescription.appendText("\n${parsedRequestBody.second}")
+        mismatchDescription.appendText("\n${request.parse().second}")
     }
 
     override fun matchesSafely(request: RecordedRequest): Boolean {
-        return parsedRequestBody.first == parsedExpectedBody
+        return request.parse().first == parsedExpectedBody
     }
 }

@@ -15,20 +15,17 @@ How it works
 It uses Kotlin features like **extension functions**, **type aliases**, **delegation**, 
 **package level functions** and many other ones like **custom hamcrest** matchers to achieve the wanted behavior.
 
-When you are testing you want to isolate your tests from external frameworks that can provoke flakiness. 
-**Hiroaki** relies on `MockWebServer` to provide a mock server as a target for your HTTP requests 
-that you'll be able to use to mock your server behavior.
+When you are testing you want to isolate your tests from external frameworks that can provoke flakiness. **Hiroaki** 
+relies on `MockWebServer` to provide a mock server as a target for your HTTP requests that you'll be able to use to mock 
+your server behavior.
 
-That enables you to assert over how your app or system will react to some predefined server & API 
-behaviors. 
+That enables you to assert over how your app or system will react to some predefined server & API behaviors. 
 
 Where is the magic?
 -------------------
-Most of the features provided by `Hiroaki` are **extension functions** declared over the 
-`MockWebServer` type.
+Most of the features provided by `Hiroaki` are **extension functions** declared over the  `MockWebServer` type.
  
-That means you can easily program and chain mock responses for given request conditions to certain 
-endpoints (à la mockito), mock responses with one liners, assert over recorded request conditions 
+That means you can easily program and chain mock responses for given request conditions to certain endpoints (à la mockito), mock responses with one liners, assert over recorded request conditions 
 or over the response data parsed just with a simple `MockWebServer` instance.
 
 Usage
@@ -258,9 +255,8 @@ fun verifiesCall() {
             headers = headers("Cache-Control" to "max-age=640000"))
 }
 ```
-You can also provide a json body to assert over the body sent on your requests (`POST`, `PUT`, `PATCH`). Here you have an inlined body used for the assertion. 
+You can also provide a json body to verify the body sent on your requests (`POST`, `PUT`, `PATCH`). Here you have an inlined body used for the assertion. 
 
-*Note that **It's mandatory to provide the network DTO you are using to map that body from**, since `Hiroaki` parses both bodies to objects and uses `equals` to compare the **expected** vs **sent** bodies. Therefore, it's highly recommended to **use Kotlin `data` classes** for your DTOs (following the standards) or if you don't really want to use them, you'll have to override `equals` on the class and all its nested levels.*
 ```kotlin
 verify("v2/top-headlines").called(
             times = once(),
@@ -273,13 +269,13 @@ verify("v2/top-headlines").called(
                                     "    \"link\": \"http://source/123\",\n" +
                                     "    \"name\": \"Some source\"\n" +
                                     "  }\n" +
-                                    "}\n", ArticleDto::class.java))
+                                    "}\n"))
 ````
 You can also provide json body for post requests from a file saved on your `/test/resources` directory.
 ```kotlin
 verify("v2/top-headlines").called(
             method = Method.POST,
-            jsonBodyResFile = fileBody("PublishHeadline.json", ArticleDto::class.java))
+            jsonBodyResFile = fileBody("PublishHeadline.json"))
 ```
 
 ### Parsed Response assertions
@@ -298,7 +294,7 @@ fun parsesNewsProperly() {
 }
 ``` 
 Here `eq` Is just an `infix` function to run `assertEquals` on both objects. Here we are building the list of expected objects with the function `expectedNews()`. 
-The objects are being compared using the `equals` operator so again, you **better use data classes or redefine `equals`** for your returned classes. 
+The objects are being compared using the `equals` operator so you **better use data classes for DTOs or redefine `equals`** properly. 
 
 ### Android Instrumentation Tests
 

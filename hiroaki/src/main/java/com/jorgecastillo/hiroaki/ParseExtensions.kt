@@ -5,6 +5,9 @@ import com.google.gson.JsonParseException
 import com.jorgecastillo.hiroaki.dispatcher.DispatcherRetainer
 import okhttp3.mockwebserver.RecordedRequest
 import java.io.File
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType.Object
+import com.google.gson.Gson
+import com.google.gson.internal.LinkedTreeMap
 
 @Throws(Exception::class)
 fun <T : Any> T.fileContentAsString(fileName: String): String {
@@ -19,23 +22,21 @@ fun <T : Any> T.fileContentAsString(fileName: String): String {
     }
 }
 
-fun convertStreamToString(inputStream: java.io.InputStream): String {
+private fun convertStreamToString(inputStream: java.io.InputStream): String {
     val s = java.util.Scanner(inputStream)
             .useDelimiter("\\A")
     return if (s.hasNext()) s.next() else ""
 }
 
 @Throws(Exception::class)
-fun <T> String.fromJson(clazz: Class<T>): T =
-        GsonBuilder().create().fromJson(this, clazz)
-
-@Throws(JsonParseException::class)
-fun <T> RecordedRequest.parse(clazz: Class<T>): Pair<T, String> {
-    val bodyString = this.body.readUtf8()
-    return Pair(GsonBuilder().create().fromJson(bodyString, clazz), bodyString)
+fun String.fromJson(): LinkedTreeMap<String, Object> {
+    val gson = Gson()
+    return gson.fromJson<LinkedTreeMap<String, Object>>(this, LinkedTreeMap::class.java)
 }
 
 @Throws(JsonParseException::class)
-fun <T> String.parse(clazz: Class<T>): Pair<T, String> {
-    return Pair(fromJson(clazz), this)
+fun RecordedRequest.parse(): Pair<LinkedTreeMap<String, Object>, String> {
+    val bodyString = this.body.snapshot().utf8()
+    return Pair(bodyString.fromJson(), bodyString)
 }
+
