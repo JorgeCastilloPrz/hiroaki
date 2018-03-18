@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         launch(UI) {
             loading.visibility = View.VISIBLE
-            val articles = MoshiNewsNetworkDataSource(provideNewsService()).getNews()
+            val articles = MoshiNewsNetworkDataSource(getApp().newsService()).getNews()
             adapter.articles = articles
             adapter.notifyDataSetChanged()
             loading.visibility = View.GONE

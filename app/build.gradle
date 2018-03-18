@@ -10,7 +10,7 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "0.0.1"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.jorgecastillo.hiroaki.CustomTestRunner"
 
         multiDexEnabled true
     }
@@ -85,6 +85,11 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-android:2.15.0'
     androidTestImplementation "com.nhaarman:mockito-kotlin:1.5.0"
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:3.0.1') {
+        exclude module: 'support-annotations'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'support-v4'
+    }
 }
 
 apply from: '../ktlint/ktlint.gradle'
