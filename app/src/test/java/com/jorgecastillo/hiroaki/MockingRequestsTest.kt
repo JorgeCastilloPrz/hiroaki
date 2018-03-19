@@ -3,6 +3,8 @@ package com.jorgecastillo.hiroaki
 import com.jorgecastillo.hiroaki.data.datasource.GsonNewsNetworkDataSource
 import com.jorgecastillo.hiroaki.data.service.GsonNewsApiService
 import com.jorgecastillo.hiroaki.internal.MockServerSuite
+import com.jorgecastillo.hiroaki.matchers.atLeast
+import com.jorgecastillo.hiroaki.matchers.atMost
 import com.jorgecastillo.hiroaki.matchers.order
 import com.jorgecastillo.hiroaki.matchers.times
 import com.jorgecastillo.hiroaki.model.Article
@@ -155,6 +157,102 @@ class MockingRequestsTest : MockServerSuite() {
                         "sources" to "crypto-coins-news",
                         "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
                 headers = headers("Cache-Control" to "max-age=640000"))
+    }
+
+    @Test
+    fun verifiesAtLeast() {
+        server.whenever(Method.GET, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+
+        runBlocking {
+            dataSource.getNews()
+            dataSource.getNews()
+            dataSource.getNews()
+        }
+
+        server.verify("v2/top-headlines").called(times = atLeast(3))
+    }
+
+    @Test
+    fun verifiesAtLeast2() {
+        server.whenever(Method.GET, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+
+        runBlocking {
+            dataSource.getNews()
+            dataSource.getNews()
+            dataSource.getNews()
+        }
+
+        server.verify("v2/top-headlines").called(times = atLeast(1))
+    }
+
+    @Test(expected = AssertionError::class)
+    fun verifiesAtLeastError() {
+        server.whenever(Method.GET, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+
+        runBlocking {
+            dataSource.getNews()
+            dataSource.getNews()
+            dataSource.getNews()
+        }
+
+        server.verify("v2/top-headlines").called(times = atLeast(4))
+    }
+
+    @Test
+    fun verifiesAtMost() {
+        server.whenever(Method.GET, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+
+        runBlocking {
+            dataSource.getNews()
+            dataSource.getNews()
+            dataSource.getNews()
+        }
+
+        server.verify("v2/top-headlines").called(times = atMost(3))
+    }
+
+    @Test
+    fun verifiesAtMost2() {
+        server.whenever(Method.GET, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+
+        runBlocking {
+            dataSource.getNews()
+            dataSource.getNews()
+            dataSource.getNews()
+        }
+
+        server.verify("v2/top-headlines").called(times = atMost(4))
+    }
+
+    @Test(expected = AssertionError::class)
+    fun verifiesAtMostError() {
+        server.whenever(Method.GET, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+
+        runBlocking {
+            dataSource.getNews()
+            dataSource.getNews()
+            dataSource.getNews()
+        }
+
+        server.verify("v2/top-headlines").called(times = atMost(2))
     }
 
     private fun expectedNews(): List<Article> {
