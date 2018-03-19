@@ -5,6 +5,7 @@ import com.jorgecastillo.hiroaki.data.service.GsonNewsApiService
 import com.jorgecastillo.hiroaki.internal.MockServerSuite
 import com.jorgecastillo.hiroaki.matchers.atLeast
 import com.jorgecastillo.hiroaki.matchers.atMost
+import com.jorgecastillo.hiroaki.matchers.never
 import com.jorgecastillo.hiroaki.matchers.order
 import com.jorgecastillo.hiroaki.matchers.times
 import com.jorgecastillo.hiroaki.model.Article
@@ -253,6 +254,22 @@ class MockingRequestsTest : MockServerSuite() {
         }
 
         server.verify("v2/top-headlines").called(times = atMost(2))
+    }
+
+    @Test(expected = AssertionError::class)
+    fun verifiesNever() {
+        server.whenever(Method.GET, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+
+        runBlocking {
+            dataSource.getNews()
+            dataSource.getNews()
+            dataSource.getNews()
+        }
+
+        server.verify("v2/users").called(times = never())
     }
 
     private fun expectedNews(): List<Article> {

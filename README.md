@@ -286,7 +286,7 @@ fun verifiesCall() {
             headers = headers("Cache-Control" to "max-age=640000"))
 }
 ```
-You can use the functions `once()`, `twice()`, `times(num)`, `atLeast`, and `atMost` for the times param.
+You can use the functions `never()`, `once()`, `twice()`, `times(num)`, `atLeast`, and `atMost` for the times param.
 
 You can also provide a json body to verify the body sent on your requests (`POST`, `PUT`, `PATCH`). Here you have an inlined body used for the assertion. 
 
