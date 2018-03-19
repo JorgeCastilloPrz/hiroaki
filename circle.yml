@@ -12,7 +12,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}-{{ checksum "hiroaki/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}-{{ checksum "hiroaki-core/build.gradle" }}-{{ checksum "hiroaki-android/build.gradle" }}
       - run:
           name: Update Android SDK
           command: yes | sdkmanager --update || true
@@ -23,7 +23,7 @@ jobs:
           name: Download Dependencies
           command: ./gradlew androidDependencies
       - save_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}-{{ checksum "hiroaki/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}-{{ checksum "hiroaki-core/build.gradle" }}-{{ checksum "hiroaki-android/build.gradle" }}
           paths:
             - ~/.gradle
       - run:
@@ -31,8 +31,12 @@ jobs:
           command: ./gradlew :app:ktlint
           when: always
       - run:
-          name: Run Klint on library module
-          command: ./gradlew :hiroaki:ktlint
+          name: Run Klint on hiroaki core module
+          command: ./gradlew :hiroaki-core:ktlint
+          when: always
+      - run:
+          name: Run Klint on hiroaki android module
+          command: ./gradlew :hiroaki-android:ktlint
           when: always
       - run:
           name: Run Unit Tests
