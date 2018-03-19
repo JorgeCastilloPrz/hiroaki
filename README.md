@@ -350,6 +350,8 @@ Do you want to contribute?
 I would love to get contributions from anybody. So if you feel that the library is lacking any features 
 you consider key, please open an issue asking for it or a pull request providing an implementation for it. 
 
+The library is using **CircleCI 2.0** to enforce passing tests and code style quality.
+ 
 Any PR's must pass CI and that includes code style. Run the following commands to check code style or 
 automatically format it. (You can use the graddle wrapper (`gradlew`) instead)
 ```groovy
