@@ -5,7 +5,7 @@ import okhttp3.mockwebserver.RecordedRequest
 object DispatcherAdapter {
     private val registeredDispatchers: MutableMap<String, Retainer> = mutableMapOf()
 
-    fun register(retainer: Retainer): Unit {
+    fun register(retainer: Retainer) {
         registeredDispatchers[retainer::class.java.simpleName] = retainer
     }
 
