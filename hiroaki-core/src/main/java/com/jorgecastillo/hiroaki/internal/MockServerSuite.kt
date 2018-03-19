@@ -16,6 +16,7 @@ open class MockServerSuite {
     @Before
     open fun setup() {
         server = MockWebServer()
+        DispatcherRetainer.registerRetainer()
         DispatcherRetainer.resetDispatchers()
         server.start()
     }

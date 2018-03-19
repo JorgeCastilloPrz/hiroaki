@@ -1,6 +1,5 @@
 package com.jorgecastillo.hiroaki
 
-import android.content.Context
 import com.jorgecastillo.hiroaki.dispatcher.DispatcherRetainer
 import com.jorgecastillo.hiroaki.matchers.matches
 import com.jorgecastillo.hiroaki.models.JsonBody
@@ -34,10 +33,6 @@ fun <T> MockWebServer.retrofitService(
             .client(okHttpClient)
             .addConverterFactory(converterFactory).build()
             .create(serviceClass)
-}
-
-fun MockWebServer.setAndroidContext(context: Context) {
-    DispatcherRetainer.androidContext = context
 }
 
 fun MockWebServer.whenever(

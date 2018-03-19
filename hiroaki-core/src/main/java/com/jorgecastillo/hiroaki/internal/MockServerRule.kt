@@ -12,6 +12,7 @@ class MockServerRule : ExternalResource() {
     @Before
     override fun before() {
         server = MockWebServer()
+        DispatcherRetainer.registerRetainer()
         DispatcherRetainer.resetDispatchers()
         server.start()
     }

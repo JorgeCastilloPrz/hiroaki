@@ -1,8 +1,7 @@
 package com.jorgecastillo.hiroaki.internal
 
 import android.support.test.InstrumentationRegistry
-import com.jorgecastillo.hiroaki.dispatcher.DispatcherRetainer
-import com.jorgecastillo.hiroaki.setAndroidContext
+import com.jorgecastillo.hiroaki.dispatcher.AndroidDispatcherRetainer
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
@@ -17,15 +16,16 @@ open class AndroidMockServerSuite {
     @Before
     open fun setup() {
         server = MockWebServer()
-        server.setAndroidContext(InstrumentationRegistry.getContext())
-        DispatcherRetainer.resetDispatchers()
+        AndroidDispatcherRetainer.androidContext = InstrumentationRegistry.getContext()
+        AndroidDispatcherRetainer.registerRetainer()
+        AndroidDispatcherRetainer.resetDispatchers()
         server.start()
     }
 
     @After
     open fun tearDown() {
         server.shutdown()
-        DispatcherRetainer.resetDispatchers()
-        server.setDispatcher(DispatcherRetainer.queueDispatcher)
+        AndroidDispatcherRetainer.resetDispatchers()
+        server.setDispatcher(AndroidDispatcherRetainer.queueDispatcher)
     }
 }

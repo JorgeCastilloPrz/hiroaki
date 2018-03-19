@@ -7,25 +7,11 @@ import java.io.File
 import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType.Object
 import com.google.gson.Gson
 import com.google.gson.internal.LinkedTreeMap
+import com.jorgecastillo.hiroaki.dispatcher.DispatcherAdapter
 
 @Throws(Exception::class)
-fun <T : Any> T.fileContentAsString(fileName: String): String {
-    val context = DispatcherRetainer.androidContext
-    return if (context != null) {
-        val inputStream = context.resources.assets.open(fileName)
-        convertStreamToString(inputStream)
-    } else {
-        val classLoader = this::class.java.classLoader
-        val file = File(classLoader.getResource(fileName).file)
-        file.readText(Charsets.UTF_8)
-    }
-}
-
-private fun convertStreamToString(inputStream: java.io.InputStream): String {
-    val s = java.util.Scanner(inputStream)
-            .useDelimiter("\\A")
-    return if (s.hasNext()) s.next() else ""
-}
+fun <T : Any> T.fileContentAsString(fileName: String): String =
+        DispatcherAdapter.fileContentAsString(fileName, this)
 
 @Throws(Exception::class)
 fun String.fromJson(): LinkedTreeMap<String, Object> {

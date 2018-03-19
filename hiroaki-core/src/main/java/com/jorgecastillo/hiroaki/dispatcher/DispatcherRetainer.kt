@@ -1,19 +1,29 @@
 package com.jorgecastillo.hiroaki.dispatcher
 
-import android.annotation.SuppressLint
-import android.content.Context
+import java.io.File
 
-@SuppressLint("StaticFieldLeak")
-object DispatcherRetainer {
+internal object DispatcherRetainer : Retainer {
     val queueDispatcher = HiroakiQueueDispatcher()
     val hiroakiDispatcher = HiroakiDispatcher()
-    var androidContext: Context? = null
+
+    fun registerRetainer() {
+        DispatcherAdapter.register(this)
+    }
 
     fun resetDispatchers() {
         queueDispatcher.reset()
         hiroakiDispatcher.reset()
     }
 
-    fun dispatchedRequests() =
-            queueDispatcher.dispatchedRequests + hiroakiDispatcher.dispatchedRequests
+    override fun dispatchedRequests() =
+        queueDispatcher.dispatchedRequests + hiroakiDispatcher.dispatchedRequests
+
+    override fun <T : Any> fileContentAsString(
+        fileName: String,
+        receiver: T
+    ): String {
+        val classLoader = receiver::class.java.classLoader
+        val file = File(classLoader.getResource(fileName).file)
+        return file.readText(Charsets.UTF_8)
+    }
 }

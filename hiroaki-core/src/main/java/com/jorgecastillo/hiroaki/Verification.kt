@@ -1,16 +1,17 @@
 package com.jorgecastillo.hiroaki
 
-import com.jorgecastillo.hiroaki.dispatcher.DispatcherRetainer
+import com.jorgecastillo.hiroaki.dispatcher.DispatcherAdapter
 import com.jorgecastillo.hiroaki.matchers.anyOrder
 import com.jorgecastillo.hiroaki.matchers.matches
 import com.jorgecastillo.hiroaki.matchers.times
 import com.jorgecastillo.hiroaki.models.JsonBody
 import com.jorgecastillo.hiroaki.models.JsonBodyFile
+import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat
 
-fun verify(path: String): VerifiableRequest =
+fun MockWebServer.verify(path: String): VerifiableRequest =
         VerifiableRequest(path)
 
 fun once(): (requestMatcher: Matcher<RecordedRequest>) -> Matcher<List<RecordedRequest>> = times(1)
@@ -39,7 +40,7 @@ class VerifiableRequest(private val path: String) {
                 headers = headers,
                 method = method)
 
-        val dispatchedRequests = DispatcherRetainer.dispatchedRequests()
+        val dispatchedRequests = DispatcherAdapter.dispatchedRequests()
         assertThat(dispatchedRequests, safeTimes(requestMatcher))
         assertThat(dispatchedRequests, safeOrder(requestMatcher))
     }
