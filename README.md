@@ -355,11 +355,13 @@ automatically format it. (You can use the graddle wrapper (`gradlew`) instead)
 ```groovy
 // check code style
 gradle app:ktlint
-gradle hiroaki:ktlint 
+gradle hiroaki-core:ktlint
+gradle hiroaki-android:ktlint 
 
 // autoformat
 gradle app:ktlintFormat
-gradle hiroaki:ktlintFormat
+gradle hiroaki-core:ktlintFormat
+gradle hiroaki-android:ktlintFormat
 ```
 
 Tests are also required to pass. You can run them like:
