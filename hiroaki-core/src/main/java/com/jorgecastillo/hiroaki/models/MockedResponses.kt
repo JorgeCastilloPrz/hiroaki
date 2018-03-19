@@ -80,3 +80,14 @@ fun MockWebServer.enqueueError(
 fun MockResponse.delay(millis: Long): MockResponse = this.apply {
     setBodyDelay(millis, TimeUnit.MILLISECONDS)
 }
+
+/**
+ * Throttles the request reader and response writer to sleep for the given periodToSleepMillis after each
+ * series of {@code bytesPerPeriod} bytes are transferred. Use this to simulate network behavior.
+ *
+ * @param bytesPerPeriod how many bytes are sent before waiting for periodToSleepMillis
+ * @periodToSleepMillis how long the server sleeps after the previous bytesPerPeriod chunk.
+ */
+fun MockResponse.throttle(bytesPerPeriod: Long, periodToSleepMillis: Long): MockResponse = this.apply {
+    throttleBody(bytesPerPeriod, periodToSleepMillis, TimeUnit.MILLISECONDS)
+}

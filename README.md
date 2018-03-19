@@ -247,6 +247,14 @@ server.whenever(Method.GET, "v2/top-headlines")
       .thenDispatch { request -> success().delay(250) }
 ````
 
+**Throttle response bodies**
+
+Sometimes you want to emulate bad network conditions, so you can throttle your response body like:
+````kotlin
+server.whenever(GET, "v2/top-headlines").thenRespond(error().throttle(64, 1000))
+````
+Here, you are asking the server to throttle and write chunks of 64 bytes per second (1000 millis).
+
 ### Request verification
 
 **Hiroaki** provides a highly configurable `verify()` function to perform verification over executed HTTP requests. 
