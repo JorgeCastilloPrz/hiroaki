@@ -147,7 +147,7 @@ class MockingRequestsTest : MockServerSuite() {
             dataSource.getNews()
         }
 
-        verify("v2/top-headlines").called(
+        server.verify("v2/top-headlines").called(
                 times = times(3),
                 order = order(1, 2, 3),
                 method = Method.GET,

@@ -40,7 +40,7 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
 
         runBlocking { dataSource.getNews() }
 
-        verify("v2/top-headlines").called(
+        server.verify("v2/top-headlines").called(
                 times = once(),
                 queryParams = params(
                         "sources" to "crypto-coins-news",
@@ -58,7 +58,7 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        verify("v2/top-headlines").called(
+        server.verify("v2/top-headlines").called(
                 times = once(),
                 jsonBodyResFile = fileBody("PublishHeadline.json"),
                 method = POST)
@@ -71,7 +71,7 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        verify("v2/top-headlines").called(
+        server.verify("v2/top-headlines").called(
                 times = once(),
                 jsonBody = inlineBody("{\n" +
                         "  \"title\": \"Any Title\",\n" +
@@ -93,7 +93,7 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        verify("v2/top-headlines").called(
+        server.verify("v2/top-headlines").called(
                 times = once(),
                 jsonBodyResFile = fileBody("PublishHeadline.json"),
                 jsonBody = inlineBody("{\"title\" = \"Any title\" }"))

@@ -245,7 +245,7 @@ fun verifiesCall() {
         dataSource.getNews()
     }
 
-    verify("v2/top-headlines").called(
+    server.verify("v2/top-headlines").called(
             times = times(2),
             order = order(1, 3),
             method = Method.GET,
@@ -258,7 +258,7 @@ fun verifiesCall() {
 You can also provide a json body to verify the body sent on your requests (`POST`, `PUT`, `PATCH`). Here you have an inlined body used for the assertion. 
 
 ```kotlin
-verify("v2/top-headlines").called(
+server.verify("v2/top-headlines").called(
             times = once(),
             method = Method.POST,
             headers = headers("Cache-Control" to "max-age=640000"),
@@ -273,7 +273,7 @@ verify("v2/top-headlines").called(
 ````
 You can also provide json body for post requests from a file saved on your `/test/resources` directory.
 ```kotlin
-verify("v2/top-headlines").called(
+server.verify("v2/top-headlines").called(
             method = Method.POST,
             jsonBodyResFile = fileBody("PublishHeadline.json"))
 ```

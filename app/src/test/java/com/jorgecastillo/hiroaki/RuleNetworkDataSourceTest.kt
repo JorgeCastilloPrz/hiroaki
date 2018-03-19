@@ -42,7 +42,7 @@ class RuleNetworkDataSourceTest {
 
         runBlocking { dataSource.getNews() }
 
-        verify("v2/top-headlines").called(
+        rule.server.verify("v2/top-headlines").called(
                 times = once(),
                 queryParams = params(
                         "sources" to "crypto-coins-news",
@@ -60,7 +60,7 @@ class RuleNetworkDataSourceTest {
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        verify("v2/top-headlines").called(
+        rule.server.verify("v2/top-headlines").called(
                 times = once(),
                 jsonBodyResFile = fileBody("PublishHeadline.json"),
                 method = POST)
@@ -73,7 +73,7 @@ class RuleNetworkDataSourceTest {
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        verify("v2/top-headlines").called(
+        rule.server.verify("v2/top-headlines").called(
                 times = times(1),
                 jsonBody = inlineBody("{\n" +
                         "  \"title\": \"Any Title\",\n" +
@@ -95,7 +95,7 @@ class RuleNetworkDataSourceTest {
 
         runBlocking { dataSource.publishHeadline(article) }
 
-        verify("v2/top-headlines").called(
+        rule.server.verify("v2/top-headlines").called(
                 times = once(),
                 jsonBodyResFile = fileBody("PublishHeadline.json"),
                 jsonBody = inlineBody("{\"title\" = \"Any title\" }"))
