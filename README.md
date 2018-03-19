@@ -114,6 +114,26 @@ class RuleNetworkDataSourceTest {
     }
 }
 ```
+If you're not using `Retrofit` but just [OkHttp](http://square.github.io/okhttp/) you can still use **Hiroaki**. Just 
+request the URL from the mock server provided by the base class or the rule, and pass it to your collaborator to create your OkHttp requests.
+````kotlin
+val mockServerUrl = server.url("/v2/news")
+dataSource = NewsDataSource(mockServerUrl)
+
+class NewsDataSource(var baseUrl: HttpUrl) {
+
+  fun getNews(): String? {
+      val client = OkHttpClient()
+      val request = Request.Builder()
+              .url(baseUrl)
+              .build()
+  
+      val response = client.newCall(request).execute()
+      return response.body()?.string()
+  }
+}
+````
+
 ### Mocking Responses
 
 With **Hiroaki**, you can mock request responses as if it was mockito:
