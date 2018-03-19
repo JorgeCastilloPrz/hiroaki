@@ -114,6 +114,9 @@ class RuleNetworkDataSourceTest {
     }
 }
 ```
+
+**Using Hiroaki without Retrofit (just OkHttp)**
+
 If you're not using `Retrofit` but just [OkHttp](http://square.github.io/okhttp/) you can still use **Hiroaki**. Just 
 request the URL from the mock server provided by the base class or the rule, and pass it to your collaborator to create your OkHttp requests.
 ````kotlin
