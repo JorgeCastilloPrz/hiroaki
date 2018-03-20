@@ -257,6 +257,22 @@ class MockingRequestsTest : MockServerSuite() {
     }
 
     @Test(expected = AssertionError::class)
+    fun verifiesNeverError() {
+        server.whenever(Method.GET, "v2/top-headlines")
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonFileName = "GetNews.json"))
+
+        runBlocking {
+            dataSource.getNews()
+            dataSource.getNews()
+            dataSource.getNews()
+        }
+
+        server.verify("v2/top-headlines").called(times = never())
+    }
+
+    @Test
     fun verifiesNever() {
         server.whenever(Method.GET, "v2/top-headlines")
                 .thenRespond(success(jsonFileName = "GetNews.json"))

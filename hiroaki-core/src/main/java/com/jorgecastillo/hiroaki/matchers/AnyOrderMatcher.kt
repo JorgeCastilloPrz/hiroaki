@@ -10,7 +10,7 @@ fun anyOrder(): (requestMatcher: Matcher<RecordedRequest>) -> Matcher<List<Recor
         object : TypeSafeMatcher<List<RecordedRequest>>() {
 
             override fun describeTo(description: Description) {
-                description.appendText("Expected request: asdf")
+                description.appendText("Expected request on any order.")
             }
 
             override fun describeMismatchSafely(

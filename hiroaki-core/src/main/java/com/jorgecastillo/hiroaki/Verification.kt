@@ -3,6 +3,7 @@ package com.jorgecastillo.hiroaki
 import com.jorgecastillo.hiroaki.dispatcher.DispatcherAdapter
 import com.jorgecastillo.hiroaki.matchers.anyOrder
 import com.jorgecastillo.hiroaki.matchers.matches
+import com.jorgecastillo.hiroaki.matchers.never
 import com.jorgecastillo.hiroaki.matchers.times
 import com.jorgecastillo.hiroaki.models.JsonBody
 import com.jorgecastillo.hiroaki.models.JsonBodyFile
@@ -42,6 +43,8 @@ class VerifiableRequest(private val path: String) {
 
         val dispatchedRequests = DispatcherAdapter.dispatchedRequests()
         assertThat(dispatchedRequests, safeTimes(requestMatcher))
-        assertThat(dispatchedRequests, safeOrder(requestMatcher))
+        if (times != never()) {
+            assertThat(dispatchedRequests, safeOrder(requestMatcher))
+        }
     }
 }
