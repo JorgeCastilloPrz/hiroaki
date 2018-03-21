@@ -6,32 +6,17 @@ Hiroaki [![CircleCI](https://circleci.com/gh/JorgeCastilloPrz/hiroaki/tree/maste
     Japanese: 'spreading brightness'. Derived from the words 'hiro', which means 'large or wide', and 'aki', 
     which means 'bright or clear'.
 
-The intention of Hiroaki is to achieve clarity on your **API integration tests** in an idiomatic way by simplifying the way you **prepare 
-your test environment prior to test execution and the assertions you perform in the end**. 
+The intention of Hiroaki is to achieve clarity on your **API integration tests** in an idiomatic way by leveraging the 
+power of Kotlin.
 
-How it works
-------------
+It uses `MockWebServer` to provide a mock server as a target for your HTTP requests that you'll use to mock your backend.
 
-It uses Kotlin features like **extension functions**, **type aliases**, **delegation**, 
-**package level functions** and many other ones like **custom hamcrest** matchers to achieve the wanted behavior.
-
-When you are testing you want to isolate your tests from external frameworks that can provoke flakiness. **Hiroaki** 
-relies on `MockWebServer` to provide a mock server as a target for your HTTP requests that you'll be able to use to mock 
-your server behavior.
-
-That enables you to assert over how your app or system will react to some predefined server & API behaviors. 
-
-Where is the magic?
--------------------
-Most of the features provided by `Hiroaki` are **extension functions** declared over the  `MockWebServer` type.
- 
-That means you can easily program and chain mock responses for given request conditions to certain endpoints (à la mockito), mock responses with one liners, assert over recorded request conditions 
-or over the response data parsed just with a simple `MockWebServer` instance.
+That enables you to assert over how your program reacts to some predefined server & API behaviors. 
 
 Usage
 -----
 
-Add the following code to your ``build.gradle``. Both dependencies are deployed in **Maven Central**.
+Add the following code to your ``build.gradle``. Both dependencies are available in **Maven Central**.
 
 ```groovy
 dependencies{
@@ -40,17 +25,12 @@ dependencies{
 }
 ```
 
-### Connecting your app to the mock server
+### Setup
 
-Your app will query the real endpoints if you don't configure your retrofit instance to use the 
-mock server url. To do that, you can wake up a **mock retrofit service** passing in your **service 
-interface** and the **converter** you want to use. 
+To avoid your code to query the real endpoints you must configure your retrofit instance to use the mock server url. 
 
-Finally, you are free to pass this mocked service to your `ApiClient`, `NetworkDataSource`, or 
-whatever your collaborator handling your network logic is called.
-
-You'll have to extend the base class `MockServerSuite`, which takes care of running and shutting 
-down the server for you. But there's also a JUnit `Rule` if you don't want to.
+Also note that you must extend `MockServerSuite`, which takes care of running and shutting down the server for you. 
+If you can't do that, there's also a JUnit `Rule` with the same goal.
 
 ```kotlin
 class GsonNewsNetworkDataSourceTest : MockServerSuite() {
@@ -60,6 +40,7 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
     @Before
     override fun setup() {
         super.setup()
+        // Use server.retrofitService() to build the service targeting the mock URL
         dataSource = GsonNewsNetworkDataSource(server.retrofitService(
                 GsonNewsApiService::class.java,
                 GsonConverterFactory.create()))
@@ -68,14 +49,13 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
     /*...*/
 }
 ```
-This will use a default `OkHttpClient` instance created for you with basic configuration. 
-If you need further configuration on the http client, `retrofitService()` extension function offers 
-an optional parameter to pass a custom `OkHttpClient`:
+This will use a default `OkHttpClient` instance created for you with basic configuration. For more detailed 
+configuration, `retrofitService()` function offers an optional parameter to pass a custom `OkHttpClient`:
 
 ```kotlin
 val customClient = OkHttpClient.Builder()
-        .connectTimeout(2, TimeUnit.SECONDS) // For testing purposes
-        .readTimeout(2, TimeUnit.SECONDS) // For testing purposes
+        .connectTimeout(2, TimeUnit.SECONDS)
+        .readTimeout(2, TimeUnit.SECONDS)
         .writeTimeout(2, TimeUnit.SECONDS)
         .build()
 
@@ -85,8 +65,7 @@ dataSource = GsonNewsNetworkDataSource(server.retrofitService(
                 okHttpClient = customClient))
 ```
 
-If you can't extend `MockServerSuite`, **Hiroaki** also provides a **JUnit rule** called 
-`MockServerRule` with the same purpose:
+Also here you have the **JUnit4 rule** with the same purpose:
 
 ```kotlin
 @RunWith(MockitoJUnitRunner::class)
@@ -115,10 +94,10 @@ class RuleNetworkDataSourceTest {
 }
 ```
 
-**Using Hiroaki without Retrofit (just OkHttp)**
+**But I don\'t use Retrofit!**
 
-If you're not using `Retrofit` but just [OkHttp](http://square.github.io/okhttp/) you can still use **Hiroaki**. Just 
-request the URL from the mock server provided by the base class or the rule, and pass it to your collaborator to create your OkHttp requests.
+You can still use **Hiroaki** without `Retrofit`. Just request the URL from your mock server instance and use it as the 
+endpoint for your requests. Here you have a plain [OkHttp](http://square.github.io/okhttp/) sample.
 ````kotlin
 val mockServerUrl = server.url("/v2/news")
 dataSource = NewsDataSource(mockServerUrl)
@@ -151,46 +130,40 @@ fun chainResponses() {
     /*...*/
 }
 ````
-This ensures that **whenever** the endpoint `v2/top-headlines` is called with a `GET` http method, 
-the you'll get a response like the one we are mocking there.
+This ensures that **whenever** the endpoint `v2/top-headlines` is called with the given conditions the server will 
+respond with the mocked response we're providing.
 
-You can also program responses for expected query params:
-````kotlin
+These are all the supported params for `whenever` that you can match to. All of them are optional except `sentToPath`:
+```kotlin
 server.whenever(method = Method.GET,
                 sentToPath = "v2/top-headlines",
                 queryParams = mapOf("sources" to "crypto-coins-news",
-                                    "apiKey" to "a7c816f57c004c49a21bd458e11e2807"))
+                        "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
+                jsonBodyResFile = fileBody("GetNews.json"),
+                jsonBody = inlineBody("{\n" +
+                        "  \"title\": \"Any Title\",\n" +
+                        "  \"description\": \"Any description\",\n" +
+                        "  \"source\": {\n" +
+                        "    \"link\": \"http://source/123\",\n" +
+                        "    \"name\": \"Some source\"\n" +
+                        "  }\n" +
+                        "}\n"),
+                headers = headers("Cache-Control" to "max-age=640000"))
       .thenRespond(success(jsonFileName = "GetNews.json"))
-````
+```
+If you try to match to both `jsonBodyResFile` and `jsonBody` at the same time you'll get an exception.
 
-This is the declaration of the `whenever()` function, so you can program your mocked responses 
-expecting the following request configuration specs: 
-````kotlin
-fun MockWebServer.whenever(sentToPath: String,
-                           queryParams: QueryParams? = null,
-                           jsonBodyResFile: JsonBodyFile? = null,
-                           jsonBody: JsonBody? = null,
-                           headers: Headers? = null,
-                           method: Method? = null) {
-    /*...*/                           
-}
-````
-You're able to match over path, query params, json body (inline or by resource file), headers, and 
-HTTP method.
-
-Also note in the previous snippets the `success()` function when mocking the response. function 
-`success()` is a shortcut to provide a successful response. You can also use `error()`  and 
-`response()`. All of them are mocking functions that allow you to pass the following **optional** 
-arguments:
+Also note in the previous snippets the `success()` function when mocking the response. function `success()` is a 
+shortcut to provide a mocked successful response. You can also use `error()`  and `response()`. All of them are mocking 
+functions that allow you to pass the following **optional** arguments:
 
 * `code` **Int** return http status code for the mocked response.
 * `jsonFileName` **String** resource file name to load the mocked response json body from.
 * `jsonBody` **String** inlined json for your mocked response body.
 * `headers` Is a **Map<String,String>** headers to attach to the mocked response.
 
-If you don't want to use the `succes()`, `error()` or `response()` shortcut functions, you can 
-still pass your own custom `MockResponse` from `MockWebServer`, the same way you have been doing 
-until now. 
+If you don't want to use the `succes()`, `error()` or `response()` shortcut functions, you can still pass your own 
+custom `MockResponse`. 
 
 **Chaining mocked responses:**
 
@@ -201,27 +174,18 @@ server.whenever(Method.GET, "v2/top-headlines")
                 .thenRespond(success(jsonFileName = "GetSingleNew.json"))
                 .thenRespond(success(jsonFileName = "GetNews.json"))
 ````
-* The first time the endpoint is called under the given conditions, it will return a 
-`MockResponse` with the body obtained from the file `GetNews.json`. 
-* The second time it gets called, it will return the second mocked response, which on this example 
-is reading it's body from `GetSingleNew.json`. 
-* The third time it gets called it'll return the third mocked response.
+Each time the endpoint is called under the given conditions, the server will return the next mocked response from the 
+list, **following the same order**.
 
-You can chain as many responses as you want, just remember that those **will be dispatched in the 
-same order**.
+**Dynamic dispatch**
 
-**Dispatching dynamic responses**
-
-Sometimes you want a response to depend on the structure of the request sent. For that reason, 
-**Hiroaki** provides the `thenDispatch` method:
+Sometimes you want a response to depend on the request sent. For that reason, **Hiroaki** provides the `thenDispatch` 
+method:
 ````kotlin
 server.whenever(Method.GET, "v2/top-headlines")
       .thenDispatch { request -> success(jsonBody = "{\"requestPath\" : ${request.path}" }
 ````   
-With this feature, you could attach the same requesteded item Id to one of the items contained into 
-the response body, for example. I guess you can imagine different use cases.
-
-Feel free to combine as many `thenRespond()` and `thenDispatch()` calls as you want.
+You can combine as many `thenRespond()` and `thenDispatch()` calls as you want.
 ````kotlin
 server.whenever(Method.GET, "v2/top-headlines")
       .thenRespond(success())
@@ -231,10 +195,8 @@ server.whenever(Method.GET, "v2/top-headlines")
 
 **Delay responses**
 
-Sometimes you need to mimic server response delays. `MockWebServer` already provides a function 
-`MockResponse.setBodyDelay()` to achieve it, which you can append to any `MockResponse` you create. 
-But **Hiroaki** also provides an extension function for `MockResponse` to pass a delay in millis: 
-`response.delay(millis)`:
+Mimic server response delays with `delay()`, an extension function for `MockResponse` to pass a delay in 
+millis: `response.delay(millis)`:
 
 ````kotlin
 server.whenever(Method.GET, "v2/top-headlines")
@@ -260,8 +222,6 @@ Here, you are asking the server to throttle and write chunks of 64 bytes per sec
 **Hiroaki** provides a highly configurable `verify()` function to perform verification over executed HTTP requests. 
 Its arguments are **optional** so you're free to configure the assertion in a way that matches your needs. 
 
-Here you have some examples:
-
 ```kotlin
 @Test
 fun verifiesCall() {
@@ -279,43 +239,28 @@ fun verifiesCall() {
     server.verify("v2/top-headlines").called(
             times = times(2),
             order = order(1, 3),
-            method = Method.GET,
+            method = Method.POST,
+            headers = headers("Cache-Control" to "max-age=640000"),
             queryParams = params(
-                    "sources" to "crypto-coins-news",
-                    "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
-            headers = headers("Cache-Control" to "max-age=640000"))
+                                "sources" to "crypto-coins-news",
+                                "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
+            jsonBody = inlineBody("{\n" +
+                                  "  \"title\": \"Any Title\",\n" +
+                                  "  \"description\": \"Any description\",\n" +
+                                  "  \"source\": {\n" +
+                                  "    \"link\": \"http://source/123\",\n" +
+                                  "    \"name\": \"Some source\"\n" +
+                                  "  }\n" +
+                                  "}\n"))
+            // Ofc you can also pass a fileBody("GetNews.json")
 }
 ```
 You can use the functions `never()`, `once()`, `twice()`, `times(num)`, `atLeast`, and `atMost` for the times param.
 
-You can also provide a json body to verify the body sent on your requests (`POST`, `PUT`, `PATCH`). Here you have an inlined body used for the assertion. 
-
-```kotlin
-server.verify("v2/top-headlines").called(
-            times = once(),
-            method = Method.POST,
-            headers = headers("Cache-Control" to "max-age=640000"),
-            jsonBody = inlineBody("{\n" +
-                                    "  \"title\": \"Any Title\",\n" +
-                                    "  \"description\": \"Any description\",\n" +
-                                    "  \"source\": {\n" +
-                                    "    \"link\": \"http://source/123\",\n" +
-                                    "    \"name\": \"Some source\"\n" +
-                                    "  }\n" +
-                                    "}\n"))
-````
-You can also provide json body for post requests from a file saved on your `/test/resources` directory.
-```kotlin
-server.verify("v2/top-headlines").called(
-            method = Method.POST,
-            jsonBodyResFile = fileBody("PublishHeadline.json"))
-```
-
 ### Parsed Response assertions
-After any test that requests data from network you'll probably need to **assert over the parsed 
-response** to double check whether the data was received and parsed properly.
+After any test that requests data from network you'll probably need to **assert over the parsed response** to double 
+check whether the data was received and parsed properly.
 
-To achieve that, **Hiroaki** provides syntax for asserting over equality, so you'd do the following:
 ```kotlin
 @Test
 fun parsesNewsProperly() {
@@ -326,14 +271,13 @@ fun parsesNewsProperly() {
     news eq expectedNews() // eq is an infix function for assertEquals()
 }
 ``` 
-Here `eq` Is just an `infix` function to run `assertEquals` on both objects. Here we are building the list of expected objects with the function `expectedNews()`. 
-The objects are being compared using the `equals` operator so you **better use data classes for DTOs or redefine `equals`** properly. 
+`eq` is just an `infix` function to run `assertEquals` on both objects. Here we are building the list of expected 
+objects with the function `expectedNews()`. The objects are being compared using the `equals` operator so you 
+**better use data classes for DTOs or redefine `equals`** properly. 
 
 ### Android Instrumentation Tests
 
-You must extend `AndroidMockServerSuite` or use `AndroidMockServerRule` instead. Those classes are equivalent to 
-`MockServerSuite` and `MockServerRule`, but they also take care of passing the instrumentation Android `Context` into 
-**Hiroaki** so it can load resource files from `androidTest/assets/` for json body files. 
+Extend `AndroidMockServerSuite` or use `AndroidMockServerRule` instead. 
 
 Basic sample of Android instrumentation tests:
 ````kotlin
@@ -371,6 +315,10 @@ class ExampleInstrumentedTest : AndroidMockServerSuite() {
 I'm being intentionally simple here on how I pass the mocked service to the application class (setup method), which is 
 being replaced by a mock application on the androidTest environment. But you would use a dependency injector/container 
 to replace the service most likely. 
+
+**Important: Json Body files location:**
+For Android instrumentation tests you'll need to put your json body files into `androidTest/assets/` folder. That's due 
+to how android loads resources.
 
 **Verifying calls in Android**
 
