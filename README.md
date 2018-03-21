@@ -31,7 +31,7 @@ or over the response data parsed just with a simple `MockWebServer` instance.
 Usage
 -----
 
-Add the following code to your ``build.gradle``. **The artifacts are still to be deployed, but this is how you'll fetch them when they're ready:**
+Add the following code to your ``build.gradle``. Both dependencies are deployed in **Maven Central**.
 
 ```groovy
 dependencies{
