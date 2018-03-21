@@ -35,8 +35,8 @@ Add the following code to your ``build.gradle``. **The artifacts are still to be
 
 ```groovy
 dependencies{
-    implementation 'me.jorgecastillo:hiroaki-core:0.0.1'
-    implementation 'me.jorgecastillo:hiroaki-android:0.0.1' // Android instrumentation tests
+    implementation 'me.jorgecastillo:hiroaki-core:0.0.2'
+    implementation 'me.jorgecastillo:hiroaki-android:0.0.2' // Android instrumentation tests
 }
 ```
 

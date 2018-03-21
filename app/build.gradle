@@ -42,8 +42,8 @@ dependencies {
     def supportVersion = "27.1.0"
     def retrofitVersion = "2.3.0"
 
-    implementation project(':hiroaki-core')
-    implementation project(':hiroaki-android')
+    implementation "me.jorgecastillo:hiroaki-core:0.0.3"
+    implementation "me.jorgecastillo:hiroaki-android:0.0.3"
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"

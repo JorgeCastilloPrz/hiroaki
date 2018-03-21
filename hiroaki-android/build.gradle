@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply from: './gradle-mvn-push.gradle'
 
 android {
     compileSdkVersion 27
@@ -30,10 +29,19 @@ android {
             }
         }
     }
+
+    sourceSets {
+        main {
+            java {
+                include '**/*.java'
+                include '**/*.kt'
+            }
+        }
+    }
 }
 
 dependencies {
-    implementation project(':hiroaki-core')
+    implementation "me.jorgecastillo:hiroaki-core:0.0.3"
 
     // linters
     ktlint "com.github.shyiko:ktlint:0.19.0"
@@ -56,6 +64,4 @@ dependencies {
 }
 
 apply from: '../ktlint/ktlint.gradle'
-repositories {
-    mavenCentral()
-}
+apply from: './gradle-mvn-push.gradle'

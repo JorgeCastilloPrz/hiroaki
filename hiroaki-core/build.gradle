@@ -1,5 +1,4 @@
 apply plugin: "kotlin"
-apply from: './gradle-mvn-push.gradle'
 
 test {
     testLogging {
@@ -27,6 +26,4 @@ dependencies {
 }
 
 apply from: '../ktlint/ktlint.gradle'
-repositories {
-    mavenCentral()
-}
+apply from: './gradle-mvn-push.gradle'
