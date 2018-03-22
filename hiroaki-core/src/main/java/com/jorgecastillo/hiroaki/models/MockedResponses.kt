@@ -47,7 +47,6 @@ fun response(
             is JsonBodyFile -> setBody(fileContentAsString(body.jsonBodyResFile))
             is JsonDSL -> setBody(body.toJsonString())
         }
-
     } ?: setBody("")
     headers?.forEach { header -> addHeader(header.key, header.value) }
 }
