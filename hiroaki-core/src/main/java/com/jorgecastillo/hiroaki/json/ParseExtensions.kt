@@ -1,4 +1,4 @@
-package com.jorgecastillo.hiroaki
+package com.jorgecastillo.hiroaki.json
 
 import com.google.gson.JsonParseException
 import okhttp3.mockwebserver.RecordedRequest

@@ -1,7 +1,7 @@
 package com.jorgecastillo.hiroaki.matchers
 
 import com.google.gson.internal.LinkedTreeMap
-import com.jorgecastillo.hiroaki.parse
+import com.jorgecastillo.hiroaki.json.parse
 import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.Description
 import org.hamcrest.Matcher

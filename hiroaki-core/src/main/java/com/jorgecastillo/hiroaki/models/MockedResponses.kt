@@ -1,7 +1,10 @@
 package com.jorgecastillo.hiroaki.models
 
 import com.jorgecastillo.hiroaki.Headers
-import com.jorgecastillo.hiroaki.fileContentAsString
+import com.jorgecastillo.hiroaki.json.fileContentAsString
+import com.jorgecastillo.hiroaki.models.Body.JsonBody
+import com.jorgecastillo.hiroaki.models.Body.JsonBodyFile
+import com.jorgecastillo.hiroaki.models.Body.JsonDSL
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import java.util.concurrent.TimeUnit
@@ -14,67 +17,55 @@ private const val UNAUTHORIZED_RESPONSE_CODE = 401
  */
 fun success(
     code: Int = SUCCESS_RESPONSE_CODE,
-    jsonFileName: String? = null,
-    jsonBody: String? = null,
+    jsonBody: Body? = null,
     headers: Headers? = null
 ): MockResponse =
-        response(code, jsonFileName, jsonBody, headers)
+    response(code, jsonBody, headers)
 
 /**
  * Utility function to mock success responses easily.
  */
 fun error(
     code: Int = UNAUTHORIZED_RESPONSE_CODE,
-    jsonFileName: String? = null,
-    jsonBody: String? = null,
+    jsonBody: Body? = null,
     headers: Headers? = null
 ): MockResponse =
-        response(code, jsonFileName, jsonBody, headers)
+    response(code, jsonBody, headers)
 
 /**
  * Utility function to mock responses easily.
  */
 fun response(
     code: Int = UNAUTHORIZED_RESPONSE_CODE,
-    jsonFileName: String? = null,
-    jsonBody: String? = null,
+    jsonBody: Body? = null,
     headers: Headers? = null
-): MockResponse {
-    throwIfBothBodyParamsArePassed(jsonFileName, jsonBody)
-
-    return MockResponse().apply {
-        setResponseCode(code)
-        when {
-            jsonFileName != null -> setBody(fileContentAsString(jsonFileName))
-            jsonBody != null -> setBody(jsonBody)
-            else -> setBody("")
+): MockResponse = MockResponse().apply {
+    setResponseCode(code)
+    jsonBody?.let { body ->
+        when (body) {
+            is JsonBody -> setBody(body.jsonBody)
+            is JsonBodyFile -> setBody(fileContentAsString(body.jsonBodyResFile))
+            is JsonDSL -> setBody(body.toJsonString())
         }
-        headers?.forEach { header -> addHeader(header.key, header.value) }
-    }
-}
 
-fun throwIfBothBodyParamsArePassed(jsonBodyResFile: String? = null, jsonBody: String? = null) {
-    if (jsonBodyResFile != null && jsonBody != null) {
-        throw IllegalArgumentException("Please pass jsonBodyFile name or jsonBody, but not both.")
-    }
+    } ?: setBody("")
+    headers?.forEach { header -> addHeader(header.key, header.value) }
 }
 
 fun MockWebServer.enqueueSuccess(
     code: Int = SUCCESS_RESPONSE_CODE,
-    jsonFileName: String? = null,
-    jsonBody: String? = null,
+    jsonBody: Body? = null,
     headers: Headers? = null
 ) {
-    this.enqueue(success(code, jsonFileName, jsonBody, headers))
+    this.enqueue(success(code, jsonBody, headers))
 }
 
 fun MockWebServer.enqueueError(
     code: Int = SUCCESS_RESPONSE_CODE,
-    jsonFileName: String? = null,
-    jsonBody: String? = null,
+    jsonBody: Body? = null,
     headers: Headers? = null
 ) {
-    this.enqueue(error(code, jsonFileName, jsonBody, headers))
+    this.enqueue(error(code, jsonBody, headers))
 }
 
 fun MockResponse.delay(millis: Long): MockResponse = this.apply {
@@ -88,6 +79,9 @@ fun MockResponse.delay(millis: Long): MockResponse = this.apply {
  * @param bytesPerPeriod how many bytes are sent before waiting for periodToSleepMillis
  * @periodToSleepMillis how long the server sleeps after the previous bytesPerPeriod chunk.
  */
-fun MockResponse.throttle(bytesPerPeriod: Long, periodToSleepMillis: Long): MockResponse = this.apply {
+fun MockResponse.throttle(
+    bytesPerPeriod: Long,
+    periodToSleepMillis: Long
+): MockResponse = this.apply {
     throttleBody(bytesPerPeriod, periodToSleepMillis, TimeUnit.MILLISECONDS)
 }

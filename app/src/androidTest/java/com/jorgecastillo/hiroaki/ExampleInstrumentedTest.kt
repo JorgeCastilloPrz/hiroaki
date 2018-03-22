@@ -13,6 +13,7 @@ import com.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
 import com.jorgecastillo.hiroaki.internal.AndroidMockServerSuite
 import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.model.Source
+import com.jorgecastillo.hiroaki.models.fileBody
 import com.jorgecastillo.hiroaki.models.success
 import org.junit.Before
 import org.junit.Rule
@@ -42,7 +43,7 @@ class ExampleInstrumentedTest : AndroidMockServerSuite() {
     @Test
     fun showsEmptyCaseIfThereAreNoSuperHeroes() {
         server.whenever(GET, "v2/top-headlines")
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         startActivity()
 

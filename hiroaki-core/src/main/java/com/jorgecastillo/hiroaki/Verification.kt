@@ -5,8 +5,7 @@ import com.jorgecastillo.hiroaki.matchers.anyOrder
 import com.jorgecastillo.hiroaki.matchers.matches
 import com.jorgecastillo.hiroaki.matchers.never
 import com.jorgecastillo.hiroaki.matchers.times
-import com.jorgecastillo.hiroaki.models.JsonBody
-import com.jorgecastillo.hiroaki.models.JsonBodyFile
+import com.jorgecastillo.hiroaki.models.Body
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.Matcher
@@ -25,8 +24,7 @@ class VerifiableRequest(private val path: String) {
         times: ((requestMatcher: Matcher<RecordedRequest>) -> Matcher<List<RecordedRequest>>)? = null,
         order: ((requestMatcher: Matcher<RecordedRequest>) -> Matcher<List<RecordedRequest>>)? = null,
         queryParams: QueryParams? = null,
-        jsonBodyResFile: JsonBodyFile? = null,
-        jsonBody: JsonBody? = null,
+        jsonBody: Body? = null,
         headers: Headers? = null,
         method: Method? = null
     ) {
@@ -36,7 +34,6 @@ class VerifiableRequest(private val path: String) {
 
         val requestMatcher = matches(sentToPath = path,
                 queryParams = queryParams,
-                jsonBodyResFile = jsonBodyResFile,
                 jsonBody = jsonBody,
                 headers = headers,
                 method = method)

@@ -2,8 +2,7 @@ package com.jorgecastillo.hiroaki
 
 import com.jorgecastillo.hiroaki.dispatcher.DispatcherRetainer
 import com.jorgecastillo.hiroaki.matchers.matches
-import com.jorgecastillo.hiroaki.models.JsonBody
-import com.jorgecastillo.hiroaki.models.JsonBodyFile
+import com.jorgecastillo.hiroaki.models.Body
 import com.jorgecastillo.hiroaki.models.PotentialRequestChain
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -38,8 +37,7 @@ fun <T> MockWebServer.retrofitService(
 fun MockWebServer.whenever(
     sentToPath: String,
     queryParams: QueryParams? = null,
-    jsonBodyResFile: JsonBodyFile? = null,
-    jsonBody: JsonBody? = null,
+    jsonBody: Body? = null,
     headers: Headers? = null,
     method: Method? = null
 ): PotentialRequestChain {
@@ -48,7 +46,6 @@ fun MockWebServer.whenever(
             sentToPath = sentToPath,
             method = method,
             queryParams = queryParams,
-            jsonBodyResFile = jsonBodyResFile,
             jsonBody = jsonBody,
             headers = headers))
 }
@@ -68,20 +65,12 @@ fun MockWebServer.whenever(method: Method, sentToPath: String, params: QueryPara
             queryParams = params))
 }
 
-fun MockWebServer.whenever(method: Method, sentToPath: String, jsonBody: JsonBody): PotentialRequestChain {
+fun MockWebServer.whenever(method: Method, sentToPath: String, jsonBody: Body): PotentialRequestChain {
     this.setDispatcher(DispatcherRetainer.hiroakiDispatcher)
     return PotentialRequestChain(matches(
             method = method,
             sentToPath = sentToPath,
             jsonBody = jsonBody))
-}
-
-fun MockWebServer.whenever(method: Method, sentToPath: String, jsonBodyResFile: JsonBodyFile): PotentialRequestChain {
-    this.setDispatcher(DispatcherRetainer.hiroakiDispatcher)
-    return PotentialRequestChain(matches(
-            method = method,
-            sentToPath = sentToPath,
-            jsonBodyResFile = jsonBodyResFile))
 }
 
 fun MockWebServer.whenever(matcher: Matcher<RecordedRequest>): PotentialRequestChain {

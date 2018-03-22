@@ -11,6 +11,8 @@ import com.jorgecastillo.hiroaki.matchers.times
 import com.jorgecastillo.hiroaki.model.Article
 import com.jorgecastillo.hiroaki.model.Source
 import com.jorgecastillo.hiroaki.models.error
+import com.jorgecastillo.hiroaki.models.fileBody
+import com.jorgecastillo.hiroaki.models.inlineBody
 import com.jorgecastillo.hiroaki.models.response
 import com.jorgecastillo.hiroaki.models.success
 import kotlinx.coroutines.experimental.runBlocking
@@ -36,7 +38,7 @@ class MockingRequestsTest : MockServerSuite() {
 
     @Test
     fun enqueuesSuccess() {
-        server.enqueue(success(jsonFileName = "GetNews.json"))
+        server.enqueue(success(jsonBody = fileBody("GetNews.json")))
 
         val news = runBlocking { dataSource.getNews() }
 
@@ -52,7 +54,7 @@ class MockingRequestsTest : MockServerSuite() {
 
     @Test
     fun enqueueMockResponseSuccess() {
-        server.enqueue(response(200, jsonFileName = "GetNews.json"))
+        server.enqueue(response(200, jsonBody = fileBody("GetNews.json")))
 
         val news = runBlocking { dataSource.getNews() }
 
@@ -69,9 +71,9 @@ class MockingRequestsTest : MockServerSuite() {
     @Test
     fun chainResponses() {
         server.whenever(Method.GET, "v2/top-headlines")
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetSingleNew.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetSingleNew.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         val news = runBlocking { dataSource.getNews() }
 
@@ -90,7 +92,7 @@ class MockingRequestsTest : MockServerSuite() {
     fun dispatchesCorrectly() {
         server.whenever(Method.GET, "v2/top-headlines")
                 .thenDispatch { request ->
-                    success(jsonBody = "{\n" +
+                    success(jsonBody = inlineBody("{\n" +
                             "  \"status\": \"ok\",\n" +
                             "  \"totalResults\": 2342,\n" +
                             "  \"articles\": [\n" +
@@ -107,7 +109,7 @@ class MockingRequestsTest : MockServerSuite() {
                             "      \"publishedAt\": \"2018-03-09T20:30:00Z\"\n" +
                             "    }\n" +
                             "  ]\n" +
-                            "}")
+                            "}"))
                 }
 
         val singleNew = runBlocking { dataSource.getNews() }
@@ -122,7 +124,7 @@ class MockingRequestsTest : MockServerSuite() {
                 sentToPath = "v2/top-headlines",
                 queryParams = mapOf("sources" to "crypto-coins-news",
                         "apiKey" to "a7c816f57c004c49a21bd458e11e2807"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         val news = runBlocking { dataSource.getNews() }
 
@@ -132,7 +134,7 @@ class MockingRequestsTest : MockServerSuite() {
     @Test(expected = IOException::class)
     fun failsWithUnknownParams() {
         server.whenever(Method.GET, "v2/top-headlines", mapOf("randomParam" to "someValue"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         runBlocking { dataSource.getNews() }
     }
@@ -140,9 +142,9 @@ class MockingRequestsTest : MockServerSuite() {
     @Test
     fun verifiesCall() {
         server.whenever(Method.GET, "v2/top-headlines")
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         runBlocking {
             dataSource.getNews()
@@ -163,9 +165,9 @@ class MockingRequestsTest : MockServerSuite() {
     @Test
     fun verifiesAtLeast() {
         server.whenever(Method.GET, "v2/top-headlines")
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         runBlocking {
             dataSource.getNews()
@@ -179,9 +181,9 @@ class MockingRequestsTest : MockServerSuite() {
     @Test
     fun verifiesAtLeast2() {
         server.whenever(Method.GET, "v2/top-headlines")
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         runBlocking {
             dataSource.getNews()
@@ -195,9 +197,9 @@ class MockingRequestsTest : MockServerSuite() {
     @Test(expected = AssertionError::class)
     fun verifiesAtLeastError() {
         server.whenever(Method.GET, "v2/top-headlines")
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         runBlocking {
             dataSource.getNews()
@@ -211,9 +213,9 @@ class MockingRequestsTest : MockServerSuite() {
     @Test
     fun verifiesAtMost() {
         server.whenever(Method.GET, "v2/top-headlines")
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         runBlocking {
             dataSource.getNews()
@@ -227,9 +229,9 @@ class MockingRequestsTest : MockServerSuite() {
     @Test
     fun verifiesAtMost2() {
         server.whenever(Method.GET, "v2/top-headlines")
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         runBlocking {
             dataSource.getNews()
@@ -243,9 +245,9 @@ class MockingRequestsTest : MockServerSuite() {
     @Test(expected = AssertionError::class)
     fun verifiesAtMostError() {
         server.whenever(Method.GET, "v2/top-headlines")
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         runBlocking {
             dataSource.getNews()
@@ -259,9 +261,9 @@ class MockingRequestsTest : MockServerSuite() {
     @Test(expected = AssertionError::class)
     fun verifiesNeverError() {
         server.whenever(Method.GET, "v2/top-headlines")
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         runBlocking {
             dataSource.getNews()
@@ -275,9 +277,9 @@ class MockingRequestsTest : MockServerSuite() {
     @Test
     fun verifiesNever() {
         server.whenever(Method.GET, "v2/top-headlines")
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         runBlocking {
             dataSource.getNews()

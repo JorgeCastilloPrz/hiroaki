@@ -36,7 +36,7 @@ class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
     @Test
     fun sendsGetNews() {
         server.whenever(GET, "v2/top-headlines")
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         runBlocking { dataSource.getNews() }
 
@@ -59,7 +59,7 @@ class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
         runBlocking { dataSource.publishHeadline(article) }
 
         server.verify("v2/top-headlines").called(
-                jsonBodyResFile = fileBody("PublishHeadline.json"),
+                jsonBody = fileBody("PublishHeadline.json"),
                 method = POST)
     }
 
@@ -85,23 +85,10 @@ class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
                         "}\n"))
     }
 
-    @Test(expected = IllegalArgumentException::class)
-    fun throwsWhenYouPassBothBodyParams() {
-        server.whenever(POST, "v2/top-headlines").thenRespond(success())
-        val article = anyArticle()
-
-        runBlocking { dataSource.publishHeadline(article) }
-
-        server.verify("v2/top-headlines").called(
-                times = once(),
-                jsonBodyResFile = fileBody("PublishHeadline.json"),
-                jsonBody = inlineBody("{\"title\" = \"Any title\" }"))
-    }
-
     @Test
     fun parsesNewsProperly() {
         server.whenever(GET, "v2/top-headlines")
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         val news = runBlocking { dataSource.getNews() }
 
