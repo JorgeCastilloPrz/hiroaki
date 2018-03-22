@@ -1,6 +1,7 @@
 package com.jorgecastillo.hiroaki.services
 
 import com.jorgecastillo.hiroaki.data.networkdto.GsonArticleDto
+import com.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
 import com.jorgecastillo.hiroaki.data.networkdto.MoshiNewsResponse
 import com.jorgecastillo.hiroaki.services.dto.NonNestedData
 import com.jorgecastillo.hiroaki.services.dto.NonNestedDataNumericArray
@@ -22,6 +23,12 @@ interface SomeService {
 
     @GET("/my-fake-service/1")
     fun getSomeJsonWithArrayOnRootLevel(): Call<ArrayList<Int>>
+
+    @GET("/my-fake-service/1")
+    fun getSomeJsonWithStringArrayOnRootLevel(): Call<ArrayList<String>>
+
+    @GET("/my-fake-service/1")
+    fun getSomeJsonArrayWithJsonObjectsOnRootLevel(): Call<ArrayList<MoshiNewsResponse>>
 
     /**
      * This is a no-op method on the real news API, just created for testing purposes.
