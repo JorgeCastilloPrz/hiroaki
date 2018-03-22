@@ -57,10 +57,35 @@ sealed class Body {
                     with(sb) {
                         append("""$indent"$k" : """)
                         when (v) {
-                            is String -> append(""""$v"""")
-                            is Array<*> -> append("[${v.joinToString()}]")
-                            is JsonDSL -> append(toJsonStringNested(nested = v, indent = indent + " "))
-                            else -> append("$v")
+                            is String -> {
+                                append("\"$v\"")
+                            }
+                            is Array<*> -> {
+                                append("[")
+                                v.forEachIndexed { index, item ->
+                                    when (item) {
+                                        is JsonDSL -> {
+                                            append(item.toJsonString())
+                                        }
+                                        is String -> {
+                                            append("\"$item\"")
+                                        }
+                                        else -> {
+                                            append("$item")
+                                        }
+                                    }
+                                    if (index < v.size - 1) {
+                                        append(",")
+                                    }
+                                }
+                                append("]")
+                            }
+                            is JsonDSL -> {
+                                append(toJsonStringNested(nested = v, indent = "$indent "))
+                            }
+                            else -> {
+                                append("$v")
+                            }
                         }
                         if (index < nested.entries.size - 1){
                             append(",")
