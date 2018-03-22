@@ -79,7 +79,7 @@ sealed class Body {
     }
 }
 
-inline fun <reified T> jsonArray(vararg elements: T): Array<T> = arrayOf(elements).flatten().toTypedArray()
+inline fun <reified T> jsonArray(vararg elements: T = arrayOf()): Array<T> = arrayOf(elements).flatten().toTypedArray()
 
 fun json(init: JsonDSL.() -> Unit): JsonDSL {
     val json = JsonDSL()

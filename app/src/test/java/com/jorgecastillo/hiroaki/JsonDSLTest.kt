@@ -30,7 +30,7 @@ class JsonDSLTest : MockServerSuite() {
     }
 
     @Test
-    fun respondsJsonDSL() {
+    fun respondsJsonDSLNestedJson() {
         server.whenever(Method.GET, "v2/top-headlines")
                 .thenDispatch { request ->
                     success(jsonBody = json {
@@ -48,31 +48,27 @@ class JsonDSLTest : MockServerSuite() {
                             "urlToImage" / "https://i.kinja-img.com/gawker-media/image/upload/s--Y-5X_NcT--/c_fill,fl_progressive,g_center,h_450,q_80,w_800/nxmwbkwzoc1z1tmak7s4.jpg"
                             "publishedAt" / "2018-03-09T20:30:00Z"
                         })
-                    }
-                    /*inlineBody("{\n" +
-                            "  \"status\": \"ok\",\n" +
-                            "  \"totalResults\": 2342,\n" +
-                            "  \"articles\": [\n" +
-                            "    {\n" +
-                            "      \"source\": {\n" +
-                            "        \"id\": ${request.path.length},\n" +
-                            "        \"name\": \"Lifehacker.com\"\n" +
-                            "      },\n" +
-                            "      \"author\": \"Jacob Kleinman\",\n" +
-                            "      \"title\": \"How to Get Android P's Screenshot Editing Tool on Any Android Phone\",\n" +
-                            "      \"description\": \"Last year, Apple brought advanced screenshot editing tools to the iPhone with iOS 11, and, this week, Google fired back with a similar Android feature called Markup. The only catch is that this new tool is limited to Android P, which launches later this year …\",\n" +
-                            "      \"url\": \"https://lifehacker.com/how-to-get-android-ps-screenshot-editing-tool-on-any-an-1823646122\",\n" +
-                            "      \"urlToImage\": \"https://i.kinja-img.com/gawker-media/image/upload/s--Y-5X_NcT--/c_fill,fl_progressive,g_center,h_450,q_80,w_800/nxmwbkwzoc1z1tmak7s4.jpg\",\n" +
-                            "      \"publishedAt\": \"2018-03-09T20:30:00Z\"\n" +
-                            "    }\n" +
-                            "  ]\n" +
-                            "}")*/
-                    )
+                    })
                 }
 
         val singleNew = runBlocking { dataSource.getNews() }
 
         singleNew eq expectedSingleNew(83)
+    }
+
+    @Test
+    fun respondsJsonDSLNonNested() {
+        server.whenever(Method.GET, "v2/top-headlines")
+                .thenRespond(success(jsonBody = json {
+                    "status" / "ok"
+                    "totalResults" / 2342
+                    "author" / "Jacob Kleinman"
+                    "articles" / jsonArray<Article>()
+                }))
+
+        val singleNew = runBlocking { dataSource.getNews() }
+
+        singleNew eq arrayListOf()
     }
 
     private fun expectedSingleNew(requestPathLengthAsSourceId: Int? = null): List<Article> = listOf(
