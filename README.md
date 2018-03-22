@@ -86,7 +86,8 @@ class RuleNetworkDataSourceTest {
        // you'll need to call the server through the rule
        rule.server.whenever(GET, "v2/top-headlines")
                   .thenRespond(success(jsonBody = fileBody("GetNews.json")))
-    
+                  // Can also inline a body or use the json DSL
+                  
        runBlocking { dataSource.getNews() }
 
        /*...*/
@@ -123,7 +124,8 @@ With **Hiroaki**, you can mock request responses as if it was mockito:
 @Test
 fun chainResponses() {
     server.whenever(Method.GET, "v2/top-headlines")
-            .thenRespond(success(jsonBody = fileBody("GetNews.json"))) // Can also inline a body or use the json DSL
+            .thenRespond(success(jsonBody = fileBody("GetNews.json"))) 
+            // Can also inline a body or use the json DSL
 
     val news = runBlocking { dataSource.getNews() }
     
