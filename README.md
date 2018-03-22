@@ -85,7 +85,7 @@ class RuleNetworkDataSourceTest {
     fun sendsGetNews() {
        // you'll need to call the server through the rule
        rule.server.whenever(GET, "v2/top-headlines")
-                  .thenRespond(success(jsonFileName = "GetNews.json"))
+                  .thenRespond(success(jsonBody = fileBody("GetNews.json")))
     
        runBlocking { dataSource.getNews() }
 
@@ -123,7 +123,7 @@ With **Hiroaki**, you can mock request responses as if it was mockito:
 @Test
 fun chainResponses() {
     server.whenever(Method.GET, "v2/top-headlines")
-            .thenRespond(success(jsonFileName = "GetNews.json"))
+            .thenRespond(success(jsonBody = fileBody("GetNews.json"))) // Can also inline a body or use the json DSL
 
     val news = runBlocking { dataSource.getNews() }
     
@@ -139,27 +139,17 @@ server.whenever(method = Method.GET,
                 sentToPath = "v2/top-headlines",
                 queryParams = mapOf("sources" to "crypto-coins-news",
                         "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
-                jsonBodyResFile = fileBody("GetNews.json"),
-                jsonBody = inlineBody("{\n" +
-                        "  \"title\": \"Any Title\",\n" +
-                        "  \"description\": \"Any description\",\n" +
-                        "  \"source\": {\n" +
-                        "    \"link\": \"http://source/123\",\n" +
-                        "    \"name\": \"Some source\"\n" +
-                        "  }\n" +
-                        "}\n"),
+                jsonBody = fileBody("GetNews.json"), // check json body options available (file, inline, or JsonDSL)
                 headers = headers("Cache-Control" to "max-age=640000"))
       .thenRespond(success(jsonFileName = "GetNews.json"))
 ```
-If you try to match to both `jsonBodyResFile` and `jsonBody` at the same time you'll get an exception.
 
 Also note in the previous snippets the `success()` function when mocking the response. function `success()` is a 
 shortcut to provide a mocked successful response. You can also use `error()`  and `response()`. All of them are mocking 
 functions that allow you to pass the following **optional** arguments:
 
 * `code` **Int** return http status code for the mocked response.
-* `jsonFileName` **String** resource file name to load the mocked response json body from.
-* `jsonBody` **String** inlined json for your mocked response body.
+* `jsonBody` **JsonBody**, **JsonFileBody**, **Json** or **JsonArray**: json for your mocked response body.
 * `headers` Is a **Map<String,String>** headers to attach to the mocked response.
 
 If you don't want to use the `succes()`, `error()` or `response()` shortcut functions, you can still pass your own 
@@ -170,9 +160,9 @@ custom `MockResponse`.
 You can also chain a bunch of mocked responses:
 ````kotlin
 server.whenever(Method.GET, "v2/top-headlines")
-                .thenRespond(success(jsonFileName = "GetNews.json"))
-                .thenRespond(success(jsonFileName = "GetSingleNew.json"))
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+                .thenRespond(success(jsonBody = fileBody("GetSingleNew.json")))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 ````
 Each time the endpoint is called under the given conditions, the server will return the next mocked response from the 
 list, **following the same order**.
@@ -183,13 +173,13 @@ Sometimes you want a response to depend on the request sent. For that reason, **
 method:
 ````kotlin
 server.whenever(Method.GET, "v2/top-headlines")
-      .thenDispatch { request -> success(jsonBody = "{\"requestPath\" : ${request.path}" }
+      .thenDispatch { request -> success(jsonBody = inlineBody("{\"requestPath\" : ${request.path}}")) }
 ````   
 You can combine as many `thenRespond()` and `thenDispatch()` calls as you want.
 ````kotlin
 server.whenever(Method.GET, "v2/top-headlines")
       .thenRespond(success())
-      .thenDispatch { request -> success(jsonBody = "{\"requestPath\" : ${request.path}" }
+      .thenDispatch { request -> success(jsonBody = inlineBody("{\"requestPath\" : ${request.path}}")) }
       .thenRespond(error())
 ````   
 
@@ -200,9 +190,9 @@ millis: `response.delay(millis)`:
 
 ````kotlin
 server.whenever(Method.GET, "v2/top-headlines")
-      .thenRespond(success(jsonFileName = "GetNews.json").delay(250))
-      .thenRespond(success(jsonFileName = "GetSingleNew.json").delay(500))
-      .thenRespond(success(jsonFileName = "GetNews.json").delay(1000))
+      .thenRespond(success(jsonBody = fileBody("GetNews.json")).delay(250))
+      .thenRespond(success(jsonBody = fileBody("GetSingleNew.json")).delay(500))
+      .thenRespond(success(jsonBody = fileBody("GetNews.json")).delay(1000))
       
 // Also for dispatched responses
 server.whenever(Method.GET, "v2/top-headlines")
@@ -226,9 +216,9 @@ Its arguments are **optional** so you're free to configure the assertion in a wa
 @Test
 fun verifiesCall() {
     server.whenever(Method.GET, "v2/top-headlines")
-            .thenRespond(success(jsonFileName = "GetNews.json"))
-            .thenRespond(success(jsonFileName = "GetSingleNew.json"))
-            .thenRespond(success(jsonFileName = "GetNews.json"))
+            .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+            .thenRespond(success(jsonBody = fileBody("GetSingleNew.json")))
+            .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
     runBlocking {
         dataSource.getNews()
@@ -303,7 +293,7 @@ class ExampleInstrumentedTest : AndroidMockServerSuite() {
     @Test
     fun showsEmptyCaseIfThereAreNoSuperHeroes() {
         server.whenever(GET, "v2/top-headlines")
-                .thenRespond(success(jsonFileName = "GetNews.json"))
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         startActivity()
 
@@ -323,7 +313,77 @@ to how android loads resources.
 **Verifying calls in Android**
 
 Using call verification on Android instrumentation tests can also be a good idea, so you are able to assert that the 
-endpoints are called as expected (including optional times / ordering) per screen. 
+endpoints are called as expected (including optional times / ordering) per screen.
+
+### Json Body DSL
+
+Anywhere where **Hiroaki** requests a `JsonBody` from you (matchers, assertions, wherever), you can use 3 options: 
+* `fileBody("Filename.json")`: To pass a json from a file resource (`/test/resources` or `androidTest/assets`)
+* `inlineBody("{...}")`: To pass an inlined body.
+* `JsonDSL`: A fancy DSL to create your inlined json bodies in a very idiomatic way. Some examples:
+
+```kotlin
+json {
+    "status" / "ok"
+    "totalResults" / 2342
+    "articles" / jsonArray(json {
+        "source" / json {
+            "id" / request.path.length
+            "name" / "Lifehacker.com"
+        }
+        "author" / "Jacob Kleinman"
+        "title" / "How to Get Android P's Screenshot Editing Tool on Any Android Phone"
+        "description" / "Last year, Apple brought advanced screenshot editing tools to the iPhone with iOS 11, and, this week, Google fired back with a similar Android feature called Markup. The only catch is that this new tool is limited to Android P, which launches later this year …"
+        "url" / "https://lifehacker.com/how-to-get-android-ps-screenshot-editing-tool-on-any-an-1823646122"
+        "urlToImage" / "https://i.kinja-img.com/gawker-media/image/upload/s--Y-5X_NcT--/c_fill,fl_progressive,g_center,h_450,q_80,w_800/nxmwbkwzoc1z1tmak7s4.jpg"
+        "publishedAt" / "2018-03-09T20:30:00Z"
+    })
+}
+
+jsonArray("Something", "More stuff", "Something more"))
+
+jsonArray(
+    json {
+      "status" / "ok"
+      "title" / "How to Get Android P's Screenshot Editing Tool on Any Android Phone"
+      "ids" / jsonArray(1, 2, 3)
+    },
+    json {
+      "status" / "ok"
+      "title" / "How to Get Android P's Screenshot Editing Tool on Any Android Phone"
+      "ids" / jsonArray(1, 2, 3)
+    },
+    json {
+      "status" / "ok"
+      "title" / "How to Get Android P's Screenshot Editing Tool on Any Android Phone"
+      "ids" / jsonArray(1, 2, 3)
+    })
+``` 
+You can combine `jsonArray{}` and `json{}` blocks arbitrarily. **Hiroaki** will create a properly formatted json for you.
+Also feel free to use `jsonArray` as the root node for your json if you need to.
+````kotlin
+server.whenever(Method.GET, "my-fake-service/1")
+                .thenRespond(success(jsonBody = jsonArray(1, 2, 3)))
+                
+server.whenever(Method.GET, "my-fake-service/1")
+                .thenRespond(success(jsonBody = 
+                    json {
+                       "status" / "ok"
+                       "totalResults" / 2342
+                       "articles" / jsonArray(json {
+                           "source" / json {
+                               "id" / request.path.length
+                               "name" / "Lifehacker.com"
+                           }
+                           "author" / "Jacob Kleinman"
+                           "title" / "How to Get Android P's Screenshot Editing Tool on Any Android Phone"
+                           "description" / "Last year, Apple brought advanced screenshot editing tools to the iPhone with iOS 11, and, this week, Google fired back with a similar Android feature called Markup. The only catch is that this new tool is limited to Android P, which launches later this year …"
+                           "url" / "https://lifehacker.com/how-to-get-android-ps-screenshot-editing-tool-on-any-an-1823646122"
+                           "urlToImage" / "https://i.kinja-img.com/gawker-media/image/upload/s--Y-5X_NcT--/c_fill,fl_progressive,g_center,h_450,q_80,w_800/nxmwbkwzoc1z1tmak7s4.jpg"
+                           "publishedAt" / "2018-03-09T20:30:00Z"
+                       })
+                   }))
+````
 
 Do you want to contribute?
 --------------------------
