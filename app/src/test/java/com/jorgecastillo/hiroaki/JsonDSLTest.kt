@@ -3,17 +3,12 @@ package com.jorgecastillo.hiroaki
 import com.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
 import com.jorgecastillo.hiroaki.data.networkdto.MoshiSourceDto
 import com.jorgecastillo.hiroaki.internal.MockServerSuite
-import com.jorgecastillo.hiroaki.model.Article
-import com.jorgecastillo.hiroaki.model.Source
 import com.jorgecastillo.hiroaki.models.json
 import com.jorgecastillo.hiroaki.models.jsonArray
 import com.jorgecastillo.hiroaki.models.success
 import com.jorgecastillo.hiroaki.services.SomeService
 import com.jorgecastillo.hiroaki.services.dto.NonNestedData
 import com.jorgecastillo.hiroaki.services.dto.NonNestedDataNumericArray
-import kotlinx.coroutines.experimental.runBlocking
-import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Test
@@ -115,6 +110,16 @@ class JsonDSLTest : MockServerSuite() {
         val parsedData = service.getNestedJson().execute().body()?.articles
 
         parsedData eq expectedSingleNew(18)
+    }
+
+    @Test
+    fun respondsDSLArrayAtRootLevel() {
+        server.whenever(Method.GET, "my-fake-service/1")
+                .thenRespond(success(jsonBody = jsonArray(1, 2, 3)))
+
+        val parsedData = service.getSomeJsonWithArrayOnRootLevel().execute().body()
+
+        parsedData eq arrayListOf(1, 2, 3)
     }
 
     private fun expectedSingleNew(requestPathLengthAsSourceId: Int? = null): List<MoshiArticleDto> = listOf(

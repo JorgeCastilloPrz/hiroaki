@@ -4,7 +4,8 @@ import com.jorgecastillo.hiroaki.Headers
 import com.jorgecastillo.hiroaki.json.fileContentAsString
 import com.jorgecastillo.hiroaki.models.Body.JsonBody
 import com.jorgecastillo.hiroaki.models.Body.JsonBodyFile
-import com.jorgecastillo.hiroaki.models.Body.JsonDSL
+import com.jorgecastillo.hiroaki.models.Body.Json
+import com.jorgecastillo.hiroaki.models.Body.JsonArray
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import java.util.concurrent.TimeUnit
@@ -45,7 +46,8 @@ fun response(
         when (body) {
             is JsonBody -> setBody(body.jsonBody)
             is JsonBodyFile -> setBody(fileContentAsString(body.jsonBodyResFile))
-            is JsonDSL -> setBody(body.toJsonString())
+            is Json -> setBody(body.toJsonString())
+            is JsonArray<*> -> setBody(body.toJsonString())
         }
     } ?: setBody("")
     headers?.forEach { header -> addHeader(header.key, header.value) }

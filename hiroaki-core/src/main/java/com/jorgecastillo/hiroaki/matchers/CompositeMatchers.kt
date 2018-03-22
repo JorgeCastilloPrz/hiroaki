@@ -8,7 +8,8 @@ import com.jorgecastillo.hiroaki.json.fromJson
 import com.jorgecastillo.hiroaki.models.Body
 import com.jorgecastillo.hiroaki.models.Body.JsonBody
 import com.jorgecastillo.hiroaki.models.Body.JsonBodyFile
-import com.jorgecastillo.hiroaki.models.Body.JsonDSL
+import com.jorgecastillo.hiroaki.models.Body.Json
+import com.jorgecastillo.hiroaki.models.Body.JsonArray
 import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matcher
@@ -43,9 +44,14 @@ fun <T : Any> T.matches(
                                 fileStringBody.fromJson())
                 )
             }
-            is JsonDSL -> matchers.add(
+            is Json -> matchers.add(
                     hasBody(
                             body.toJsonString(),
+                            body.toJsonString().fromJson())
+            )
+            is JsonArray<*> -> matchers.add(
+                    hasBody(
+                            body.array.joinToString(),
                             body.toJsonString().fromJson())
             )
         }

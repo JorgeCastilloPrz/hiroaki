@@ -2,7 +2,8 @@ package com.jorgecastillo.hiroaki.models
 
 import com.jorgecastillo.hiroaki.models.Body.JsonBody
 import com.jorgecastillo.hiroaki.models.Body.JsonBodyFile
-import com.jorgecastillo.hiroaki.models.Body.JsonDSL
+import com.jorgecastillo.hiroaki.models.Body.Json
+import com.jorgecastillo.hiroaki.models.Body.JsonArray
 
 fun inlineBody(jsonBody: String): JsonBody = JsonBody(jsonBody)
 
@@ -13,7 +14,51 @@ sealed class Body {
 
     data class JsonBodyFile(val jsonBodyResFile: String) : Body()
 
-    class JsonDSL : Body() {
+    class JsonArray<T>(val array: Array<T>) : Body() {
+        override fun toString(): String {
+            return toJsonString()
+        }
+
+        fun toJsonString(indent: String = " "): String {
+            fun toJsonStringNested(
+                nested: JsonArray<T>,
+                indent: String
+            ): String {
+                val sb = StringBuilder().append("[")
+                        .append("\n")
+
+                var index = 0
+                for (v in nested.array) {
+                    with(sb) {
+                        when (v) {
+                            is String -> {
+                                append("\"$v\"")
+                            }
+                            is JsonArray<*> -> {
+                                append(toJsonString(indent = "$indent "))
+                            }
+                            is Json -> {
+                                append(v.toJsonString(indent = "$indent "))
+                            }
+                            else -> {
+                                append("$v")
+                            }
+                        }
+                        if (index < nested.array.size - 1) {
+                            append(",")
+                        }
+                        append("\n")
+                    }
+                    index += 1
+                }
+                return sb.append("$indent]")
+                        .toString()
+            }
+            return toJsonStringNested(this, indent = indent)
+        }
+    }
+
+    class Json : Body() {
         private val entries = linkedMapOf<String, Any?>()
 
         infix operator fun String.div(value: String?): Unit {
@@ -32,11 +77,11 @@ sealed class Body {
             entries[this] = value
         }
 
-        infix operator fun String.div(value: Array<*>?): Unit {
+        infix operator fun String.div(value: JsonArray<*>?): Unit {
             entries[this] = value
         }
 
-        infix operator fun String.div(value: JsonDSL?): Unit {
+        infix operator fun String.div(value: Json?): Unit {
             entries[this] = value
         }
 
@@ -46,7 +91,7 @@ sealed class Body {
 
         fun toJsonString(indent: String = " "): String {
             fun toJsonStringNested(
-                nested: JsonDSL,
+                nested: Json,
                 indent: String
             ): String {
                 val sb = StringBuilder().append("{")
@@ -60,11 +105,11 @@ sealed class Body {
                             is String -> {
                                 append("\"$v\"")
                             }
-                            is Array<*> -> {
+                            is JsonArray<*> -> {
                                 append("[")
-                                v.forEachIndexed { index, item ->
+                                v.array.forEachIndexed { index, item ->
                                     when (item) {
-                                        is JsonDSL -> {
+                                        is Json -> {
                                             append(item.toJsonString())
                                         }
                                         is String -> {
@@ -74,20 +119,20 @@ sealed class Body {
                                             append("$item")
                                         }
                                     }
-                                    if (index < v.size - 1) {
+                                    if (index < v.array.size - 1) {
                                         append(",")
                                     }
                                 }
                                 append("]")
                             }
-                            is JsonDSL -> {
+                            is Json -> {
                                 append(toJsonStringNested(nested = v, indent = "$indent "))
                             }
                             else -> {
                                 append("$v")
                             }
                         }
-                        if (index < nested.entries.size - 1){
+                        if (index < nested.entries.size - 1) {
                             append(",")
                         }
                         append("\n")
@@ -104,10 +149,11 @@ sealed class Body {
     }
 }
 
-inline fun <reified T> jsonArray(vararg elements: T = arrayOf()): Array<T> = arrayOf(elements).flatten().toTypedArray()
+inline fun <reified T> jsonArray(vararg elements: T = arrayOf()): JsonArray<T> =
+    JsonArray(arrayOf(elements).flatten().toTypedArray())
 
-fun json(init: JsonDSL.() -> Unit): JsonDSL {
-    val json = JsonDSL()
+fun json(init: Json.() -> Unit): Json {
+    val json = Json()
     json.init()
     return json
 }

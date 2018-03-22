@@ -20,6 +20,9 @@ interface SomeService {
     @GET("/my-fake-service/1")
     fun getNestedJson(): Call<MoshiNewsResponse>
 
+    @GET("/my-fake-service/1")
+    fun getSomeJsonWithArrayOnRootLevel(): Call<ArrayList<Int>>
+
     /**
      * This is a no-op method on the real news API, just created for testing purposes.
      */
