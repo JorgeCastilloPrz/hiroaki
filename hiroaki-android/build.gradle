@@ -41,8 +41,7 @@ android {
 }
 
 dependencies {
-    //implementation "me.jorgecastillo:hiroaki-core:0.0.3"
-    implementation project(":hiroaki-core")
+    implementation "me.jorgecastillo:hiroaki-core:0.0.4"
 
     // linters
     ktlint "com.github.shyiko:ktlint:0.19.0"

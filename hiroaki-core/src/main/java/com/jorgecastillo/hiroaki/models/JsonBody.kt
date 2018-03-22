@@ -61,27 +61,27 @@ sealed class Body {
     class Json : Body() {
         private val entries = linkedMapOf<String, Any?>()
 
-        infix operator fun String.div(value: String?): Unit {
+        infix operator fun String.div(value: String?) {
             entries[this] = value
         }
 
-        infix operator fun String.div(value: Number?): Unit {
+        infix operator fun String.div(value: Number?) {
             entries[this] = value
         }
 
-        infix operator fun String.div(value: Double?): Unit {
+        infix operator fun String.div(value: Double?) {
             entries[this] = value
         }
 
-        infix operator fun String.div(value: Boolean?): Unit {
+        infix operator fun String.div(value: Boolean?) {
             entries[this] = value
         }
 
-        infix operator fun String.div(value: JsonArray<*>?): Unit {
+        infix operator fun String.div(value: JsonArray<*>?) {
             entries[this] = value
         }
 
-        infix operator fun String.div(value: Json?): Unit {
+        infix operator fun String.div(value: Json?) {
             entries[this] = value
         }
 

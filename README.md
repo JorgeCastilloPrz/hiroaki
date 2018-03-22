@@ -20,8 +20,8 @@ Add the following code to your ``build.gradle``. Both dependencies are available
 
 ```groovy
 dependencies{
-    implementation 'me.jorgecastillo:hiroaki-core:0.0.3'
-    implementation 'me.jorgecastillo:hiroaki-android:0.0.3' // Android instrumentation tests
+    implementation 'me.jorgecastillo:hiroaki-core:0.0.4'
+    implementation 'me.jorgecastillo:hiroaki-android:0.0.4' // Android instrumentation tests
 }
 ```
 
@@ -141,7 +141,7 @@ server.whenever(method = Method.GET,
                 sentToPath = "v2/top-headlines",
                 queryParams = mapOf("sources" to "crypto-coins-news",
                         "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
-                jsonBody = fileBody("GetNews.json"), // check json body options available (file, inline, or JsonDSL)
+                jsonBody = fileBody("GetNews.json"), // (file, inline, or JsonDSL)
                 headers = headers("Cache-Control" to "max-age=640000"))
       .thenRespond(success(jsonFileName = "GetNews.json"))
 ```
@@ -244,7 +244,6 @@ fun verifiesCall() {
                                   "    \"name\": \"Some source\"\n" +
                                   "  }\n" +
                                   "}\n"))
-            // Ofc you can also pass a fileBody("GetNews.json")
 }
 ```
 You can use the functions `never()`, `once()`, `twice()`, `times(num)`, `atLeast`, and `atMost` for the times param.
