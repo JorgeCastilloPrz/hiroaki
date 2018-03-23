@@ -137,7 +137,8 @@ class RuleNetworkDataSourceTest {
 }
 ```
 
-### Mocking Responses
+Mocking Responses
+-----------------
 
 With **Hiroaki**, you can mock request responses as if it was mockito:
 ````kotlin
@@ -177,7 +178,8 @@ functions that allow you to pass the following **optional** arguments:
 If you don't want to use the `succes()`, `error()` or `response()` shortcut functions, you can still pass your own 
 custom `MockResponse`. 
 
-**Chaining mocked responses:**
+Chaining Mocked Responses
+-------------------------
 
 You can also chain a bunch of mocked responses:
 ````kotlin
@@ -189,7 +191,8 @@ server.whenever(Method.GET, "v2/top-headlines")
 Each time the endpoint is called under the given conditions, the server will return the next mocked response from the 
 list, **following the same order**.
 
-**Dynamic dispatch**
+Dynamic dispatch
+----------------
 
 Sometimes you want a response to depend on the request sent. For that reason, **Hiroaki** provides the `thenDispatch` 
 method:
@@ -205,7 +208,8 @@ server.whenever(Method.GET, "v2/top-headlines")
       .thenRespond(error())
 ````   
 
-**Delay responses**
+Delay Responses
+---------------
 
 Mimic server response delays with `delay()`, an extension function for `MockResponse` to pass a delay in 
 millis: `response.delay(millis)`:
@@ -221,7 +225,8 @@ server.whenever(Method.GET, "v2/top-headlines")
       .thenDispatch { request -> success().delay(250) }
 ````
 
-**Throttle response bodies**
+Throttle response bodies
+------------------------
 
 Sometimes you want to emulate bad network conditions, so you can throttle your response body like:
 ````kotlin
@@ -229,7 +234,8 @@ server.whenever(GET, "v2/top-headlines").thenRespond(error().throttle(64, 1000))
 ````
 Here, you are asking the server to throttle and write chunks of 64 bytes per second (1000 millis).
 
-### Request verification
+Verifying Requests
+------------------
 
 **Hiroaki** provides a highly configurable `verify()` function to perform verification over executed HTTP requests. 
 Its arguments are **optional** so you're free to configure the assertion in a way that matches your needs. 
@@ -268,7 +274,9 @@ fun verifiesCall() {
 ```
 You can use the functions `never()`, `once()`, `twice()`, `times(num)`, `atLeast`, and `atMost` for the times param.
 
-### Parsed Response assertions
+Parsed response assertions
+--------------------------
+
 After any test that requests data from network you'll probably need to **assert over the parsed response** to double 
 check whether the data was received and parsed properly.
 
@@ -286,7 +294,8 @@ fun parsesNewsProperly() {
 objects with the function `expectedNews()`. The objects are being compared using the `equals` operator so you 
 **better use data classes for DTOs or redefine `equals`** properly. 
 
-### Android Instrumentation Tests
+Android Instrumentation tests
+-----------------------------
 
 Extend `AndroidMockServerSuite` or use `AndroidMockServerRule` instead. 
 
@@ -331,12 +340,14 @@ to replace the service most likely.
 For Android instrumentation tests you'll need to put your json body files into `androidTest/assets/` folder. That's due 
 to how android loads resources.
 
-**Verifying calls in Android**
+Call verification on Android
+----------------------------
 
 Using call verification on Android instrumentation tests can also be a good idea, so you are able to assert that the 
 endpoints are called as expected (including optional times / ordering) per screen.
 
-### Json Body DSL
+Json Body DSL
+-------------
 
 Anywhere where **Hiroaki** requests a `JsonBody` from you (matchers, assertions, wherever), you can use 3 options: 
 * `fileBody("Filename.json")`: To pass a json from a file resource (`/test/resources` or `androidTest/assets`)
