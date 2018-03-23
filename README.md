@@ -13,8 +13,8 @@ It uses `MockWebServer` to provide a mock server as a target for your HTTP reque
 
 That enables you to assert over how your program reacts to some predefined server & API behaviors. 
 
-Usage
------
+Dependency
+----------
 
 Add the following code to your ``build.gradle``. Both dependencies are available in **Maven Central**.
 
@@ -25,12 +25,52 @@ dependencies{
 }
 ```
 
-### Setup
+Setup
+-----
 
-To avoid your code to query the real endpoints you must configure your retrofit instance to use the mock server url. 
+To work with **Hiroaki** you must extend `MockServerSuite` on your test class, which takes care of running and shutting 
+down the server for you. If you can't do that, there's also a JUnit4 `Rule` called `MockServerRule` with the same goal.
 
-Also note that you must extend `MockServerSuite`, which takes care of running and shutting down the server for you. 
-If you can't do that, there's also a JUnit `Rule` with the same goal.
+To target the mock server with your requests, you'll need to request the URL from it and pass it to your endpoint 
+creation system / collaborator / entity.
+
+Here you have a plain [OkHttp](http://square.github.io/okhttp/) sample.
+````kotlin
+class GsonNewsNetworkDataSourceTest : MockServerSuite() {
+
+ private lateinit var dataSource: GsonNewsNetworkDataSource
+
+    @Before
+    override fun setup() {
+        super.setup()
+        val mockServerUrl = server.url("/v2/news")
+        dataSource = NewsDataSource(mockServerUrl)
+    }
+        
+    /*...add tests here!...*/
+}
+
+/*Some random data source, probably on a different file*/
+class NewsDataSource(var baseUrl: HttpUrl) {
+
+  fun getNews(): String? {
+      val client = OkHttpClient()
+      val request = Request.Builder()
+              .url(baseUrl)
+              .build()
+  
+      val response = client.newCall(request).execute()
+      return response.body()?.string()
+  }
+}
+````
+If you have an **endpoint factory**, or even a **DI system** providing injected endpoints, you'll need to have a good 
+design on your app to pass the mock server url to it. That's on you and is different for every project.
+
+Syntax for Retrofit
+-------------------
+However, **Hiroaki** provides syntax for waking up mock `Retrofit` services in case you need one for writing some unit 
+tests for your api client / data source as the subject under test.
 
 ```kotlin
 class GsonNewsNetworkDataSourceTest : MockServerSuite() {
@@ -65,7 +105,9 @@ dataSource = GsonNewsNetworkDataSource(server.retrofitService(
                 okHttpClient = customClient))
 ```
 
-Also here you have the **JUnit4 rule** with the same purpose:
+JUnit4 Rule
+-----------
+As mentioned before, here you have the alternative **JUnit4 rule** to avoid using extension if that's your need:
 
 ```kotlin
 @RunWith(MockitoJUnitRunner::class)
@@ -94,28 +136,6 @@ class RuleNetworkDataSourceTest {
     }
 }
 ```
-
-**But I don\'t use Retrofit!**
-
-You can still use **Hiroaki** without `Retrofit`. Just request the URL from your mock server instance and use it as the 
-endpoint for your requests. Here you have a plain [OkHttp](http://square.github.io/okhttp/) sample.
-````kotlin
-val mockServerUrl = server.url("/v2/news")
-dataSource = NewsDataSource(mockServerUrl)
-
-class NewsDataSource(var baseUrl: HttpUrl) {
-
-  fun getNews(): String? {
-      val client = OkHttpClient()
-      val request = Request.Builder()
-              .url(baseUrl)
-              .build()
-  
-      val response = client.newCall(request).execute()
-      return response.body()?.string()
-  }
-}
-````
 
 ### Mocking Responses
 
