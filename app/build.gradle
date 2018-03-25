@@ -42,6 +42,8 @@ dependencies {
     def supportVersion = "27.1.0"
     def retrofitVersion = "2.3.0"
 
+    implementation 'com.android.support:multidex:1.0.3'
+
     testImplementation "me.jorgecastillo:hiroaki-core:0.0.4"
     androidTestImplementation "me.jorgecastillo:hiroaki-android:0.0.4"
 
