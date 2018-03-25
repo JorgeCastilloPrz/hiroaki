@@ -2,10 +2,6 @@ package me.jorgecastillo.hiroaki.dispatcher
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.jorgecastillo.hiroaki.dispatcher.DispatcherAdapter
-import com.jorgecastillo.hiroaki.dispatcher.HiroakiDispatcher
-import com.jorgecastillo.hiroaki.dispatcher.HiroakiQueueDispatcher
-import com.jorgecastillo.hiroaki.dispatcher.Retainer
 
 @SuppressLint("StaticFieldLeak")
 internal object AndroidDispatcherRetainer : Retainer {

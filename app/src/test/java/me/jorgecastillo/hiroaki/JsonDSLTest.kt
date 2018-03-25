@@ -1,14 +1,14 @@
-package com.jorgecastillo.hiroaki
+package me.jorgecastillo.hiroaki
 
 import me.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
 import me.jorgecastillo.hiroaki.data.networkdto.MoshiSourceDto
-import com.jorgecastillo.hiroaki.internal.MockServerSuite
-import com.jorgecastillo.hiroaki.models.json
-import com.jorgecastillo.hiroaki.models.jsonArray
-import com.jorgecastillo.hiroaki.models.success
-import com.jorgecastillo.hiroaki.services.SomeService
-import com.jorgecastillo.hiroaki.services.dto.NonNestedData
-import com.jorgecastillo.hiroaki.services.dto.NonNestedDataNumericArray
+import me.jorgecastillo.hiroaki.internal.MockServerSuite
+import me.jorgecastillo.hiroaki.models.json
+import me.jorgecastillo.hiroaki.models.jsonArray
+import me.jorgecastillo.hiroaki.models.success
+import me.jorgecastillo.hiroaki.services.SomeService
+import me.jorgecastillo.hiroaki.services.dto.NonNestedData
+import me.jorgecastillo.hiroaki.services.dto.NonNestedDataNumericArray
 import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Test

@@ -1,4 +1,4 @@
-package com.jorgecastillo.hiroaki
+package me.jorgecastillo.hiroaki
 
 import android.content.Intent
 import android.support.test.espresso.Espresso.onView
@@ -8,14 +8,13 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import com.jorgecastillo.hiroaki.Method.GET
+import me.jorgecastillo.hiroaki.Method.GET
 import me.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
-import com.jorgecastillo.hiroaki.internal.AndroidMockServerSuite
+import me.jorgecastillo.hiroaki.internal.AndroidMockServerSuite
 import me.jorgecastillo.hiroaki.model.Article
 import me.jorgecastillo.hiroaki.model.Source
-import com.jorgecastillo.hiroaki.models.fileBody
-import com.jorgecastillo.hiroaki.models.success
-import me.jorgecastillo.hiroaki.MainActivity
+import me.jorgecastillo.hiroaki.models.fileBody
+import me.jorgecastillo.hiroaki.models.success
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -35,7 +34,8 @@ class ExampleInstrumentedTest : AndroidMockServerSuite() {
         val mockService = server.retrofitService(
                 MoshiNewsApiService::class.java,
                 MoshiConverterFactory.create())
-        getApp().service = mockService
+        getApp()
+                .service = mockService
     }
 
     private fun startActivity(): MainActivity {

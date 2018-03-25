@@ -1,4 +1,4 @@
-package com.jorgecastillo.hiroaki
+package me.jorgecastillo.hiroaki
 
 import android.app.Application
 import android.content.Context

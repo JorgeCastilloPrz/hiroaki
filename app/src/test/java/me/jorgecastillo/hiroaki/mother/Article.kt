@@ -1,4 +1,4 @@
-package com.jorgecastillo.hiroaki.mother
+package me.jorgecastillo.hiroaki.mother
 
 import me.jorgecastillo.hiroaki.model.Article
 import me.jorgecastillo.hiroaki.model.Source

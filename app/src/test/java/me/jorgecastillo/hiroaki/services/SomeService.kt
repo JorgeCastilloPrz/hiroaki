@@ -1,9 +1,9 @@
-package com.jorgecastillo.hiroaki.services
+package me.jorgecastillo.hiroaki.services
 
 import me.jorgecastillo.hiroaki.data.networkdto.GsonArticleDto
 import me.jorgecastillo.hiroaki.data.networkdto.MoshiNewsResponse
-import com.jorgecastillo.hiroaki.services.dto.NonNestedData
-import com.jorgecastillo.hiroaki.services.dto.NonNestedDataNumericArray
+import me.jorgecastillo.hiroaki.services.dto.NonNestedData
+import me.jorgecastillo.hiroaki.services.dto.NonNestedDataNumericArray
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET

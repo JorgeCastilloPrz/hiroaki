@@ -1,4 +1,4 @@
-package com.jorgecastillo.hiroaki.services.dto
+package me.jorgecastillo.hiroaki.services.dto
 
 data class NonNestedData(val first: String, val second: Long, val third: List<String>)
 

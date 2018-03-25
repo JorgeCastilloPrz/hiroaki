@@ -1,4 +1,4 @@
-package com.jorgecastillo.hiroaki
+package me.jorgecastillo.hiroaki
 
 import android.support.test.InstrumentationRegistry
 
