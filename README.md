@@ -25,6 +25,15 @@ dependencies{
 }
 ```
 
+You will probably also need to add this to your android module using the library.
+````groovy
+android {
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}
+````
+
 Setup
 -----
 
