@@ -1,6 +1,7 @@
 package com.jorgecastillo.hiroaki
 
-import com.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
+import me.jorgecastillo.hiroaki.SampleApp
+import me.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
 
 class TestSampleApp : SampleApp() {
 

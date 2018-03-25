@@ -1,7 +1,7 @@
 package com.jorgecastillo.hiroaki
 
-import com.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
-import com.jorgecastillo.hiroaki.data.networkdto.MoshiSourceDto
+import me.jorgecastillo.hiroaki.data.networkdto.MoshiArticleDto
+import me.jorgecastillo.hiroaki.data.networkdto.MoshiSourceDto
 import com.jorgecastillo.hiroaki.internal.MockServerSuite
 import com.jorgecastillo.hiroaki.models.json
 import com.jorgecastillo.hiroaki.models.jsonArray
