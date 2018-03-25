@@ -20,8 +20,8 @@ Add the following code to your ``build.gradle``. Both dependencies are available
 
 ```groovy
 dependencies{
-    implementation 'me.jorgecastillo:hiroaki-core:0.0.4'
-    implementation 'me.jorgecastillo:hiroaki-android:0.0.4' // Android instrumentation tests
+    testImplementation 'me.jorgecastillo:hiroaki-core:0.0.4'
+    androidTestImplementation 'me.jorgecastillo:hiroaki-android:0.0.4' // Android instrumentation tests
 }
 ```
 
