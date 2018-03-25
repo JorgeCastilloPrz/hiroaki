@@ -30,10 +30,6 @@ android {
             }
         }
     }
-
-    lintOptions {
-        disable 'InvalidPackage'
-    }
 }
 
 kotlin {
@@ -70,7 +66,7 @@ dependencies {
     // Network
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-    implementation 'com.squareup.okhttp3:mockwebserver:3.10.0'
+
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
