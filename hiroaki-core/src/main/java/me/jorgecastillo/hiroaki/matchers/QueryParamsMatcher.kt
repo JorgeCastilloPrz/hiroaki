@@ -9,24 +9,26 @@ import java.net.URLEncoder
 /**
  * Custom Hamcrest matcher to assert about query parameters on an OkHttp RecordedRequest.
  */
-fun hasQueryParams(params: Map<String, String>): Matcher<RecordedRequest> {
+fun hasQueryParams(expectedParams: List<Pair<String, String>>): Matcher<RecordedRequest> {
     return object : TypeSafeMatcher<RecordedRequest>() {
 
         override fun describeTo(description: Description) {
             description.appendText("The HTTP query should contain params: ")
-            params.forEach {
-                description.appendText("\n${it.key} = ${it.value}")
+            expectedParams.forEach {
+                description.appendText("\n${it.first} = ${it.second}")
             }
         }
 
         override fun describeMismatchSafely(request: RecordedRequest, mismatchDescription: Description) {
-            for ((key, value) in params) {
-                val parameter = request.requestUrl.queryParameter(key)
-                if (parameter == null) {
+            for ((key, value) in expectedParams) {
+                val requestedParamsForExpectedKey = request.requestUrl.queryParameterValues(key)
+                if (requestedParamsForExpectedKey == null ||
+                        requestedParamsForExpectedKey.isEmpty()) {
                     mismatchDescription.appendText("\nparameter $key is not present.")
                 } else {
-                    if (parameter != URLEncoder.encode(value, "UTF-8")) {
-                        mismatchDescription.appendText("\n$key = $parameter (Not matching!)")
+                    if (requestedParamsForExpectedKey
+                                    .find { it == URLEncoder.encode(value, "UTF-8") } == null) {
+                        mismatchDescription.appendText("\n$key = $value (Not matching!)")
                     }
                 }
             }
@@ -34,12 +36,14 @@ fun hasQueryParams(params: Map<String, String>): Matcher<RecordedRequest> {
 
         override fun matchesSafely(request: RecordedRequest): Boolean {
             var failed = false
-            for ((key, value) in params) {
-                val parameter = request.requestUrl.queryParameter(key)
-                if (parameter == null) {
+            for ((key, value) in expectedParams) {
+                val requestedParamsForExpectedKey = request.requestUrl.queryParameterValues(key)
+                if (requestedParamsForExpectedKey == null ||
+                        requestedParamsForExpectedKey.isEmpty()) {
                     failed = true
                 } else {
-                    if (parameter != URLEncoder.encode(value, "UTF-8")) {
+                    if (requestedParamsForExpectedKey
+                                    .find { it == URLEncoder.encode(value, "UTF-8") } == null) {
                         failed = true
                     }
                 }
