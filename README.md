@@ -160,7 +160,7 @@ These are all the supported params for `whenever` that you can match to. All of 
 ```kotlin
 server.whenever(method = Method.GET,
                 sentToPath = "v2/top-headlines",
-                queryParams = mapOf("sources" to "crypto-coins-news",
+                queryParams = params("sources" to "crypto-coins-news",
                         "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
                 jsonBody = fileBody("GetNews.json"), // (file, inline, or JsonDSL)
                 headers = headers("Cache-Control" to "max-age=640000"))

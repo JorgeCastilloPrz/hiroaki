@@ -3,12 +3,11 @@ package me.jorgecastillo.hiroaki
 import me.jorgecastillo.hiroaki.Either.Left
 import me.jorgecastillo.hiroaki.Either.Right
 
-typealias NetworkDto = Class<*>
-typealias QueryParams = Map<String, String>
+typealias QueryParams = List<Pair<String, String>>
 typealias Headers = Map<String, String>
 
 fun params(vararg pairs: Pair<String, String>): QueryParams =
-        if (pairs.isNotEmpty()) pairs.toMap() else emptyMap()
+        if (pairs.isNotEmpty()) pairs.toList() else listOf()
 
 fun headers(vararg pairs: Pair<String, String>): Headers =
         if (pairs.isNotEmpty()) pairs.toMap() else emptyMap()

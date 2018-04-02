@@ -8,6 +8,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface SomeService {
 
@@ -34,4 +35,13 @@ interface SomeService {
      */
     @POST("/my-fake-service")
     fun publishHeadline(@Body articleDto: GsonArticleDto): Call<Void>
+
+    /**
+     * Added to test query param verification for lists.
+     */
+    @POST("/my-fake-service/edit-tag")
+    fun addNewsTags(
+        @Query("i") ids: List<String>,
+        @Query("a") tagIds: List<String>
+    ): Call<Void>
 }

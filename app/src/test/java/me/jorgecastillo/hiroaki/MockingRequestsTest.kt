@@ -125,7 +125,7 @@ class MockingRequestsTest : MockServerSuite() {
         server.whenever(
                 method = Method.GET,
                 sentToPath = "v2/top-headlines",
-                queryParams = mapOf("sources" to "crypto-coins-news",
+                queryParams = params("sources" to "crypto-coins-news",
                         "apiKey" to "a7c816f57c004c49a21bd458e11e2807"))
                 .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
@@ -136,7 +136,7 @@ class MockingRequestsTest : MockServerSuite() {
 
     @Test(expected = IOException::class)
     fun failsWithUnknownParams() {
-        server.whenever(Method.GET, "v2/top-headlines", mapOf("randomParam" to "someValue"))
+        server.whenever(Method.GET, "v2/top-headlines", params("randomParam" to "someValue"))
                 .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         runBlocking { dataSource.getNews() }
