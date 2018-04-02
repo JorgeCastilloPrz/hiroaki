@@ -26,8 +26,7 @@ fun hasQueryParams(expectedParams: List<Pair<String, String>>): Matcher<Recorded
                         requestedParamsForExpectedKey.isEmpty()) {
                     mismatchDescription.appendText("\nparameter $key is not present.")
                 } else {
-                    if (requestedParamsForExpectedKey
-                                    .find { it == URLEncoder.encode(value, "UTF-8") } == null) {
+                    if (requestedParamsForExpectedKey.find { it == value } == null) {
                         mismatchDescription.appendText("\n$key = $value (Not matching!)")
                     }
                 }
@@ -42,8 +41,7 @@ fun hasQueryParams(expectedParams: List<Pair<String, String>>): Matcher<Recorded
                         requestedParamsForExpectedKey.isEmpty()) {
                     failed = true
                 } else {
-                    if (requestedParamsForExpectedKey
-                                    .find { it == URLEncoder.encode(value, "UTF-8") } == null) {
+                    if (requestedParamsForExpectedKey.find { it == value } == null) {
                         failed = true
                     }
                 }
