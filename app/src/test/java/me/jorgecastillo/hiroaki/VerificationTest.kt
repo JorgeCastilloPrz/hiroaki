@@ -4,6 +4,7 @@ import me.jorgecastillo.hiroaki.internal.MockServerSuite
 import me.jorgecastillo.hiroaki.models.success
 import me.jorgecastillo.hiroaki.services.SomeService
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
@@ -90,5 +91,48 @@ class VerificationTest : MockServerSuite() {
                         "i" to "3",
                         "a" to "user/-/tag",
                         "a" to "user/-/tag-2"))
+    }
+
+    @Test(expected = AssertionError::class)
+    fun reportsErrorWhenMissingExpectedQueryParamWithParamList() {
+        server.whenever(Method.POST, "my-fake-service/edit-tag")
+                .thenRespond(success())
+
+        service.getNewsByIds(listOf("1", "2")).execute()
+
+        server.verify("my-fake-service/edit-tag").called(
+                times = once(),
+                queryParams = params(
+                        "id" to "1",
+                        "id" to "2",
+                        "id" to "3"))
+    }
+
+    @Test(expected = AssertionError::class)
+    fun reportsErrorWhenMissingExpectedQueryParam() {
+        server.whenever(Method.POST, "my-fake-service/edit-tag")
+                .thenRespond(success())
+
+        service.getNew("1").execute()
+
+        server.verify("my-fake-service/edit-tag").called(
+                times = once(),
+                queryParams = params(
+                        "id" to "1",
+                        "id" to "2"))
+    }
+
+    @Ignore @Test(expected = AssertionError::class)
+    fun reportsErrorWhenMoreParametersThanTheExpectedOnesAreSent() {
+        server.whenever(Method.POST, "my-fake-service/edit-tag")
+                .thenRespond(success())
+
+        service.getNewsByIds(listOf("1", "2", "3")).execute()
+
+        server.verify("my-fake-service/edit-tag").called(
+                times = once(),
+                queryParams = params(
+                        "id" to "1",
+                        "id" to "2"))
     }
 }

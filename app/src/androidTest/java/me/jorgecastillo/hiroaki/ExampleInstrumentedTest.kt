@@ -25,7 +25,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest : AndroidMockServerSuite() {
 
-    @get:Rule val testRule: ActivityTestRule<MainActivity> = ActivityTestRule(
+    @get:Rule
+    val testRule: ActivityTestRule<MainActivity> = ActivityTestRule(
             MainActivity::class.java, true, false)
 
     @Before

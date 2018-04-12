@@ -25,7 +25,7 @@ fun times(count: Int): (requestMatcher: Matcher<RecordedRequest>) -> Matcher<Lis
                         .fold(0, { acc, recordedRequest ->
                             if (requestMatcher.matches(recordedRequest)) acc + 1 else acc
                         })
-                mismatchDescription.appendText("\nBut request found it $timesFound times instead.")
+                mismatchDescription.appendText("\nBut request found it $timesFound times instead.\n")
             }
 
             override fun matchesSafely(dispatchedRequests: List<RecordedRequest>): Boolean {
