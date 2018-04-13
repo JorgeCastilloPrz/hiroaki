@@ -3,8 +3,8 @@ package me.jorgecastillo.hiroaki.dispatcher
 import java.io.File
 
 internal object DispatcherRetainer : Retainer {
-    val queueDispatcher = HiroakiQueueDispatcher()
-    val hiroakiDispatcher = HiroakiDispatcher()
+    val queueDispatcher = HiroakiQueueDispatcher
+    val hiroakiDispatcher = HiroakiDispatcher
 
     fun registerRetainer() {
         DispatcherAdapter.register(this)
@@ -16,11 +16,11 @@ internal object DispatcherRetainer : Retainer {
     }
 
     override fun dispatchedRequests() =
-        queueDispatcher.dispatchedRequests + hiroakiDispatcher.dispatchedRequests
+            queueDispatcher.dispatchedRequests + hiroakiDispatcher.dispatchedRequests
 
     override fun <T : Any> fileContentAsString(
-        fileName: String,
-        receiver: T
+            fileName: String,
+            receiver: T
     ): String {
         val classLoader = receiver::class.java.classLoader
         val file = File(classLoader.getResource(fileName).file)

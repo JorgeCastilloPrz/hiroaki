@@ -6,8 +6,8 @@ import android.content.Context
 @SuppressLint("StaticFieldLeak")
 internal object AndroidDispatcherRetainer : Retainer {
 
-    val queueDispatcher = HiroakiQueueDispatcher()
-    val hiroakiDispatcher = HiroakiDispatcher()
+    val queueDispatcher = HiroakiQueueDispatcher
+    val hiroakiDispatcher = HiroakiDispatcher
     var androidContext: Context? = null
 
     fun registerRetainer() {
@@ -20,12 +20,12 @@ internal object AndroidDispatcherRetainer : Retainer {
     }
 
     override fun dispatchedRequests() =
-        queueDispatcher.dispatchedRequests + hiroakiDispatcher.dispatchedRequests
+            queueDispatcher.dispatchedRequests + hiroakiDispatcher.dispatchedRequests
 
     @Throws(Exception::class)
     override fun <T : Any> fileContentAsString(
-        fileName: String,
-        receiver: T
+            fileName: String,
+            receiver: T
     ): String {
         val inputStream = androidContext!!.resources.assets.open(fileName)
         return convertStreamToString(inputStream)

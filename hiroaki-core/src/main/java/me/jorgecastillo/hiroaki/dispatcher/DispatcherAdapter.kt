@@ -10,10 +10,10 @@ object DispatcherAdapter {
     }
 
     fun dispatchedRequests(): List<RecordedRequest> {
-        val requests = registeredDispatchers["DispatcherRetainer"]?.dispatchedRequests()
-        val androidRequests = registeredDispatchers["AndroidDispatcherRetainer"]?.dispatchedRequests()
-        val allRequests = requests?.union(androidRequests ?: listOf())?.toList()
-        return allRequests ?: listOf()
+        val requests = registeredDispatchers["DispatcherRetainer"]?.dispatchedRequests() ?: listOf()
+        val androidRequests = registeredDispatchers["AndroidDispatcherRetainer"]?.dispatchedRequests() ?: listOf()
+        val allRequests = requests.union(androidRequests).toList()
+        return allRequests
     }
 
     @Throws(Exception::class)

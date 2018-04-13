@@ -20,7 +20,7 @@ import org.hamcrest.Matcher
  *
  * It's open so end users can extend it to create their own dispatchers if they need to.
  */
-open class HiroakiDispatcher : Dispatcher() {
+object HiroakiDispatcher : Dispatcher() {
 
     private val mockRequests: MutableList<Pair<Matcher<RecordedRequest>,
             Either<MockResponse, (recordedRequest: RecordedRequest) -> MockResponse>>> =
@@ -28,15 +28,15 @@ open class HiroakiDispatcher : Dispatcher() {
     val dispatchedRequests: MutableList<RecordedRequest> = mutableListOf()
 
     fun addMockRequest(
-        matcher: Matcher<RecordedRequest>,
-        mockResponse: MockResponse
+            matcher: Matcher<RecordedRequest>,
+            mockResponse: MockResponse
     ) {
         mockRequests.add(Pair(matcher, mockResponse.left()))
     }
 
     fun addDispatchableBlock(
-        matcher: Matcher<RecordedRequest>,
-        dispatchableBlock: (recordedRequest: RecordedRequest) -> MockResponse
+            matcher: Matcher<RecordedRequest>,
+            dispatchableBlock: (recordedRequest: RecordedRequest) -> MockResponse
     ) {
         mockRequests.add(Pair(matcher, dispatchableBlock.right()))
     }
