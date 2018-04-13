@@ -8,7 +8,7 @@ import okhttp3.mockwebserver.RecordedRequest
  * This is a basic QueueDispatcher to enqueue sequential calls on MockWebServer, but also retaining
  * some info about dispatched calls for further verify() calls.
  */
-class HiroakiQueueDispatcher : QueueDispatcher() {
+object HiroakiQueueDispatcher : QueueDispatcher() {
 
     val dispatchedRequests: MutableList<RecordedRequest> = mutableListOf()
 
