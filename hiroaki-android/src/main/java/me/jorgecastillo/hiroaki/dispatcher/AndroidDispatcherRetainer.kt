@@ -24,8 +24,8 @@ internal object AndroidDispatcherRetainer : Retainer {
 
     @Throws(Exception::class)
     override fun <T : Any> fileContentAsString(
-            fileName: String,
-            receiver: T
+        fileName: String,
+        receiver: T
     ): String {
         val inputStream = androidContext!!.resources.assets.open(fileName)
         return convertStreamToString(inputStream)

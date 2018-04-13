@@ -19,8 +19,8 @@ internal object DispatcherRetainer : Retainer {
             queueDispatcher.dispatchedRequests + hiroakiDispatcher.dispatchedRequests
 
     override fun <T : Any> fileContentAsString(
-            fileName: String,
-            receiver: T
+        fileName: String,
+        receiver: T
     ): String {
         val classLoader = receiver::class.java.classLoader
         val file = File(classLoader.getResource(fileName).file)
