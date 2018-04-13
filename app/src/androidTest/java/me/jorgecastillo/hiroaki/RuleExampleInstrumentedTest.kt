@@ -16,6 +16,7 @@ import me.jorgecastillo.hiroaki.model.Article
 import me.jorgecastillo.hiroaki.model.Source
 import me.jorgecastillo.hiroaki.models.fileBody
 import me.jorgecastillo.hiroaki.models.success
+import org.hamcrest.Matchers.not
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -26,8 +27,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 @RunWith(AndroidJUnit4::class)
 class RuleExampleInstrumentedTest {
 
-    @get:Rule val testRule: AndroidMockServerRule = AndroidMockServerRule()
-    @get:Rule val activityRule: ActivityTestRule<MainActivity> = ActivityTestRule(
+    @Rule @JvmField val testRule: AndroidMockServerRule = AndroidMockServerRule()
+    @Rule @JvmField val activityRule: ActivityTestRule<MainActivity> = ActivityTestRule(
             MainActivity::class.java, true, false)
 
     @Before
@@ -39,21 +40,43 @@ class RuleExampleInstrumentedTest {
                 .service = mockService
     }
 
+    private val server get() = testRule.server
+
     private fun startActivity(): MainActivity {
         return activityRule.launchActivity(Intent())
     }
 
     @Test
-    fun showsEmptyCaseIfThereAreNoSuperHeroes() {
-        testRule.server.whenever(GET, "v2/top-headlines")
+    fun showsResultsIfThereAreNewsArticles() {
+        server.whenever(GET, "v2/top-headlines")
                 .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         startActivity()
 
         onView(withText(expectedNews()[0].title)).check(matches(isDisplayed()))
         onView(withText(expectedNews()[0].description)).check(matches(isDisplayed()))
+    }
 
-        testRule.server.verify("v2/top-headlines").called(times = times(1), method = Method.GET)
+    @Test
+    fun verifiesCorrectApiWasCalled() {
+        server.whenever(GET, "v2/top-headlines")
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+
+        startActivity()
+
+        onView(withText(expectedNews()[0].title)).check(matches(isDisplayed()))
+
+        server.verify("v2/top-headlines").called(times = times(1), method = Method.GET)
+    }
+
+    @Test
+    fun showsEmptyCaseIfThereAreNoSuperHeroes() {
+        server.whenever(GET, "v2/top-headlines")
+                .thenRespond(success(jsonBody = fileBody("GetEmptyNews.json")))
+
+        startActivity()
+
+        onView(withText(expectedNews()[0].title)).check(matches(not(isDisplayed())))
     }
 
     private fun expectedNews(): List<Article> {
