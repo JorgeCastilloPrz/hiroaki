@@ -4,6 +4,7 @@ import android.content.Intent
 import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import kotlinx.coroutines.experimental.runBlocking
 import me.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
 import me.jorgecastillo.hiroaki.internal.AndroidMockServerRule
 import me.jorgecastillo.hiroaki.matchers.never
@@ -35,7 +36,7 @@ class RuleAndroidVerificationTests {
     }
 
     private fun startActivity(): MainActivity {
-        return activityRule.launchActivity(Intent())
+        return runBlocking { activityRule.launchActivity(Intent()) }
     }
 
     @Test
