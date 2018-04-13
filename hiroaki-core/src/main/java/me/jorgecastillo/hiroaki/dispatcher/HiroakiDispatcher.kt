@@ -28,15 +28,15 @@ object HiroakiDispatcher : Dispatcher() {
     val dispatchedRequests: MutableList<RecordedRequest> = mutableListOf()
 
     fun addMockRequest(
-            matcher: Matcher<RecordedRequest>,
-            mockResponse: MockResponse
+        matcher: Matcher<RecordedRequest>,
+        mockResponse: MockResponse
     ) {
         mockRequests.add(Pair(matcher, mockResponse.left()))
     }
 
     fun addDispatchableBlock(
-            matcher: Matcher<RecordedRequest>,
-            dispatchableBlock: (recordedRequest: RecordedRequest) -> MockResponse
+        matcher: Matcher<RecordedRequest>,
+        dispatchableBlock: (recordedRequest: RecordedRequest) -> MockResponse
     ) {
         mockRequests.add(Pair(matcher, dispatchableBlock.right()))
     }
