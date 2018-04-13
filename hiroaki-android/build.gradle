@@ -22,7 +22,7 @@ android {
         unitTests.all {
             testLogging {
                 events "passed", "skipped", "failed", "standardOut", "standardError"
-                outputs.upToDateWhen {false}
+                outputs.upToDateWhen { false }
                 showStandardStreams = true
             }
         }
@@ -43,7 +43,8 @@ android {
 }
 
 dependencies {
-    api "me.jorgecastillo:hiroaki-core:0.0.7"
+    // api "me.jorgecastillo:hiroaki-core:0.0.7"
+    api project(":hiroaki-core")
 
     // linters
     ktlint "com.github.shyiko:ktlint:0.19.0"

@@ -44,4 +44,10 @@ interface SomeService {
         @Query("i") ids: List<String>,
         @Query("a") tagIds: List<String>
     ): Call<Void>
+
+    @GET("/my-fake-service/edit-tag")
+    fun getNewsByIds(@Query("id") ids: List<String>): Call<ArrayList<MoshiNewsResponse>>
+
+    @GET("/my-fake-service/edit-tag")
+    fun getNew(@Query("id") id: String): Call<MoshiNewsResponse>
 }
