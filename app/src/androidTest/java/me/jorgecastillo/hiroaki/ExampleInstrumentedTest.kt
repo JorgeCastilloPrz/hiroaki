@@ -8,6 +8,7 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import kotlinx.coroutines.experimental.runBlocking
 import me.jorgecastillo.hiroaki.Method.GET
 import me.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
 import me.jorgecastillo.hiroaki.internal.AndroidMockServerSuite
@@ -40,7 +41,7 @@ class ExampleInstrumentedTest : AndroidMockServerSuite() {
     }
 
     private fun startActivity(): MainActivity {
-        return testRule.launchActivity(Intent())
+        return runBlocking { testRule.launchActivity(Intent()) }
     }
 
     @Test

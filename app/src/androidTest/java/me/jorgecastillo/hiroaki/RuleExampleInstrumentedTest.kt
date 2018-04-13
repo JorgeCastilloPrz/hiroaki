@@ -8,6 +8,7 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import kotlinx.coroutines.experimental.runBlocking
 import me.jorgecastillo.hiroaki.Method.GET
 import me.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
 import me.jorgecastillo.hiroaki.internal.AndroidMockServerRule
@@ -25,8 +26,10 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 @RunWith(AndroidJUnit4::class)
 class RuleExampleInstrumentedTest {
 
-    @get:Rule val testRule: AndroidMockServerRule = AndroidMockServerRule()
-    @get:Rule val activityRule: ActivityTestRule<MainActivity> = ActivityTestRule(
+    @get:Rule
+    val testRule: AndroidMockServerRule = AndroidMockServerRule()
+    @get:Rule
+    val activityRule: ActivityTestRule<MainActivity> = ActivityTestRule(
             MainActivity::class.java, true, false)
 
     @Before
@@ -39,7 +42,7 @@ class RuleExampleInstrumentedTest {
     }
 
     private fun startActivity(): MainActivity {
-        return activityRule.launchActivity(Intent())
+        return runBlocking { activityRule.launchActivity(Intent()) }
     }
 
     @Test
