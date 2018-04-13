@@ -11,10 +11,13 @@ import android.support.test.runner.AndroidJUnit4
 import me.jorgecastillo.hiroaki.Method.GET
 import me.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
 import me.jorgecastillo.hiroaki.internal.AndroidMockServerSuite
+import me.jorgecastillo.hiroaki.matchers.times
 import me.jorgecastillo.hiroaki.model.Article
 import me.jorgecastillo.hiroaki.model.Source
 import me.jorgecastillo.hiroaki.models.fileBody
+import me.jorgecastillo.hiroaki.models.inlineBody
 import me.jorgecastillo.hiroaki.models.success
+import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -43,7 +46,7 @@ class ExampleInstrumentedTest : AndroidMockServerSuite() {
     }
 
     @Test
-    fun showsEmptyCaseIfThereAreNoSuperHeroes() {
+    fun showsResultsIfThereAreNewsArticles() {
         server.whenever(GET, "v2/top-headlines")
                 .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
@@ -51,6 +54,28 @@ class ExampleInstrumentedTest : AndroidMockServerSuite() {
 
         onView(withText(expectedNews()[0].title)).check(matches(isDisplayed()))
         onView(withText(expectedNews()[0].description)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun verifiesCorrectApiWasCalled() {
+        server.whenever(GET, "v2/top-headlines")
+                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+
+        startActivity()
+
+        onView(withText(expectedNews()[0].title)).check(matches(isDisplayed()))
+
+        server.verify("v2/top-headlines").called(times = times(1), method = Method.GET)
+    }
+
+    @Test
+    fun showsEmptyCaseIfThereAreNoSuperHeroes() {
+        server.whenever(GET, "v2/top-headlines")
+                .thenRespond(success(jsonBody = fileBody("GetEmptyNews.json")))
+
+        startActivity()
+
+        onView(withText(expectedNews()[0].title)).check(matches(not(isDisplayed())))
     }
 
     private fun expectedNews(): List<Article> {
