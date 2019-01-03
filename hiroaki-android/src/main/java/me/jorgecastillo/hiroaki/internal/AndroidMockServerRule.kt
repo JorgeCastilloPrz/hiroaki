@@ -1,6 +1,6 @@
 package me.jorgecastillo.hiroaki.internal
 
-import android.support.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 import me.jorgecastillo.hiroaki.dispatcher.AndroidDispatcherRetainer
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Before
@@ -12,20 +12,20 @@ import org.junit.rules.ExternalResource
  */
 class AndroidMockServerRule : ExternalResource() {
 
-    lateinit var server: MockWebServer
+  lateinit var server: MockWebServer
 
-    @Before
-    override fun before() {
-        server = MockWebServer()
-        AndroidDispatcherRetainer.androidContext = InstrumentationRegistry.getContext()
-        AndroidDispatcherRetainer.registerRetainer()
-        AndroidDispatcherRetainer.resetDispatchers()
-        server.start()
-    }
+  @Before
+  override fun before() {
+    server = MockWebServer()
+    AndroidDispatcherRetainer.androidContext = InstrumentationRegistry.getInstrumentation().context
+    AndroidDispatcherRetainer.registerRetainer()
+    AndroidDispatcherRetainer.resetDispatchers()
+    server.start()
+  }
 
-    override fun after() {
-        server.shutdown()
-        AndroidDispatcherRetainer.resetDispatchers()
-        server.setDispatcher(AndroidDispatcherRetainer.queueDispatcher)
-    }
+  override fun after() {
+    server.shutdown()
+    AndroidDispatcherRetainer.resetDispatchers()
+    server.setDispatcher(AndroidDispatcherRetainer.queueDispatcher)
+  }
 }
