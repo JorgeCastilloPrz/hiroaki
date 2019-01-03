@@ -1,10 +1,10 @@
 package me.jorgecastillo.hiroaki
 
 import android.content.Intent
-import android.support.test.filters.LargeTest
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
-import kotlinx.coroutines.experimental.runBlocking
+import androidx.test.filters.LargeTest
+import androidx.test.rule.ActivityTestRule
+import androidx.test.runner.AndroidJUnit4
+import kotlinx.coroutines.runBlocking
 import me.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
 import me.jorgecastillo.hiroaki.internal.AndroidMockServerRule
 import me.jorgecastillo.hiroaki.matchers.never
@@ -24,15 +24,15 @@ class RuleAndroidVerificationTests {
     val testRule: AndroidMockServerRule = AndroidMockServerRule()
     @get:Rule
     val activityRule: ActivityTestRule<MainActivity> = ActivityTestRule(
-            MainActivity::class.java, true, false)
+        MainActivity::class.java, true, false)
 
     @Before
     fun setup() {
         val mockService = testRule.server.retrofitService(
-                MoshiNewsApiService::class.java,
-                MoshiConverterFactory.create())
+            MoshiNewsApiService::class.java,
+            MoshiConverterFactory.create())
         getApp()
-                .service = mockService
+            .service = mockService
     }
 
     private fun startActivity(): MainActivity {
@@ -42,7 +42,7 @@ class RuleAndroidVerificationTests {
     @Test
     fun verifiesEndpointCalled() {
         testRule.server.whenever(Method.GET, "v2/top-headlines")
-                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+            .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         startActivity()
 
@@ -52,33 +52,33 @@ class RuleAndroidVerificationTests {
     @Test
     fun verifiesHeadersOnEndpointCalled() {
         testRule.server.whenever(Method.GET, "v2/top-headlines")
-                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+            .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         startActivity()
 
         testRule.server.verify("v2/top-headlines").called(
-                times = once(),
-                headers = headers("Cache-Control" to "max-age=640000"))
+            times = once(),
+            headers = headers("Cache-Control" to "max-age=640000"))
     }
 
     @Test
     fun verifiesQueryParamsOnEndpointCalled() {
         testRule.server.whenever(Method.GET, "v2/top-headlines")
-                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+            .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         startActivity()
 
         testRule.server.verify("v2/top-headlines").called(
-                times = once(),
-                queryParams = params(
-                        "sources" to "crypto-coins-news",
-                        "apiKey" to "a7c816f57c004c49a21bd458e11e2807"))
+            times = once(),
+            queryParams = params(
+                "sources" to "crypto-coins-news",
+                "apiKey" to "a7c816f57c004c49a21bd458e11e2807"))
     }
 
     @Test
     fun verifiesEndpointNotCalled() {
         testRule.server.whenever(Method.GET, "v2/top-headlines")
-                .thenRespond(success(jsonBody = fileBody("GetNews.json")))
+            .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 
         startActivity()
 
