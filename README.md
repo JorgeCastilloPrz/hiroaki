@@ -1,4 +1,4 @@
-Hiroaki [![CircleCI](https://circleci.com/gh/JorgeCastilloPrz/hiroaki/tree/master.svg?style=svg&circle-token=3824cb7754fef5b81f1a67c6e86786df5db242c5)](https://circleci.com/gh/JorgeCastilloPrz/hiroaki/tree/master) [![MavenCentral/hiroaki-core](https://maven-badges.herokuapp.com/maven-central/me.jorgecastillo/hiroaki-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/me.jorgecastillo/hiroaki-core)
+Hiroaki [![CircleCI](https://circleci.com/gh/JorgeCastilloPrz/hiroaki/tree/master.svg?style=svg&circle-token=3824cb7754fef5b81f1a67c6e86786df5db242c5)](https://circleci.com/gh/JorgeCastilloPrz/hiroaki/tree/master)
 ======
 
 <img src="./art/sakura_logo.svg" width="256" height="256" />
