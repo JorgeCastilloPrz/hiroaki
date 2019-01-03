@@ -1,8 +1,8 @@
 package me.jorgecastillo.hiroaki
 
-import android.support.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 
 fun getApp() =
     (InstrumentationRegistry.getInstrumentation()
-            .targetContext
-            .applicationContext as TestSampleApp)
+        .targetContext
+        .applicationContext as TestSampleApp)

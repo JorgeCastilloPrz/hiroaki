@@ -33,12 +33,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        GlobalScope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.Main) {
-                loading.visibility = View.VISIBLE
-            }
-            val articles = MoshiNewsNetworkDataSource(getApp().newsService())
+        GlobalScope.launch(Dispatchers.Main) {
+            loading.visibility = View.VISIBLE
+
+            val articles = withContext(Dispatchers.IO) {
+                MoshiNewsNetworkDataSource(getApp().newsService())
                     .getNews()
+            }
             withContext(Dispatchers.Main) {
                 adapter.articles = articles
                 adapter.notifyDataSetChanged()
