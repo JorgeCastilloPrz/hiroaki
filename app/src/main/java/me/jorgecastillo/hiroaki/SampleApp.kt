@@ -7,8 +7,8 @@ import me.jorgecastillo.hiroaki.di.provideNewsService
 
 open class SampleApp : MultiDexApplication() {
 
-  open fun newsService(): MoshiNewsApiService =
-      provideNewsService()
+    open fun newsService(): MoshiNewsApiService =
+            provideNewsService()
 }
 
 fun Activity.getApp() = application as SampleApp

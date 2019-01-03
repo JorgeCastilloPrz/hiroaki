@@ -24,7 +24,7 @@ fun MoshiArticleDto.toArticle() =
     Article(title, description, url, urlToImage, publishedAt, source.toSource())
 
 fun Article.toMoshiDto() = MoshiArticleDto(
-        title, description, url, urlToImage, publishedAt, source.toMoshiDto()
+    title, description, url, urlToImage, publishedAt, source.toMoshiDto()
 )
 
 fun MoshiSourceDto.toSource() = Source(id, name)
