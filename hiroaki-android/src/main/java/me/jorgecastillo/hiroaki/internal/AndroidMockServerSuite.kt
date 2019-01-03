@@ -11,21 +11,21 @@ import org.junit.Before
  * sets the android Context up into the library so it can easily reach asset resources for json body files.
  */
 open class AndroidMockServerSuite {
-  lateinit var server: MockWebServer
+    lateinit var server: MockWebServer
 
-  @Before
-  open fun setup() {
-    server = MockWebServer()
-    AndroidDispatcherRetainer.androidContext = InstrumentationRegistry.getInstrumentation().context
-    AndroidDispatcherRetainer.registerRetainer()
-    AndroidDispatcherRetainer.resetDispatchers()
-    server.start()
-  }
+    @Before
+    open fun setup() {
+        server = MockWebServer()
+        AndroidDispatcherRetainer.androidContext = InstrumentationRegistry.getInstrumentation().context
+        AndroidDispatcherRetainer.registerRetainer()
+        AndroidDispatcherRetainer.resetDispatchers()
+        server.start()
+    }
 
-  @After
-  open fun tearDown() {
-    server.shutdown()
-    AndroidDispatcherRetainer.resetDispatchers()
-    server.setDispatcher(AndroidDispatcherRetainer.queueDispatcher)
-  }
+    @After
+    open fun tearDown() {
+        server.shutdown()
+        AndroidDispatcherRetainer.resetDispatchers()
+        server.setDispatcher(AndroidDispatcherRetainer.queueDispatcher)
+    }
 }
