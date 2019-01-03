@@ -15,45 +15,45 @@ import me.jorgecastillo.hiroaki.data.datasource.MoshiNewsNetworkDataSource
 
 class MainActivity : AppCompatActivity() {
 
-  private lateinit var adapter: NewsAdapter
+    private lateinit var adapter: NewsAdapter
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
-    setSupportActionBar(toolbar)
-    setupList()
-  }
-
-  private fun setupList() {
-    newsList.setHasFixedSize(true)
-    newsList.layoutManager = LinearLayoutManager(this)
-    adapter = NewsAdapter()
-    newsList.adapter = adapter
-  }
-
-  override fun onResume() {
-    super.onResume()
-    GlobalScope.launch(Dispatchers.IO) {
-      withContext(Dispatchers.Main) {
-        loading.visibility = View.VISIBLE
-      }
-      val articles = MoshiNewsNetworkDataSource(getApp().newsService())
-          .getNews()
-      withContext(Dispatchers.Main) {
-        adapter.articles = articles
-        adapter.notifyDataSetChanged()
-        loading.visibility = View.GONE
-      }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        setSupportActionBar(toolbar)
+        setupList()
     }
-  }
 
-  override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-    R.id.action_settings -> true
-    else -> super.onOptionsItemSelected(item)
-  }
+    private fun setupList() {
+        newsList.setHasFixedSize(true)
+        newsList.layoutManager = LinearLayoutManager(this)
+        adapter = NewsAdapter()
+        newsList.adapter = adapter
+    }
 
-  override fun onCreateOptionsMenu(menu: Menu): Boolean {
-    menuInflater.inflate(R.menu.menu_main, menu)
-    return true
-  }
+    override fun onResume() {
+        super.onResume()
+        GlobalScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main) {
+                loading.visibility = View.VISIBLE
+            }
+            val articles = MoshiNewsNetworkDataSource(getApp().newsService())
+                    .getNews()
+            withContext(Dispatchers.Main) {
+                adapter.articles = articles
+                adapter.notifyDataSetChanged()
+                loading.visibility = View.GONE
+            }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.action_settings -> true
+        else -> super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
 }
