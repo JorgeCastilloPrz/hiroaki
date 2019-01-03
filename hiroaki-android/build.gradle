@@ -7,7 +7,7 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 27
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         multiDexEnabled true
     }
@@ -57,6 +57,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     implementation 'com.squareup.okhttp3:mockwebserver:3.11.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation 'androidx.test:monitor:1.1.1'
 }
 
 apply from: '../ktlint/ktlint.gradle'
