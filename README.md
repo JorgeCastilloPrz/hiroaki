@@ -3,21 +3,29 @@ Hiroaki [![CircleCI](https://circleci.com/gh/JorgeCastilloPrz/hiroaki/tree/maste
 
 <img src="./art/sakura_logo.svg" width="256" height="256" />
 
-    Japanese: 'spreading brightness'. Derived from the words 'hiro', which means 'large or wide', and 'aki', 
+    Japanese: 'spreading brightness'. Derived from the words 'hiro', which means 'large or wide', and 'aki',
     which means 'bright or clear'.
 
-The intention of Hiroaki is to achieve clarity on your **API integration tests** in an idiomatic way by leveraging the 
+The intention of Hiroaki is to achieve clarity on your **API integration tests** in an idiomatic way by leveraging the
 power of Kotlin.
 
 It uses `MockWebServer` to provide a mock server as a target for your HTTP requests that you'll use to mock your backend.
 
-That enables you to assert over how your program reacts to some predefined server & API behaviors. 
+That enables you to assert over how your program reacts to some predefined server & API behaviors.
 
 Dependency
 ----------
 
-Add the following code to your ``build.gradle``. Both dependencies are available in **Maven Central**.
+If you do Android and you're targeting AndroidX namespace in your project, add the following code to your ``build.gradle``. Both dependencies are available in **Maven Central**.
 
+```groovy
+dependencies{
+    testImplementation 'me.jorgecastillo:hiroaki-core:0.1.0'
+    androidTestImplementation 'me.jorgecastillo:hiroaki-android:0.1.0' // Android instrumentation tests
+}
+```
+
+In case you wanna stay targeting the support apis for a while, you can still use `0.0.8`:
 ```groovy
 dependencies{
     testImplementation 'me.jorgecastillo:hiroaki-core:0.0.8'
@@ -25,13 +33,15 @@ dependencies{
 }
 ```
 
+If you do plain Java or Kotlin you'll just need the core artifact on its `0.1.0` version.
+
 Setup
 -----
 
-To work with **Hiroaki** you must extend `MockServerSuite` on your test class, which takes care of running and shutting 
+To work with **Hiroaki** you must extend `MockServerSuite` on your test class, which takes care of running and shutting
 down the server for you. If you can't do that, there's also a JUnit4 `Rule` called `MockServerRule` with the same goal.
 
-To target the mock server with your requests, you'll need to request the URL from it and pass it to your endpoint 
+To target the mock server with your requests, you'll need to request the URL from it and pass it to your endpoint
 creation system / collaborator / entity.
 
 Here you have a plain [OkHttp](http://square.github.io/okhttp/) sample.
@@ -46,7 +56,7 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
         val mockServerUrl = server.url("/v2/news")
         dataSource = NewsDataSource(mockServerUrl)
     }
-        
+
     /*...add tests here!...*/
 }
 
@@ -58,18 +68,18 @@ class NewsDataSource(var baseUrl: HttpUrl) {
       val request = Request.Builder()
               .url(baseUrl)
               .build()
-  
+
       val response = client.newCall(request).execute()
       return response.body()?.string()
   }
 }
 ````
-If you have an **endpoint factory**, or even a **DI system** providing injected endpoints, you'll need to have a good 
+If you have an **endpoint factory**, or even a **DI system** providing injected endpoints, you'll need to have a good
 design on your app to pass the mock server url to it. That's on you and is different for every project.
 
 Syntax for Retrofit
 -------------------
-However, **Hiroaki** provides syntax for waking up mock `Retrofit` services in case you need one for writing some unit 
+However, **Hiroaki** provides syntax for waking up mock `Retrofit` services in case you need one for writing some unit
 tests for your api client / data source as the subject under test.
 
 ```kotlin
@@ -85,11 +95,11 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
                 GsonNewsApiService::class.java,
                 GsonConverterFactory.create()))
     }
-        
+
     /*...*/
 }
 ```
-This will use a default `OkHttpClient` instance created for you with basic configuration. For more detailed 
+This will use a default `OkHttpClient` instance created for you with basic configuration. For more detailed
 configuration, `retrofitService()` function offers an optional parameter to pass a custom `OkHttpClient`:
 
 ```kotlin
@@ -122,14 +132,14 @@ class RuleNetworkDataSourceTest {
                 JacksonNewsApiService::class.java,
                 JacksonConverterFactory.create()))
     }
-    
+
     @Test
     fun sendsGetNews() {
        // you'll need to call the server through the rule
        rule.server.whenever(GET, "v2/top-headlines")
                   .thenRespond(success(jsonBody = fileBody("GetNews.json")))
                   // Can also inline a body or use the json DSL
-                  
+
        runBlocking { dataSource.getNews() }
 
        /*...*/
@@ -145,15 +155,15 @@ With **Hiroaki**, you can mock request responses as if it was mockito:
 @Test
 fun chainResponses() {
     server.whenever(Method.GET, "v2/top-headlines")
-            .thenRespond(success(jsonBody = fileBody("GetNews.json"))) 
+            .thenRespond(success(jsonBody = fileBody("GetNews.json")))
             // Can also inline a body or use the json DSL
 
     val news = runBlocking { dataSource.getNews() }
-    
+
     /*...*/
 }
 ````
-This ensures that **whenever** the endpoint `v2/top-headlines` is called with the given conditions the server will 
+This ensures that **whenever** the endpoint `v2/top-headlines` is called with the given conditions the server will
 respond with the mocked response we're providing.
 
 These are all the supported params for `whenever` that you can match to. All of them are optional except `sentToPath`:
@@ -167,16 +177,16 @@ server.whenever(method = Method.GET,
       .thenRespond(success(jsonFileName = "GetNews.json"))
 ```
 
-Also note in the previous snippets the `success()` function when mocking the response. function `success()` is a 
-shortcut to provide a mocked successful response. You can also use `error()`  and `response()`. All of them are mocking 
+Also note in the previous snippets the `success()` function when mocking the response. function `success()` is a
+shortcut to provide a mocked successful response. You can also use `error()`  and `response()`. All of them are mocking
 functions that allow you to pass the following **optional** arguments:
 
 * `code` **Int** return http status code for the mocked response.
 * `jsonBody` **JsonBody**, **JsonFileBody**, **Json** or **JsonArray**: json for your mocked response body.
 * `headers` Is a **Map<String,String>** headers to attach to the mocked response.
 
-If you don't want to use the `succes()`, `error()` or `response()` shortcut functions, you can still pass your own 
-custom `MockResponse`. 
+If you don't want to use the `succes()`, `error()` or `response()` shortcut functions, you can still pass your own
+custom `MockResponse`.
 
 Chaining Mocked Responses
 -------------------------
@@ -188,13 +198,13 @@ server.whenever(Method.GET, "v2/top-headlines")
                 .thenRespond(success(jsonBody = fileBody("GetSingleNew.json")))
                 .thenRespond(success(jsonBody = fileBody("GetNews.json")))
 ````
-Each time the endpoint is called under the given conditions, the server will return the next mocked response from the 
+Each time the endpoint is called under the given conditions, the server will return the next mocked response from the
 list, **following the same order**.
 
 Dynamic dispatch
 ----------------
 
-Sometimes you want a response to depend on the request sent. For that reason, **Hiroaki** provides the `thenDispatch` 
+Sometimes you want a response to depend on the request sent. For that reason, **Hiroaki** provides the `thenDispatch`
 method:
 ````kotlin
 server.whenever(Method.GET, "v2/top-headlines")
@@ -211,7 +221,7 @@ server.whenever(Method.GET, "v2/top-headlines")
 Delay Responses
 ---------------
 
-Mimic server response delays with `delay()`, an extension function for `MockResponse` to pass a delay in 
+Mimic server response delays with `delay()`, an extension function for `MockResponse` to pass a delay in
 millis: `response.delay(millis)`:
 
 ````kotlin
@@ -219,7 +229,7 @@ server.whenever(Method.GET, "v2/top-headlines")
       .thenRespond(success(jsonBody = fileBody("GetNews.json")).delay(250))
       .thenRespond(success(jsonBody = fileBody("GetSingleNew.json")).delay(500))
       .thenRespond(success(jsonBody = fileBody("GetNews.json")).delay(1000))
-      
+
 // Also for dispatched responses
 server.whenever(Method.GET, "v2/top-headlines")
       .thenDispatch { request -> success().delay(250) }
@@ -237,8 +247,8 @@ Here, you are asking the server to throttle and write chunks of 64 bytes per sec
 Verifying Requests
 ------------------
 
-**Hiroaki** provides a highly configurable `verify()` function to perform verification over executed HTTP requests. 
-Its arguments are **optional** so you're free to configure the assertion in a way that matches your needs. 
+**Hiroaki** provides a highly configurable `verify()` function to perform verification over executed HTTP requests.
+Its arguments are **optional** so you're free to configure the assertion in a way that matches your needs.
 
 ```kotlin
 @Test
@@ -277,7 +287,7 @@ You can use the functions `never()`, `once()`, `twice()`, `times(num)`, `atLeast
 Parsed response assertions
 --------------------------
 
-After any test that requests data from network you'll probably need to **assert over the parsed response** to double 
+After any test that requests data from network you'll probably need to **assert over the parsed response** to double
 check whether the data was received and parsed properly.
 
 ```kotlin
@@ -289,15 +299,15 @@ fun parsesNewsProperly() {
 
     news eq expectedNews() // eq is an infix function for assertEquals()
 }
-``` 
-`eq` is just an `infix` function to run `assertEquals` on both objects. Here we are building the list of expected 
-objects with the function `expectedNews()`. The objects are being compared using the `equals` operator so you 
-**better use data classes for DTOs or redefine `equals`** properly. 
+```
+`eq` is just an `infix` function to run `assertEquals` on both objects. Here we are building the list of expected
+objects with the function `expectedNews()`. The objects are being compared using the `equals` operator so you
+**better use data classes for DTOs or redefine `equals`** properly.
 
 Android Instrumentation tests
 -----------------------------
 
-Extend `AndroidMockServerSuite` or use `AndroidMockServerRule` instead. 
+Extend `AndroidMockServerSuite` or use `AndroidMockServerRule` instead.
 
 Basic sample of Android instrumentation tests:
 ````kotlin
@@ -332,24 +342,24 @@ class ExampleInstrumentedTest : AndroidMockServerSuite() {
     }
 }
 ````
-I'm being intentionally simple here on how I pass the mocked service to the application class (setup method), which is 
-being replaced by a mock application on the androidTest environment. But you would use a dependency injector/container 
-to replace the service most likely. 
+I'm being intentionally simple here on how I pass the mocked service to the application class (setup method), which is
+being replaced by a mock application on the androidTest environment. But you would use a dependency injector/container
+to replace the service most likely.
 
 **Important: Json Body files location:**
-For Android instrumentation tests you'll need to put your json body files into `androidTest/assets/` folder. That's due 
+For Android instrumentation tests you'll need to put your json body files into `androidTest/assets/` folder. That's due
 to how android loads resources.
 
 Call verification on Android
 ----------------------------
 
-Using call verification on Android instrumentation tests can also be a good idea, so you are able to assert that the 
+Using call verification on Android instrumentation tests can also be a good idea, so you are able to assert that the
 endpoints are called as expected (including optional times / ordering) per screen.
 
 Json Body DSL
 -------------
 
-Anywhere where **Hiroaki** requests a `JsonBody` from you (matchers, assertions, wherever), you can use 3 options: 
+Anywhere where **Hiroaki** requests a `JsonBody` from you (matchers, assertions, wherever), you can use 3 options:
 * `fileBody("Filename.json")`: To pass a json from a file resource (`/test/resources` or `androidTest/assets`)
 * `inlineBody("{...}")`: To pass an inlined body.
 * `JsonDSL`: A fancy DSL to create your inlined json bodies in a very idiomatic way. Some examples:
@@ -390,15 +400,15 @@ jsonArray(
       "title" / "How to Get Android P's Screenshot Editing Tool on Any Android Phone"
       "ids" / jsonArray(1, 2, 3)
     })
-``` 
+```
 You can combine `jsonArray{}` and `json{}` blocks arbitrarily. **Hiroaki** will create a properly formatted json for you.
 Also feel free to use `jsonArray` as the root node for your json if you need to.
 ````kotlin
 server.whenever(Method.GET, "my-fake-service/1")
                 .thenRespond(success(jsonBody = jsonArray(1, 2, 3)))
-                
+
 server.whenever(Method.GET, "my-fake-service/1")
-                .thenRespond(success(jsonBody = 
+                .thenRespond(success(jsonBody =
                     json {
                        "status" / "ok"
                        "totalResults" / 2342
@@ -420,18 +430,18 @@ server.whenever(Method.GET, "my-fake-service/1")
 Do you want to contribute?
 --------------------------
 
-I would love to get contributions from anybody. So if you feel that the library is lacking any features 
-you consider key, please open an issue asking for it or a pull request providing an implementation for it. 
+I would love to get contributions from anybody. So if you feel that the library is lacking any features
+you consider key, please open an issue asking for it or a pull request providing an implementation for it.
 
 The library is using **CircleCI 2.0** to enforce passing tests and code style quality.
- 
-Any PR's must pass CI and that includes code style. Run the following commands to check code style or 
+
+Any PR's must pass CI and that includes code style. Run the following commands to check code style or
 automatically format it. (You can use the graddle wrapper (`gradlew`) instead)
 ```groovy
 // check code style
 gradle app:ktlint
 gradle hiroaki-core:ktlint
-gradle hiroaki-android:ktlint 
+gradle hiroaki-android:ktlint
 
 // autoformat
 gradle app:ktlintFormat
@@ -460,4 +470,3 @@ License
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
