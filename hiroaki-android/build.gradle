@@ -43,7 +43,7 @@ android {
 }
 
 dependencies {
-    api "me.jorgecastillo:hiroaki-core:0.0.8"
+    api "me.jorgecastillo:hiroaki-core:0.1.0"
 
     // linters
     ktlint "com.github.shyiko:ktlint:0.29.0"
