@@ -39,7 +39,7 @@ kotlin {
 }
 
 dependencies {
-    def retrofitVersion = "2.3.0"
+    def retrofitVersion = "2.5.0"
 
     implementation 'androidx.multidex:multidex:2.0.1'
 
