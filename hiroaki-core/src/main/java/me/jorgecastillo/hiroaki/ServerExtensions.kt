@@ -28,7 +28,7 @@ fun <T> MockWebServer.retrofitService(
     converterFactory: Converter.Factory,
     okHttpClient: OkHttpClient = okHttpClient()
 ): T {
-    return Retrofit.Builder().baseUrl(this.url("/").toString())
+    return Retrofit.Builder().baseUrl(this.url("/"))
             .client(okHttpClient)
             .addConverterFactory(converterFactory).build()
             .create(serviceClass)

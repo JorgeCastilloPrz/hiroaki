@@ -43,8 +43,8 @@ dependencies {
 
     implementation 'androidx.multidex:multidex:2.0.1'
 
-    testImplementation "me.jorgecastillo:hiroaki-core:0.1.0"
-    androidTestImplementation "me.jorgecastillo:hiroaki-android:0.1.0"
+    testImplementation project(":hiroaki-core")
+    androidTestImplementation project(":hiroaki-android")
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
