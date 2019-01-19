@@ -24,10 +24,7 @@ class JsonDSLTest : MockServerSuite() {
     @Before
     override fun setup() {
         super.setup()
-        service = server.retrofitService(
-                SomeService::class.java,
-                GsonConverterFactory.create()
-        )
+        service = server.retrofitService(GsonConverterFactory.create())
     }
 
     @Test

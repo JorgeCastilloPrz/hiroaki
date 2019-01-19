@@ -4,7 +4,6 @@ import kotlinx.coroutines.runBlocking
 import me.jorgecastillo.hiroaki.Method.GET
 import me.jorgecastillo.hiroaki.Method.POST
 import me.jorgecastillo.hiroaki.data.datasource.MoshiNewsNetworkDataSource
-import me.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
 import me.jorgecastillo.hiroaki.internal.MockServerSuite
 import me.jorgecastillo.hiroaki.model.Article
 import me.jorgecastillo.hiroaki.model.Source
@@ -31,10 +30,7 @@ class MoshiNewsNetworkDataSourceTest : MockServerSuite() {
     override fun setup() {
         super.setup()
         dataSource = MoshiNewsNetworkDataSource(
-            server.retrofitService(
-                MoshiNewsApiService::class.java,
-                MoshiConverterFactory.create()
-            )
+            server.retrofitService(MoshiConverterFactory.create())
         )
     }
 

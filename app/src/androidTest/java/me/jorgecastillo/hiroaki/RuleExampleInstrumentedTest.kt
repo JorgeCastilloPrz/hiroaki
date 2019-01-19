@@ -10,7 +10,6 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import kotlinx.coroutines.runBlocking
 import me.jorgecastillo.hiroaki.Method.GET
-import me.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
 import me.jorgecastillo.hiroaki.internal.AndroidMockServerRule
 import me.jorgecastillo.hiroaki.model.Article
 import me.jorgecastillo.hiroaki.model.Source
@@ -34,11 +33,7 @@ class RuleExampleInstrumentedTest {
 
     @Before
     fun setup() {
-        val mockService = testRule.server.retrofitService(
-            MoshiNewsApiService::class.java,
-            MoshiConverterFactory.create())
-        getApp()
-            .service = mockService
+        getApp().service = testRule.server.retrofitService(MoshiConverterFactory.create())
     }
 
     private fun startActivity(): MainActivity {

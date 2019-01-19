@@ -23,15 +23,29 @@ private fun okHttpClient(
                 .addInterceptor(HttpLoggingInterceptor().setLevel(loggingLevel))
                 .build()
 
+inline fun <reified T> MockWebServer.retrofitService(
+    converterFactory: Converter.Factory? = null,
+    okHttpClient: OkHttpClient? = null
+): T = if (okHttpClient == null) {
+    retrofitService(T::class.java, converterFactory)
+} else {
+    retrofitService(T::class.java, converterFactory, okHttpClient)
+}
+
 fun <T> MockWebServer.retrofitService(
     serviceClass: Class<T>,
-    converterFactory: Converter.Factory,
+    converterFactory: Converter.Factory? = null,
     okHttpClient: OkHttpClient = okHttpClient()
 ): T {
     return Retrofit.Builder().baseUrl(this.url("/"))
             .client(okHttpClient)
-            .addConverterFactory(converterFactory).build()
+            .addOptionalConverterFactory(converterFactory)
+            .build()
             .create(serviceClass)
+}
+
+private fun Retrofit.Builder.addOptionalConverterFactory(converterFactory: Converter.Factory?) = apply {
+    converterFactory?.let { addConverterFactory(it) }
 }
 
 fun MockWebServer.whenever(

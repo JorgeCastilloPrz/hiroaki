@@ -2,7 +2,6 @@ package me.jorgecastillo.hiroaki
 
 import kotlinx.coroutines.runBlocking
 import me.jorgecastillo.hiroaki.data.datasource.JacksonNewsNetworkDataSource
-import me.jorgecastillo.hiroaki.data.service.JacksonNewsApiService
 import me.jorgecastillo.hiroaki.internal.AndroidMockServerSuite
 import me.jorgecastillo.hiroaki.models.fileBody
 import me.jorgecastillo.hiroaki.models.success
@@ -22,10 +21,7 @@ class AndroidSuiteParametersTest(inetAddress: InetAddress, port: Int) : AndroidM
     @Before
     fun setupDataSource() {
         dataSource = JacksonNewsNetworkDataSource(
-            server.retrofitService(
-                JacksonNewsApiService::class.java,
-                JacksonConverterFactory.create()
-            )
+            server.retrofitService(JacksonConverterFactory.create())
         )
     }
 
