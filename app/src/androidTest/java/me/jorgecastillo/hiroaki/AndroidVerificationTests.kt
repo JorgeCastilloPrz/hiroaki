@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
-import me.jorgecastillo.hiroaki.data.service.MoshiNewsApiService
 import me.jorgecastillo.hiroaki.internal.AndroidMockServerSuite
 import me.jorgecastillo.hiroaki.matchers.never
 import me.jorgecastillo.hiroaki.models.fileBody
@@ -26,11 +25,7 @@ class AndroidVerificationTests : AndroidMockServerSuite() {
     @Before
     override fun setup() {
         super.setup()
-        val mockService = server.retrofitService(
-            MoshiNewsApiService::class.java,
-            MoshiConverterFactory.create())
-        getApp()
-            .service = mockService
+        getApp().service = server.retrofitService(MoshiConverterFactory.create())
     }
 
     private fun startActivity(): MainActivity {

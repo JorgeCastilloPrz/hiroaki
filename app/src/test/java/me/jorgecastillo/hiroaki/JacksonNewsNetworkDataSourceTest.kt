@@ -4,7 +4,6 @@ import kotlinx.coroutines.runBlocking
 import me.jorgecastillo.hiroaki.Method.GET
 import me.jorgecastillo.hiroaki.Method.POST
 import me.jorgecastillo.hiroaki.data.datasource.JacksonNewsNetworkDataSource
-import me.jorgecastillo.hiroaki.data.service.JacksonNewsApiService
 import me.jorgecastillo.hiroaki.internal.MockServerSuite
 import me.jorgecastillo.hiroaki.model.Article
 import me.jorgecastillo.hiroaki.model.Source
@@ -29,10 +28,7 @@ class JacksonNewsNetworkDataSourceTest : MockServerSuite() {
     override fun setup() {
         super.setup()
         dataSource = JacksonNewsNetworkDataSource(
-            server.retrofitService(
-                JacksonNewsApiService::class.java,
-                JacksonConverterFactory.create()
-            )
+            server.retrofitService(JacksonConverterFactory.create())
         )
     }
 

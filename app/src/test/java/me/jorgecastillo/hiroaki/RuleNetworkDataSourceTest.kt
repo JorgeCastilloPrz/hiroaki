@@ -4,7 +4,6 @@ import kotlinx.coroutines.runBlocking
 import me.jorgecastillo.hiroaki.Method.GET
 import me.jorgecastillo.hiroaki.Method.POST
 import me.jorgecastillo.hiroaki.data.datasource.JacksonNewsNetworkDataSource
-import me.jorgecastillo.hiroaki.data.service.JacksonNewsApiService
 import me.jorgecastillo.hiroaki.internal.MockServerRule
 import me.jorgecastillo.hiroaki.matchers.times
 import me.jorgecastillo.hiroaki.model.Article
@@ -32,10 +31,7 @@ class RuleNetworkDataSourceTest {
     @Before
     fun setup() {
         dataSource = JacksonNewsNetworkDataSource(
-                rule.server.retrofitService(
-                        JacksonNewsApiService::class.java,
-                        JacksonConverterFactory.create()
-                )
+                rule.server.retrofitService(JacksonConverterFactory.create())
         )
     }
 

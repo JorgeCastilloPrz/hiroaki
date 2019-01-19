@@ -4,7 +4,6 @@ import kotlinx.coroutines.runBlocking
 import me.jorgecastillo.hiroaki.Method.GET
 import me.jorgecastillo.hiroaki.Method.POST
 import me.jorgecastillo.hiroaki.data.datasource.GsonNewsNetworkDataSource
-import me.jorgecastillo.hiroaki.data.service.GsonNewsApiService
 import me.jorgecastillo.hiroaki.internal.MockServerSuite
 import me.jorgecastillo.hiroaki.matchers.times
 import me.jorgecastillo.hiroaki.model.Article
@@ -30,10 +29,7 @@ class GsonNewsNetworkDataSourceTest : MockServerSuite() {
     override fun setup() {
         super.setup()
         dataSource = GsonNewsNetworkDataSource(
-            server.retrofitService(
-                GsonNewsApiService::class.java,
-                GsonConverterFactory.create()
-            )
+            server.retrofitService(GsonConverterFactory.create())
         )
     }
 
