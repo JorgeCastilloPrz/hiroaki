@@ -4,13 +4,17 @@ import me.jorgecastillo.hiroaki.dispatcher.DispatcherRetainer
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
+import java.net.InetAddress
 
 /**
  * Base class to provide the mock server before and after the test execution. Intentionally avoided
  * using a rule for readability (not requiring tests to access server through the rule like
  * rule.server.enqueue() but directly server.enqueue()).
  */
-open class MockServerSuite {
+open class MockServerSuite @JvmOverloads constructor(
+    val inetAddress: InetAddress = InetAddress.getByName("localhost"),
+    val port: Int = 0
+) {
     lateinit var server: MockWebServer
 
     @Before
@@ -18,7 +22,7 @@ open class MockServerSuite {
         server = MockWebServer()
         DispatcherRetainer.registerRetainer()
         DispatcherRetainer.resetDispatchers()
-        server.start()
+        server.start(inetAddress, port)
     }
 
     @After
