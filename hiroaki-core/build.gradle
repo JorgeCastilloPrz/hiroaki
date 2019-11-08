@@ -15,9 +15,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     // Network
-    implementation 'com.squareup.okhttp3:okhttp:3.13.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.13.1'
-    implementation 'com.squareup.okhttp3:mockwebserver:3.13.1'
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+    implementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation 'com.google.code.gson:gson:2.8.5'
 }
