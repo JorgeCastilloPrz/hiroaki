@@ -171,7 +171,7 @@ These are all the supported params for `whenever` that you can match to. All of 
 server.whenever(method = Method.GET,
                 sentToPath = "v2/top-headlines",
                 queryParams = params("sources" to "crypto-coins-news",
-                        "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
+                        "apiKey" to "21a12ef352b649caa97499bed2e77350"),
                 jsonBody = fileBody("GetNews.json"), // (file, inline, or JsonDSL)
                 headers = headers("Cache-Control" to "max-age=640000"))
       .thenRespond(success(jsonFileName = "GetNews.json"))
@@ -271,7 +271,7 @@ fun verifiesCall() {
             headers = headers("Cache-Control" to "max-age=640000"),
             queryParams = params(
                                 "sources" to "crypto-coins-news",
-                                "apiKey" to "a7c816f57c004c49a21bd458e11e2807"),
+                                "apiKey" to "21a12ef352b649caa97499bed2e77350"),
             jsonBody = inlineBody("{\n" +
                                   "  \"title\": \"Any Title\",\n" +
                                   "  \"description\": \"Any description\",\n" +
