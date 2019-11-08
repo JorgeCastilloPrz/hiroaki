@@ -44,8 +44,6 @@ kotlin {
 }
 
 dependencies {
-    def retrofitVersion = "2.5.0"
-
     implementation 'androidx.multidex:multidex:2.0.1'
 
     testImplementation project(":hiroaki-core")
@@ -69,10 +67,10 @@ dependencies {
     // Network
     implementation 'com.squareup.okhttp3:okhttp:3.13.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-jackson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-jackson:$retrofit_version"
     implementation 'com.squareup.moshi:moshi:1.8.0'
     implementation 'com.squareup.moshi:moshi-kotlin:1.8.0'
     implementation 'com.google.code.gson:gson:2.8.5'
