@@ -39,7 +39,7 @@ class AndroidRuleParametersTest(inetAddress: InetAddress, port: Int) {
             times = once(),
             queryParams = params(
                 "sources" to "crypto-coins-news",
-                "apiKey" to "a7c816f57c004c49a21bd458e11e2807"
+                "apiKey" to "21a12ef352b649caa97499bed2e77350"
             ),
             headers = headers(
                 "Cache-Control" to "max-age=640000"
