@@ -20,14 +20,14 @@ For Android, add the following dependencies to your `build.gradle`. Both depende
 
 ```groovy
 dependencies{
-    testImplementation 'me.jorgecastillo:hiroaki-core:0.1.0'
-    androidTestImplementation 'me.jorgecastillo:hiroaki-android:0.1.0' // Android instrumentation tests
+    testImplementation 'me.jorgecastillo:hiroaki-core:0.2.3'
+    androidTestImplementation 'me.jorgecastillo:hiroaki-android:0.2.3' // Android instrumentation tests
 }
 ```
 
 Note that Hiroaki **only targets AndroidX**. It does not provide support for Android support libraries anymore.
 
-If you do plain Java or Kotlin you'll just need the core artifact on its `0.1.0` version.
+If you do plain Java or Kotlin you'll just need the core artifact on its `0.2.3` version.
 
 Setup
 -----
