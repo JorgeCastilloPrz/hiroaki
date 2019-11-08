@@ -16,7 +16,7 @@ That enables you to assert over how your program reacts to some predefined serve
 Dependency
 ----------
 
-If you do Android and you're targeting AndroidX namespace in your project, add the following code to your ``build.gradle``. Both dependencies are available in **Maven Central**.
+For Android, add the following dependencies to your `build.gradle`. Both dependencies are available in **Maven Central**.
 
 ```groovy
 dependencies{
@@ -25,13 +25,7 @@ dependencies{
 }
 ```
 
-In case you wanna stay targeting the support apis for a while, you can still use `0.0.8`:
-```groovy
-dependencies{
-    testImplementation 'me.jorgecastillo:hiroaki-core:0.0.8'
-    androidTestImplementation 'me.jorgecastillo:hiroaki-android:0.0.8' // Android instrumentation tests
-}
-```
+Note that Hiroaki **only targets AndroidX**. It does not provide support for Android support libraries anymore.
 
 If you do plain Java or Kotlin you'll just need the core artifact on its `0.1.0` version.
 
