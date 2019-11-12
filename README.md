@@ -1,7 +1,7 @@
 Hiroaki [![CircleCI](https://circleci.com/gh/JorgeCastilloPrz/hiroaki/tree/master.svg?style=svg&circle-token=3824cb7754fef5b81f1a67c6e86786df5db242c5)](https://circleci.com/gh/JorgeCastilloPrz/hiroaki/tree/master)
 ======
 
-<img src="./art/sakura_logo.svg" width="256" height="256" />
+<img src="https://drive.google.com/uc?id=1dUvJF0sBQCncUdLJ7z6Q7ZVHdD5WKLS0" width="256" height="256" />
 
     Japanese: 'spreading brightness'. Derived from the words 'hiro', which means 'large or wide', and 'aki',
     which means 'bright or clear'.
