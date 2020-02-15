@@ -2,7 +2,7 @@ package me.jorgecastillo.hiroaki.dispatcher
 
 import java.io.File
 
-internal object DispatcherRetainer : Retainer {
+object DispatcherRetainer : Retainer {
     val queueDispatcher = HiroakiQueueDispatcher
     val hiroakiDispatcher = HiroakiDispatcher
 
