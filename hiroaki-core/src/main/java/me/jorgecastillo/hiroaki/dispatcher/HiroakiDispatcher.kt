@@ -8,6 +8,8 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.Matcher
 
+private typealias DispatchableBlock = (recordedRequest: RecordedRequest) -> MockResponse
+
 /**
  * This is the MockWebServer dispatcher auto-attached to the server at start. It's required to mock
  * responses that are dependant on the request, instead of plain enqueuing (which just adds them to
@@ -22,16 +24,24 @@ import org.hamcrest.Matcher
  */
 object HiroakiDispatcher : Dispatcher() {
 
-    private val mockRequests: MutableList<Pair<Matcher<RecordedRequest>,
-            Either<MockResponse, (recordedRequest: RecordedRequest) -> MockResponse>>> =
-            mutableListOf()
-    val dispatchedRequests: MutableList<RecordedRequest> = mutableListOf()
+    private val mockRequestsForever =
+        mutableListOf<Pair<Matcher<RecordedRequest>, Either<MockResponse, DispatchableBlock>>>()
+    private val mockRequests =
+        mutableListOf<Pair<Matcher<RecordedRequest>, Either<MockResponse, DispatchableBlock>>>()
+    val dispatchedRequests = mutableListOf<RecordedRequest>()
 
     fun addMockRequest(
         matcher: Matcher<RecordedRequest>,
         mockResponse: MockResponse
     ) {
         mockRequests.add(Pair(matcher, mockResponse.left()))
+    }
+
+    fun addMockRequestForever(
+        matcher: Matcher<RecordedRequest>,
+        mockResponse: MockResponse
+    ) {
+        mockRequestsForever.add(Pair(matcher, mockResponse.left()))
     }
 
     fun addDispatchableBlock(
@@ -41,28 +51,39 @@ object HiroakiDispatcher : Dispatcher() {
         mockRequests.add(Pair(matcher, dispatchableBlock.right()))
     }
 
+    fun addDispatchableBlockForever(
+        matcher: Matcher<RecordedRequest>,
+        dispatchableBlock: (recordedRequest: RecordedRequest) -> MockResponse
+    ) {
+        mockRequestsForever.add(Pair(matcher, dispatchableBlock.right()))
+    }
+
     /**
      * Resets both collections to their initial state. Called after any test.
      */
     fun reset() {
+        mockRequestsForever.clear()
         mockRequests.clear()
         dispatchedRequests.clear()
     }
 
     override fun dispatch(request: RecordedRequest): MockResponse {
         dispatchedRequests.add(request)
-        val mockRequest = mockRequests.find { (matcher, _) -> matcher.matches(request) }
-        return if (mockRequest != null) {
-            mockRequests.remove(mockRequest)
-            mockRequest.second.fold({ it }, { it(request) })
-        } else {
-            notMockedResponse()
-        }
+        val predicate: (Pair<Matcher<RecordedRequest>, Any>) -> Boolean =
+            { (matcher, _) -> matcher.matches(request) }
+
+        val mockRequest = mockRequests.pop(predicate)
+            ?: mockRequestsForever.findLast(predicate)
+
+        return mockRequest?.second?.fold({ it }, { it(request) }) ?: notMockedResponse()
     }
 
-    private fun notMockedResponse(): MockResponse {
-        val mockResponse = MockResponse().setResponseCode(500)
-        mockResponse.setBody("{ \"error\" : \"not mocked response\" }")
-        return mockResponse
+    private fun <T> MutableList<T>.pop(predicate: (T) -> Boolean): T? {
+        return find(predicate).also { if (it != null) remove(it) }
+    }
+
+    private fun notMockedResponse() = MockResponse().apply {
+        setResponseCode(500)
+        setBody("{ \"error\" : \"not mocked response\" }")
     }
 }
