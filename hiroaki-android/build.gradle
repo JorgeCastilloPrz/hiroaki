@@ -61,4 +61,4 @@ dependencies {
 }
 
 apply from: '../ktlint/ktlint.gradle'
-apply from: './gradle-mvn-push.gradle'
+apply from: '../gradle/gradle-mvn-push-android.gradle'
