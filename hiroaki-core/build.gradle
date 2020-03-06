@@ -10,17 +10,20 @@ dependencies {
     // linters
     ktlint "com.github.shyiko:ktlint:0.31.0"
 
+    // Junit
+    implementation 'junit:junit:4.13'
+
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_reflect_version"
 
     // Network
+    api "com.squareup.okhttp3:mockwebserver:$okhttp_version"
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
-    implementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation 'com.google.code.gson:gson:2.8.5'
 }
 
 apply from: '../ktlint/ktlint.gradle'
-apply from: './gradle-mvn-push.gradle'
+apply from: '../gradle/gradle-mvn-push-jvm.gradle'

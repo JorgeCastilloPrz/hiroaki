@@ -1,1 +1,1 @@
-include ':app', ':hiroaki-core', ':hiroaki-android'
+include ':app', ':hiroaki-core', ':hiroaki-android', ':hiroaki-junit5', ':test-data'

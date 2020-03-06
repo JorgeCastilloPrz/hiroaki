@@ -1,0 +1,20 @@
+apply plugin: "kotlin"
+
+dependencies {
+    // Network
+    api "com.squareup.okhttp3:okhttp:$okhttp_version"
+    api "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+    api "com.squareup.retrofit2:retrofit:$retrofit_version"
+    api "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+    api "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    api "com.squareup.retrofit2:converter-jackson:$retrofit_version"
+    api 'com.squareup.moshi:moshi:1.8.0'
+    api 'com.squareup.moshi:moshi-kotlin:1.8.0'
+    api 'com.google.code.gson:gson:2.8.5'
+    api 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.4.1'
+
+    // linters
+    ktlint "com.github.shyiko:ktlint:0.31.0"
+}
+
+apply from: '../ktlint/ktlint.gradle'
